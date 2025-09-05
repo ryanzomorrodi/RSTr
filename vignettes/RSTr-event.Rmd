@@ -101,7 +101,7 @@ If you have multiple types of groups, such as race and sex, it can take a little
 
 Now that our arrays are set up, organized, and properly named, we can finally consolidate them into a `list` to be used with the model:
 
-```{r eval = FALSE}
+```{r}
 data <- list(Y = Y, n = n)
 ```
 

@@ -22,7 +22,7 @@ In the previous vignette, we finally ran our model using `run_sampler()`, import
 
 Previously, we generated age-standardized estimates for `theta` based on our example Michigan dataset, `theta`.
 
-```{r eval = FALSE}
+```{r}
 # from vignette("RSTr-samples")
 library(RSTr)
 
@@ -37,34 +37,14 @@ library(RSTr)
 
 std_pop <- c(113154, 100640, 95799)
 margin_age <- 2
-theta <- readRDS("RSTr-medians/theta.RDS")
+theta <- load_samples("my_test_model")
 theta <- bind_samples(
   theta,
   age_standardize(theta[, 1:3, , ], std_pop, margin_age),
   margin_age,
   "35-64"
 )
-pop <- readRDS("RSTr-medians/pop.RDS")
-pop <- bind_samples(
-  pop,
-  aggregate_pop(pop[, 1:3, ], margin_age),
-  margin_age,
-  "35-64"
-)
-medians <- get_medians(theta)
-```
-
-```{r eval = FALSE}
-std_pop <- c(113154, 100640, 95799)
-margin_age <- 2
-theta <- load_samples("my_test_model") * 1e5
-theta <- bind_samples(
-  theta,
-  age_standardize(theta[, 1:3, , ], std_pop, margin_age),
-  margin_age,
-  "35-64"
-)
-pop <- load_pop("my_test_model")
+pop <- miheart$n
 pop <- bind_samples(
   pop,
   aggregate_pop(pop[, 1:3, ], margin_age),
@@ -136,7 +116,7 @@ ggplot(mishp) +
 
 In this group in 1979, it seems only one region has been suppressed (i.e., grayed out). This is because age-standardizing the samples after running the model both helps to bolster our relative precisions and to increase the total population in our groups, increasing values for both suppression criteria. If we suppress our estimates in our more granular, non-age-standardized `theta` samples, we will see that, even with a small credible interval, many more counties are suppressed:
 
-```{r eval = FALSE}
+```{r}
 rel_prec <- get_relative_precision(
   output = theta,
   medians = medians,
@@ -160,7 +140,7 @@ ggplot(mishp) +
 
 As we widen our credible interval, the reliability criteria will become more conservative and suppress more counties:
 
-```{r eval = FALSE}
+```{r}
 rel_prec <- get_relative_precision(
   output = theta,
   medians = medians,

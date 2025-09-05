@@ -86,7 +86,7 @@ If you want to learn more about the `initialize_model()` function, read `vignett
 
 Once we have our model object set up, we can start getting samples. This is the heart of the `RSTr` package and what allows us to gather our final rate estimates. To get your samples, simply specify the name of the model and the directory:
 
-```{r, eval = FALSE}
+```{r}
 run_sampler(name = "my_test_model")
 ```
 
@@ -98,12 +98,8 @@ If you want to learn more about the `run_sampler()` function, read `vignette("RS
 
 After `run_sampler()` is done running (i.e., generates 6000 iterations) and your samples have been saved to `mod_test`, you can bring the samples into R using the `load_samples()` function. We can pull in samples from any of our available parameters, but let's pull in the outputs for `theta`, our rate estimates:
 
-```{r, eval = FALSE}
+```{r}
 output <- load_samples(name = "my_test_model", burn = 2000)
-```
-
-```{r, include = FALSE}
-output <- readRDS("RSTr/output.RDS")
 ```
 
 Here, the `load_samples()` function brings in samples from the model `my_test_model` in R's temporary directory, only loading in iterations after `burn`. The `burn` argument works to ensure that the estimates we get are sound by specifying a period where the model has a bit of time to "figure itself out" before gathering samples. In total, we have pulled in `(6000 - 2000) / 10 = 400` samples, as the sampler only saves every 10 iterations. To learn more about post-Gibbs sampler diagnostics, read `vignette("RSTr-samples")`.
