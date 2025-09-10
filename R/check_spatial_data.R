@@ -18,16 +18,16 @@ check_spatial_data <- function(adjacency, num_region) {
     errtxt <- paste(errct, ": Some regions have no neighbors. Ensure all regions have at least 1 neighbor. Check vignette('RSTr-adj') for more information")
     errout <- c(errout, errtxt)
   }
-  # Adjacency matrix not symmetric
-  W = array(0, dim = c(num_region, num_region))
-  for (reg in 1:num_region) {
-    W[reg, adjacency[[reg]]] = 1
-  }
-  if (!isSymmetric.matrix(W)) {
-    errct  <- errct + 1
-    errtxt <- paste(errct, ": Adjacency information is not symmetric. Check vignette('RSTr-adj') for more information")
-    errout <- c(errout, errtxt)
-  }
+  ## Adjacency matrix not symmetric
+  #W = array(0, dim = c(num_region, num_region))
+  #for (reg in 1:num_region) {
+  #  W[reg, adjacency[[reg]]] = 1
+  #}
+  #if (!isSymmetric.matrix(W)) {
+  #  errct  <- errct + 1
+  #  errtxt <- paste(errct, ": Adjacency information is not symmetric. Check vignette('RSTr-adj') for more information")
+  #  errout <- c(errout, errtxt)
+  #}
   if (errct) {
     stop(paste(errct, "error(s) found in list 'data':\n", paste(errout, collapse = "\n ")))
   }

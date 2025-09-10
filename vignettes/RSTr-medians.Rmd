@@ -33,8 +33,6 @@ run_sampler("my_test_model")
 To get the medians, let's reload our age-standardized data and population array, then load our samples into `get_medians()`:
 
 ```{r include = FALSE}
-library(RSTr)
-
 std_pop <- c(113154, 100640, 95799)
 margin_age <- 2
 theta <- load_samples("my_test_model")

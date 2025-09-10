@@ -28,7 +28,6 @@ For this example, we will continue using Massachusetts data as we did in section
 
 ```{r}
 library(RSTr)
-library(sf)
 
 head(mamap)
 ```
@@ -39,14 +38,14 @@ This dataset contains several variables related to Census information on Massach
 
 -   `geometry` describes how to map each region. We can use this to generate our adjacency information.
 
-To begin, let's first arrange `mamap` by `GEOID` to ensure the counties are in the same order as our `maexample` data, then generate some adjacency information using the `sfdep` package:
+To begin, let's first arrange `mamap` by `GEOID` to ensure the counties are in the same order as our `maexample` data, then generate some adjacency information using the `spdep` package:
 
 ```{r}
 library(dplyr)
-library(sfdep)
+library(spdep)
 
 ma_shp <- arrange(mamap, GEOID)
-ma_adj <- st_contiguity(ma_shp)
+ma_adj <- poly2nb(ma_shp)
 ```
 
 The `poly2nb()` function takes the information in `ma_shp$geometry` and looks for any regions with touching boundaries (i.e., queen contiguity). `ma_adj` is a list that contains the indices of each region that is a neighbor with a given region. Looking at `ma_adj` gives us some more information:
@@ -114,4 +113,4 @@ Finally, even though we connected the two island counties to the mainland counti
 
 ## Closing Thoughts
 
-In this vignette, we used the `poly2nb()` function inside of the `sfdep` package to generate our adjacency structure and demonstrated the two types of appropriate adjacency objects: a list of indices or a binary matrix. We then fixed issues with counties without neighbors and applied a naming scheme to the adjacency information consistent with the `data` object created in section 2. From here, the `RSTr` model is ready to be run with our `data` and `adjacency` information!
+In this vignette, we used the `poly2nb()` function inside of the `spdep` package to generate our adjacency structure and demonstrated the two types of appropriate adjacency objects: a list of indices or a binary matrix. We then fixed issues with counties without neighbors and applied a naming scheme to the adjacency information consistent with the `data` object created in section 2. From here, the `RSTr` model is ready to be run with our `data` and `adjacency` information!
