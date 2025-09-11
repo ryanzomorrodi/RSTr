@@ -14,7 +14,7 @@ installr::install.Rtools()
 
 You can install the development version of `RSTr`.
 ```r
-pak::pkg_install("CHEI-code-repos/RSTr")
+pak::pkg_install("CEHI-code-repos/RSTr")
 ```
 
 If this is your first time using RSTr, check out `vignette("configuration")` to learn how to use the package.
