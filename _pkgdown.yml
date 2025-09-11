@@ -20,6 +20,7 @@ reference:
   - run_sampler
   - get_medians
   - get_relative_precision
+  - get_credible_interval
 - title: Aggregation
   contents:
   - age_standardize
