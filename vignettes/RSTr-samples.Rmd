@@ -113,7 +113,7 @@ pop <- bind_samples(
 )
 ```
 
-Now, our samples for `theta` are aggregated by year and age-standardized and we have matching array values for `pop`. Note that if you plan on doing a mix of non-age aggregation and age-standardization, do age-standardization after all aggregation, as the doing age-standardization first will alter the results of any aggregation done afterward.
+Now, our samples for `theta` are aggregated by year and age-standardized and we have matching array values for `pop`. Note that if you plan on doing a mix of non-age aggregation and age-standardization, do age-standardization after all aggregation, as doing age-standardization first will alter the results of any aggregation done afterward.
 
 Note that the process of age- and group-standardization is identical for both MSTCAR and MCAR models, and that age/group-standardization is not possible for UCAR models.
 
