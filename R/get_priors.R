@@ -29,7 +29,7 @@ get_priors_u <- function(priors, num_region, .ignore_checks) {
     check_priors_u(priors, num_region)
   }
   if (!is.null(primiss)) {
-    cat("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "\n")
+    message("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "")
   }
   priors
 }
@@ -65,7 +65,7 @@ get_priors_m <- function(priors, num_region, num_group, .ignore_checks) {
     check_priors_m(priors, num_region, num_group)
   }
   if (!is.null(primiss)) {
-    cat("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "\n")
+    message("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "")
   }
   priors
 }
@@ -118,7 +118,7 @@ get_priors_mst <- function(priors, num_region, num_group, num_time, .ignore_chec
     check_priors_mst(priors, num_region, num_group, num_time)
   }
   if (!is.null(primiss)) {
-    cat("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "\n")
+    message("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "")
   }
   priors
 }

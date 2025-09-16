@@ -3,7 +3,7 @@
 #' @noRd
 #'
 check_inits_u <- function(inits, num_region, num_island) {
-  cat("Checking inits...\n")
+  message("Checking inits...")
   theta <- inits$theta
   beta  <- inits$beta
   sig2  <- inits$sig2
@@ -97,7 +97,7 @@ check_inits_u <- function(inits, num_region, num_island) {
 #' @noRd
 #'
 check_inits_m <- function(inits, num_region, num_group, num_island) {
-  cat("Checking inits...\n")
+  message("Checking inits...")
   theta <- inits$theta
   beta  <- inits$beta
   G     <- inits$G
@@ -217,7 +217,7 @@ check_inits_m <- function(inits, num_region, num_group, num_island) {
 #' @noRd
 #'
 check_inits_mst <- function(inits, num_region, num_group, num_time, num_island) {
-  cat("Checking inits...\n")
+  message("Checking inits...")
   theta <- inits$theta
   beta  <- inits$beta
   G     <- inits$G

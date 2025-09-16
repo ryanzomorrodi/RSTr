@@ -2,7 +2,7 @@
 #'
 #' @noRd
 check_priors_u <- function(priors, num_region) {
-  cat("Checking priors...\n")
+  message("Checking priors...")
   tau_a    <- priors$tau_a
   tau_b    <- priors$tau_b
   sig_a    <- priors$sig_a
@@ -88,7 +88,7 @@ check_priors_u <- function(priors, num_region) {
 #'
 #' @noRd
 check_priors_m <- function(priors, num_region, num_group, num_time) {
-  cat("Checking priors...\n")
+  message("Checking priors...")
   G_scale  <- priors$G_scale
   G_df     <- priors$G_df
   tau_a    <- priors$tau_a
@@ -196,7 +196,7 @@ check_priors_m <- function(priors, num_region, num_group, num_time) {
 #'
 #' @noRd
 check_priors_mst <- function(priors, num_region, num_group, num_time) {
-  cat("Checking priors...\n")
+  message("Checking priors...")
   Ag_scale <- priors$Ag_scale
   Ag_df    <- priors$Ag_df
   G_df     <- priors$G_df

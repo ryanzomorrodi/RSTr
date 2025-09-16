@@ -42,7 +42,7 @@ gibbs_m <- function(name, dir, iterations, .show_plots, .discard_burnin) {
   start_batch <- params$batch
   batches     <- seq(start_batch + 1, start_batch + iterations / 100)
 
-  cat("Starting sampler on Batch", start_batch + 1, "at", format(Sys.time(), "%a %b %d %X"), "\n")
+  message("Starting sampler on Batch", start_batch + 1, "at ", format(Sys.time(), "%a %b %d %X"), "")
   plots <- output <- vector("list", length(inits))
   names(plots) <- names(output) <- par_up <- names(inits)
   plot_its <- NULL
@@ -145,5 +145,5 @@ gibbs_m <- function(name, dir, iterations, .show_plots, .discard_burnin) {
       )
     }
   }
-  cat("\nModel finished at", format(Sys.time(), "%a %b %d %X"), "\n")
+  message("\nModel finished at ", format(Sys.time(), "%a %b %d %X"), "")
 }

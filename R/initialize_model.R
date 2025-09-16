@@ -94,7 +94,7 @@ initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
   saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
   saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
-  cat("Model ready!\n")
+  message("Model ready!")
 }
 
 #' Initialize MCAR model
@@ -145,7 +145,7 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
   saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
   saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
-  cat("Model ready!\n")
+  message("Model ready!")
 }
 
 #' Initialize MSTCAR model
@@ -204,5 +204,5 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
   saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
   saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
-  cat("Model ready!\n")
+  message("Model ready!")
 }

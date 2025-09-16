@@ -50,7 +50,7 @@ gibbs_mst <- function(name, dir, iterations, .show_plots, .discard_burnin) {
   start_batch <- params$batch
   batches     <- seq(start_batch + 1, start_batch + iterations / 100)
 
-  cat("Starting sampler on Batch", start_batch + 1, "at", format(Sys.time(), "%a %b %d %X"), "\n")
+  message("Starting sampler on Batch", start_batch + 1, "at ", format(Sys.time(), "%a %b %d %X"), "")
   par_up <- names(inits)
   if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   plots <- output <- vector("list", length(par_up))
@@ -186,5 +186,5 @@ gibbs_mst <- function(name, dir, iterations, .show_plots, .discard_burnin) {
     }
 
   }
-  cat("\nModel finished at", format(Sys.time(), "%a %b %d %X"), "\n")
+  message("\nModel finished at ", format(Sys.time(), "%a %b %d %X"), "")
 }

@@ -2,7 +2,7 @@
 #'
 #' @noRd
 check_spatial_data <- function(adjacency, num_region) {
-  cat("Checking spatial data...\n")
+  message("Checking spatial data...")
   # Check for errors
   errout <- NULL
   errct  <- 0

@@ -2,7 +2,7 @@
 #'
 #' @noRd
 check_data <- function(data) {
-  cat("Checking data...\n")
+  message("Checking data...")
   Y    <- data$Y
   n    <- data$n
   chk  <- c("Y", "n")
