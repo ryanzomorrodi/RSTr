@@ -47,6 +47,12 @@ check_data <- function(data) {
     errtxt <- paste(errct, ": Invalid Y values. Check that all Y's are at least 0 and finite")
     errout <- c(errout, errtxt)
   }
+  # Sum of Ys is zero
+  if (sum(Y) == 0) {
+    errct  <- errct + 1
+    errtxt <- paste(errct, ": No events in Y. Ensure that Y has at least one event")
+    errout <- c(errout, errtxt)
+  }
   # Values of n are either negative or infinite
   if (any((n < 0) | is.infinite(n))) {
     errct  <- errct + 1

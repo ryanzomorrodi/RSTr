@@ -10,8 +10,8 @@
 #' @param m0 Baseline neighbor count by region
 #' @param A Describes intensity of smoothing between regions
 #' @param rho_up Controls whether rho update is performed for MSTCAR models
-#' @param impute_lb If counts between lb and ub are suppressed for privacy reasons, impute_lb is lower bound
-#' @param impute_ub If counts between lb and ub are suppressed for privacy reasons, impute_ub is upper bound
+#' @param impute_lb If counts are suppressed for privacy reasons, impute_lb is lower bound of suppression, typically 0 or 1
+#' @param impute_ub If counts are suppressed for privacy reasons, impute_ub is upper bound of suppression, typically 10
 #' @param seed Set of random seeds to use for data replication
 #' @param .ignore_checks If set to TRUE, ignores data checks. Only use if you are certain that your input data is
 #' correct and you are encountering bugs during setup
