@@ -45,9 +45,9 @@ initialize_model(
 
 \item{rho_up}{Controls whether rho update is performed for MSTCAR models}
 
-\item{impute_lb}{If counts between lb and ub are suppressed for privacy reasons, impute_lb is lower bound}
+\item{impute_lb}{If counts are suppressed for privacy reasons, impute_lb is lower bound of suppression, typically 0 or 1}
 
-\item{impute_ub}{If counts between lb and ub are suppressed for privacy reasons, impute_ub is upper bound}
+\item{impute_ub}{If counts are suppressed for privacy reasons, impute_ub is upper bound of suppression, typically 10}
 
 \item{seed}{Set of random seeds to use for data replication}
 
