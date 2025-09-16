@@ -7,6 +7,8 @@
 #'
 #' @export
 run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .discard_burnin = FALSE) {
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }

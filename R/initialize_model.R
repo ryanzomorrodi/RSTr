@@ -36,6 +36,8 @@ initialize_model <- function(
 ) {
   method <- match.arg(method)
   model <- match.arg(model)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
   if (model == "ucar") {
     initialize_model_u(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
   }
