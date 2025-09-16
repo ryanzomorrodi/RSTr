@@ -136,6 +136,8 @@ gibbs_u <- function(name, dir, iterations, .show_plots, .discard_burnin) {
       plots$tau2  <- c(plots$tau2,  output$tau2)
       plots$sig2  <- c(plots$sig2,  output$sig2)
       grid <- c(2, 3)
+      oldpar <- graphics::par(no.readonly = TRUE)
+      on.exit(graphics::par(oldpar))
       graphics::par(mfrow = grid)
       # Gradually remove plots in burn-in, then plot
       if (plot_its[1] < 2000) {

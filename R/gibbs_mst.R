@@ -171,6 +171,8 @@ gibbs_mst <- function(name, dir, iterations, .show_plots, .discard_burnin) {
         plots$rho <- c(plots$rho, output$rho[1, ])
       }
       grid <- c(2, ifelse(rho_up, 4, 3))
+      oldpar <- graphics::par(no.readonly = TRUE)
+      on.exit(graphics::par(oldpar))
       graphics::par(mfrow = grid)
       # Gradually remove plots in burn-in, then plot
       if (plot_its[1] < 2000) {
