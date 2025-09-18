@@ -14,7 +14,7 @@ installr::install.Rtools()
 
 You can install the development version of `RSTr`.
 ```r
-devtools::install_github("CEHI-code-repos/RSTr")
+devtools::install_github("CEHI-code-repos/RSTr", build_vignettes = TRUE)
 ```
 
 If this is your first time using RSTr, check out `vignette("RSTr")` to learn how to use the package.
