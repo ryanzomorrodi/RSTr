@@ -20,7 +20,9 @@ run_sampler(
 
 \item{iterations}{Specifies number of iterations to run}
 
-\item{.show_plots}{Show or hide traceplots as}
+\item{.show_plots}{If set to \code{FALSE}, hides traceplots}
+
+\item{.show_progress}{If set to \code{FALSE}, hides progress bar}
 
 \item{.discard_burnin}{If set to \code{TRUE}, won't save burn-in samples}
 }
