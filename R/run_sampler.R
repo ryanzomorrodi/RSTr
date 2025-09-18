@@ -6,7 +6,7 @@
 #' @param .discard_burnin If set to \code{TRUE}, won't save burn-in samples
 #'
 #' @export
-run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .discard_burnin = FALSE) {
+run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit(graphics::par(oldpar))
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
@@ -15,12 +15,12 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
   iterations = iterations - iterations %% 100
   model <- readRDS(paste0(dir, name, "/params.Rds"))$model
   if (model == "ucar") {
-    gibbs_u(name, dir, iterations, .show_plots, .discard_burnin)
+    run_sampler_u(name, dir, iterations, .show_plots, .show_progress, .discard_burnin)
   }
   if (model == "mcar") {
-    gibbs_m(name, dir, iterations, .show_plots, .discard_burnin)
+    run_sampler_m(name, dir, iterations, .show_plots, .show_progress, .discard_burnin)
   }
   if (model == "mstcar") {
-    gibbs_mst(name, dir, iterations, .show_plots, .discard_burnin)
+    run_sampler_mst(name, dir, iterations, .show_plots, .show_progress, .discard_burnin)
   }
 }

@@ -5,7 +5,7 @@
 #' @importFrom RcppArmadillo fastLm
 #'
 #' @noRd
-gibbs_m <- function(name, dir, iterations, .show_plots, .discard_burnin) {
+run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .discard_burnin) {
   sampler_start <- Sys.time()
   data <- readRDS(paste0(dir, name, "/data.Rds"))
   Y    <- data$Y
@@ -101,7 +101,9 @@ gibbs_m <- function(name, dir, iterations, .show_plots, .discard_burnin) {
         output$theta[, , it / 10] <- theta
         output$Z    [, , it / 10] <- Z
       }
-      display_progress(batch, max(batches), total, it, T_inc, sampler_start)
+      if (.show_progress) {
+        display_progress(batch, max(batches), total, it, T_inc, sampler_start)
+      }
     }
 
     # modify meta-parameters, save outputs to respective files

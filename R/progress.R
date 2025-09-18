@@ -15,4 +15,7 @@ display_progress <- function(batch, total_batches, total, it, T_inc, sampler_sta
     "Elapsed Time:", get_elapsed_time(sampler_start),
     "\r"
   )
+  if (batch == total_batches & it == T_inc) {
+    cat("\n")
+  }
 }
