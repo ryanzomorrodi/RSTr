@@ -139,19 +139,11 @@ raw_low <- sum(miheart$Y[counties[2], 1:3, "1979"]) /
   sum(miheart$n[counties[2], 1:3, "1979"]) *
   1e5
 par(mfrow = c(1, 2))
-plot(
-  x,
-  yhigh,
-  type = "l",
-  main = paste0("Smoothed rates, 1979, 35-64, FIPS ", names(counties[1]))
-)
+title_cty1 = paste0("Smoothed rates, 1979, 35-64,\nFIPS ", names(counties[1]))
+plot(x, yhigh, type = "l", main = title_cty1)
 abline(h = raw_high, col = "red")
-plot(
-  x,
-  ylow,
-  type = "l",
-  main = paste0("Smoothed rates, 1979, 35-64, FIPS ", names(counties[2]))
-)
+title_cty2 = paste0("Smoothed rates, 1979, 35-64,\nFIPS ", names(counties[2]))
+plot(x, ylow, type = "l", main = title_cty2)
 abline(h = raw_low, col = "red")
 ```
 
