@@ -26,7 +26,7 @@ After initializing the model with `initialize_model()`, you can gather and load 
  library(RSTr)
 
 initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
-run_sampler("my_test_model", .show_plots = FALSE)
+run_sampler("my_test_model")
 ```
 
 ## The `load_samples()` function

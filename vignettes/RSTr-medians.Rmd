@@ -27,7 +27,7 @@ Previously, we generated age-standardized estimates for `theta` based on our exa
 library(RSTr)
 
 initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
-run_sampler("my_test_model", .show_plots = FALSE)
+run_sampler("my_test_model")
 ```
 
 To get the medians, let's reload our age-standardized data and population array, then load our samples into `get_medians()`:
