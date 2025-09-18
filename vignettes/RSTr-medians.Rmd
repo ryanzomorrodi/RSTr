@@ -22,7 +22,7 @@ In the previous vignette, we finally ran our model using `run_sampler()`, import
 
 Previously, we generated age-standardized estimates for `theta` based on our example Michigan dataset, `theta`.
 
-```{r, results = "hide", fig.keep = "none"}
+```{r, results = "hide", fig.keep = "none", message = "FALSE"}
 # from vignette("RSTr-samples")
 library(RSTr)
 
