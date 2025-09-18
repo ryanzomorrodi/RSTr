@@ -1,8 +1,8 @@
 ---
-title: "03: Understanding and Preparing Your Adjacency Structure"
+title: "02: Understanding and Preparing Your Adjacency Structure"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{03: Understanding and Preparing Your Adjacency Structure}
+  %\VignetteIndexEntry{02: Understanding and Preparing Your Adjacency Structure}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

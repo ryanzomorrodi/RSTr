@@ -1,8 +1,8 @@
 ---
-title: "01: An Introduction to the RSTr Package"
+title: "An Introduction to the RSTr Package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{01: An Introduction to the RSTr Package}
+  %\VignetteIndexEntry{An Introduction to the RSTr Package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -86,7 +86,7 @@ If you want to learn more about the `initialize_model()` function, read `vignett
 
 Once we have our model object set up, we can start getting samples. This is the heart of the `RSTr` package and what allows us to gather our final rate estimates. To get your samples, simply specify the name of the model and the directory:
 
-```{r}
+```{r, results = "hide", fig.keep = "last"}
 run_sampler(name = "my_test_model")
 ```
 
@@ -116,29 +116,23 @@ medians <- get_medians(output)
 
 This creates an `array` object with median estimates for `theta` along each year, county, and region:
 
-```{r}
+```{r, results = "hide"}
 head(medians)
 ```
 
 For this type of mortality data, it is common to observe the rates per 100,000 population. Therefore, in this case we multiply the rates by 100,000 prior to interpretation:
 
-```{r}
+```{r, results = "hide"}
 # the first 5 counties for the first 3 years
 head(medians) * 1e5
 ```
 
 You can also inspect rates by age group, year, or region:
 
-```{r}
-medians["26005", "65-74", ] * 1e5 # explore between time periods
-```
-
-```{r}
-medians[, "65-74", "1979"] * 1e5 # explore between counties
-```
-
-```{r}
-medians["26005", , "1979"] * 1e5 # explore between age groups
+```{r, results = "hide"}
+medians["26005", "65-74",       ] * 1e5 # explore between time periods
+medians[       , "65-74", "1979"] * 1e5 # explore between counties
+medians["26005",        , "1979"] * 1e5 # explore between age groups
 ```
 
 For more information about the median estimates, read `vignette("RSTr-medians")`.

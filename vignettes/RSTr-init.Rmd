@@ -1,8 +1,8 @@
 ---
-title: "04: Initializing Your Model"
+title: "03: Initializing Your Model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{04: Initializing Your Model}
+  %\VignetteIndexEntry{03: Initializing Your Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

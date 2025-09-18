@@ -1,8 +1,8 @@
 ---
-title: "02: Understanding and Preparing Your Event Data"
+title: "01: Understanding and Preparing Your Event Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{02: Understanding and Preparing Your Event Data}
+  %\VignetteIndexEntry{01: Understanding and Preparing Your Event Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
