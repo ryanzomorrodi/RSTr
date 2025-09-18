@@ -54,7 +54,9 @@ Some quick notes about data setup:
 -   `load_samples()`: Imports samples generated with `run_sampler()` into your R session; and
 -   `get_medians()`: Calculates median estimates loaded in by `load_samples()`.
 
-## Example Model - `initialize_model()` {#sec-init}
+## Example Model {#sec-init}
+
+### `initialize_model()`
 
 With an understanding of the example datasets and the functions, we can start running our first model. The example datasets are set up for us to run out-of-the-box:
 
@@ -82,7 +84,7 @@ Finally, you may notice a plot was generated during model setup. This is one las
 
 If you want to learn more about the `initialize_model()` function, read `vignette("RSTr-init")`.
 
-## Example Model - `run_sampler()` {#sec-samples}
+### `run_sampler()` {#sec-samples}
 
 Once we have our model object set up, we can start getting samples. This is the heart of the `RSTr` package and what allows us to gather our final rate estimates. To get your samples, simply specify the name of the model and the directory:
 
@@ -94,7 +96,7 @@ The `run_sampler()` function takes information saved in `my_test_model` and uses
 
 If you want to learn more about the `run_sampler()` function, read `vignette("RSTr-samples")`.
 
-## Example Model - `load_samples()` {#sec-loadsamples}
+### `load_samples()` {#sec-loadsamples}
 
 After `run_sampler()` is done running (i.e., generates 6000 iterations) and your samples have been saved to `mod_test`, you can bring the samples into R using the `load_samples()` function. We can pull in samples from any of our available parameters, but let's pull in the outputs for `theta`, our rate estimates:
 
@@ -106,7 +108,7 @@ Here, the `load_samples()` function brings in samples from the model `my_test_mo
 
 If you want to learn more about the `load_samples()` function, read `vignette("RSTr-samples")`.
 
-## Example Model - `get_medians()` {#sec-getmedians}
+### `get_medians()` {#sec-getmedians}
 
 With our output loaded into R, we can finally get our estimates. We put our `output` object into the `get_medians()` function:
 

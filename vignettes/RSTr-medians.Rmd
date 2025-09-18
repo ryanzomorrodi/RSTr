@@ -22,7 +22,7 @@ In the previous vignette, we finally ran our model using `run_sampler()`, import
 
 Previously, we generated age-standardized estimates for `theta` based on our example Michigan dataset, `theta`.
 
-```{r}
+```{r, results = "hide", fig.keep = "none"}
 # from vignette("RSTr-samples")
 library(RSTr)
 
@@ -32,7 +32,7 @@ run_sampler("my_test_model")
 
 To get the medians, let's reload our age-standardized data and population array, then load our samples into `get_medians()`:
 
-```{r include = FALSE}
+```{r}
 std_pop <- c(113154, 100640, 95799)
 margin_age <- 2
 theta <- load_samples("my_test_model") * 1e5

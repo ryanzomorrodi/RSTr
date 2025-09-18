@@ -26,7 +26,7 @@ Adjacency information is input as a `list` `adj` where each element `adj[[i]]` i
 
 For this example, we will continue using Massachusetts data as we did in section 2. Included is an example dataset that contains Massachusetts shapefile information, generated using the `tigris` package:
 
-```{r}
+```{r, results = "hide"}
 library(RSTr)
 
 head(mamap)
@@ -70,7 +70,7 @@ ma_shp[no_neigh, ]
 
 According to this, our two no-link counties are Dukes and Nantucket (FIPS 25007 and 25019, respectively). Let's check out a ggplot of our data to further investigate:
 
-```{r}
+```{r, warning = FALSE}
 library(ggplot2)
 
 ggplot(mamap) +

@@ -142,5 +142,5 @@ gibbs_m <- function(name, dir, iterations, .show_plots, .discard_burnin) {
       )
     }
   }
-  message("\nModel finished at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Model finished at ", format(Sys.time(), "%a %b %d %X"), "")
 }

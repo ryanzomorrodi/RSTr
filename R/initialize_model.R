@@ -105,6 +105,7 @@ initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method
 initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
   Y <- data$Y
   n <- data$n
+
   if (!.ignore_checks) {
     check_data(data)
   }
@@ -156,6 +157,12 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
 initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .ignore_checks) {
   Y <- data$Y
   n <- data$n
+
+  # Graph of total cases
+  par(mfrow = c(2, 1))
+  plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
+  plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
+
   if (!.ignore_checks) {
     check_data(data)
   }
@@ -174,9 +181,6 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
       dir.create(paste0(dir, name, "/", par))
     }
   }
-  # Graph of total cases
-  plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE))
-  plot(dimnames(Y)[[3]], apply(n, 3, sum))
 
   if (is.null(A)) {
     A <- 6
