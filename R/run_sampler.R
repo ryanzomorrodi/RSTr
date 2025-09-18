@@ -2,7 +2,8 @@
 #' @param name Name of model and corresponding folder
 #' @param dir Directory where model lives
 #' @param iterations Specifies number of iterations to run
-#' @param .show_plots Show or hide traceplots as 
+#' @param .show_plots If set to \code{FALSE}, hides traceplots
+#' @param .show_progress If set to \code{FALSE}, hides progress bar
 #' @param .discard_burnin If set to \code{TRUE}, won't save burn-in samples
 #'
 #' @export

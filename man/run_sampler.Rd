@@ -9,6 +9,7 @@ run_sampler(
   dir = tempdir(),
   iterations = 6000,
   .show_plots = TRUE,
+  .show_progress = TRUE,
   .discard_burnin = FALSE
 )
 }
