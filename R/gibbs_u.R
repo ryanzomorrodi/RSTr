@@ -48,7 +48,7 @@ gibbs_u <- function(name, dir, iterations, .show_plots, .discard_burnin) {
   num_region  <- length(Y)
   num_island  <- length(beta)
 
-  message("Starting sampler on Batch ", start_batch + 1, "at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"), "")
   plots <- output <- vector("list", length(inits))
   names(plots) <- names(output) <- par_up <- names(inits)
   plot_its <- NULL
