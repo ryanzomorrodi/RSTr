@@ -124,9 +124,7 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
 
   num_region <- dim(Y)[1]
   num_group  <- dim(Y)[2]
-  if (is.null(A)) {
-    A <- 6
-  }
+
   set.seed(seed)
   params <- list(
     seed      = .Random.seed,
@@ -159,7 +157,7 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
   n <- data$n
 
   # Graph of total cases
-  par(mfrow = c(2, 1))
+  par(mfrow = c(1, 2))
   plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
   plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
 
@@ -182,9 +180,6 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
     }
   }
 
-  if (is.null(A)) {
-    A <- 6
-  }
   num_region <- dim(Y)[1]
   num_group  <- dim(Y)[2]
   num_time   <- dim(Y)[3]
