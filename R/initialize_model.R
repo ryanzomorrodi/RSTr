@@ -10,10 +10,11 @@
 #' @param m0 Baseline neighbor count by region
 #' @param A Describes intensity of smoothing between regions
 #' @param rho_up Controls whether rho update is performed for MSTCAR models
-#' @param impute_lb If counts are suppressed for privacy reasons, impute_lb is lower bound of suppression, typically 0 or 1
-#' @param impute_ub If counts are suppressed for privacy reasons, impute_ub is upper bound of suppression, typically 10
+#' @param impute_lb If counts are suppressed for privacy reasons, \code{impute_lb} is lower bound of suppression, typically 0 or 1
+#' @param impute_ub If counts are suppressed for privacy reasons, \code{impute_ub} is upper bound of suppression, typically 10
 #' @param seed Set of random seeds to use for data replication
-#' @param .ignore_checks If set to TRUE, ignores data checks. Only use if you are certain that your input data is
+#' @param .show_plots If set to \code{FALSE}, suppresses check plots generated for MSTCAR models
+#' @param .ignore_checks If set to \code{TRUE}, ignores data checks. Only use if you are certain that your input data is
 #' correct and you are encountering bugs during setup
 #'
 #' @export
@@ -32,6 +33,7 @@ initialize_model <- function(
   impute_lb = 1,
   impute_ub = 9,
   seed      = 1234,
+  .show_plots = TRUE,
   .ignore_checks = FALSE
 ) {
   method <- match.arg(method)
@@ -45,7 +47,7 @@ initialize_model <- function(
     initialize_model_m(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
   }
   if (model == "mstcar") {
-    initialize_model_mst(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .ignore_checks)
+    initialize_model_mst(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks)
   }
 }
 
@@ -152,16 +154,18 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
 #' Initialize MSTCAR model
 #'
 #' @noRd
-initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .ignore_checks) {
+initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks) {
   Y <- data$Y
   n <- data$n
 
   # Graph of total cases
   par(mfrow = c(1, 2))
   if (!.ignore_checks) {
+    check_data(data)
+  }
+  if (.show_plots) {
     plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
     plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
-    check_data(data)
   }
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
