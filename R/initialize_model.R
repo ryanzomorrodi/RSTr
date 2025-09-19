@@ -1,4 +1,7 @@
 #' Initialize CAR model
+#' 
+#' This function performs checks and prepares data for use with either an MSTCAR, MCAR, or UCAR model. This function additionally specifies all of the model parameters, such as model type, event data type, intensity of smoothing in the UCAR model, and more.
+#' 
 #' @param name Name of model and corresponding folder
 #' @param dir Directory where model will live
 #' @param data Dataset including mortality (Y) and population (n) information

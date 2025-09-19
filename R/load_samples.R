@@ -4,6 +4,7 @@
 #' @param param Which parameter samples to load
 #' @param burn  Numer of burn-in samples to discard
 #'
+#' \code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}.
 #' @export
 load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
