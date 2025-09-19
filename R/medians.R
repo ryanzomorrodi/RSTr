@@ -27,6 +27,7 @@ get_medians <- function(sample) {
 }
 
 #' @rdname get_medians
+#' @export
 get_credible_interval <- function(sample, perc_ci = 0.95) {
   ndims <- length(dim(sample)) - 1
   alpha <- (1 - perc_ci) / 2
@@ -34,6 +35,7 @@ get_credible_interval <- function(sample, perc_ci = 0.95) {
 }
 
 #' @rdname get_medians
+#' @export
 get_relative_precision <- function(sample, medians, perc_ci = 0.95) {
   ndims <- length(dim(sample)) - 1
   alpha <- (1 - perc_ci) / 2

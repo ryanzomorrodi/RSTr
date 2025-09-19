@@ -177,10 +177,10 @@ arma::cube update_theta_mst(
         double theta_star = R::rnorm(theta(reg, grp, time), theta_sd(reg, grp, time));
         double rk1 = Y(reg, grp, time) * (theta_star - theta(reg, grp, time));
         double rk2 = 0;
-        if (method == "binom") {
+        if (method == "binomial") {
           rk2 = n(reg, grp, time) * (log(1 + exp(theta_star)) - log(1 + exp(theta(reg, grp, time))));
         } 
-        if (method == "pois") {
+        if (method == "poisson") {
           rk2 = n(reg, grp, time) * (exp(theta_star) - exp(theta(reg, grp, time)));
         }
         double rk3a = pow(theta_star            - beta(island_id[reg], grp, time) - Z(reg, grp, time), 2);

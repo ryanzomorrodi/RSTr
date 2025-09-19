@@ -120,10 +120,10 @@ arma::mat update_theta_m(
       double theta_star = R::rnorm(theta(reg, grp), theta_sd(reg, grp));
       double rk1 = Y(reg, grp) * (theta_star - theta(reg, grp));
       double rk2 = 0;
-      if (method == "binom") {
+      if (method == "binomial") {
         rk2 = n(reg, grp) * (log(1 + exp(theta_star)) - log(1 + exp(theta(reg, grp))));
       } 
-      if (method == "pois") {
+      if (method == "poisson") {
         rk2 = n(reg, grp) * (exp(theta_star) - exp(theta(reg, grp)));
       }
       double rk3a = pow(theta_star      - beta(island_id[reg], grp) - Z(reg, grp), 2);

@@ -22,7 +22,7 @@ In this vignette, we outline the hierarchical models used in the `RSTr` package,
 
 The UCAR model used by `RSTr` is based on the model developed by [Besag, York, and Mollié (1991)](https://link.springer.com/article/10.1007/bf00116466) with modifications using inverse transform sampling for restricted informativeness based on [Quick, et al. (2021)](https://pubmed.ncbi.nlm.nih.gov/33980402/):
 
-For models using `method = "binom"`,
+For models using `method = "binomial"`,
 
 $$
 \begin{split}
@@ -32,7 +32,7 @@ i &=\{1,...,N_s\}, j =\{1,...,N_{is}\}
 \end{split}
 $$
 
-For models using `method = "pois"`,
+For models using `method = "poisson"`,
 
 $$  
 \begin{split}
@@ -57,7 +57,7 @@ $$
 
 The MCAR model used by `RSTr` is an extension of the model developed by [Besag, York, and Mollié (1991)](https://link.springer.com/article/10.1007/bf00116466):
 
-For models using `method = "binom"`,
+For models using `method = "binomial"`,
 
 $$
 \begin{split}
@@ -67,7 +67,7 @@ i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\}
 \end{split}
 $$
 
-For models using `method = "pois"`,
+For models using `method = "poisson"`,
 
 $$
 \begin{split}
@@ -92,7 +92,7 @@ $$
 
 The MSTCAR model used by `RSTr` is based on the model developed by [Quick, et al. (2017)](https://doi.org/10.1214/17-AOAS1068):
 
-For models using `method = "binom"`,
+For models using `method = "binomial"`,
 
 $$
 \begin{split}
@@ -102,7 +102,7 @@ i &=\{1,...,N_s\},\ k =\{1,...,N_g\},\ t=\{1,...,N_t\},\ j=\{1,...,N_{is}\}
 \end{split}
 $$
 
-For models using `method = "pois"`,
+For models using `method = "poisson"`,
 
 $$
 \begin{split}

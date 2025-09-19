@@ -43,7 +43,7 @@ initialize_model <- function(
   inits     = NULL,
   priors    = NULL,
   model     = c("mstcar", "ucar", "mcar"),
-  method    = c("binom", "pois"),
+  method    = c("binomial", "poisson"),
   m0        = 3,
   A         = NULL,
   rho_up    = FALSE,

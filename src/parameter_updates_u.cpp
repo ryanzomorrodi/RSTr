@@ -57,11 +57,11 @@ double update_sig2_u(
     sig2 = 1 / R::rgamma(a_sig, b_sig);
   } else if (A < 1e2) {
     double sig_thres = 0;
-    if (method == "binom") {
+    if (method == "binomial") {
       double pi = sum(beta % num_island_region / num_region);
       pi        = exp(pi) / (1 + exp(pi));
       sig_thres = (1 / ((A + pi) * (1 - pi)) - tau2 * (1 + 1 / m0)) * m0;
-    } else if (method == "pois") {
+    } else if (method == "poisson") {
       sig_thres = (log(1 / A + 1) - tau2 * (1 + 1 / m0)) * m0;
     }
     sig_thres = (sig_thres < 0) ? 0 : sig_thres;
@@ -93,11 +93,11 @@ double update_tau2_u(
     tau2 = 1 / R::rgamma(a_tau, b_tau);
   } else if (A < 1e2) {
     double tau_thres = 0;
-    if (method == "binom") {
+    if (method == "binomial") {
       double pi = sum(beta % num_island_region / num_region);
       pi        = exp(pi) / (1 + exp(pi));
       tau_thres = (1 / ((A + pi) * (1 - pi)) - sig2 / m0) / (1 + 1 / m0);
-    } else if (method == "pois") {
+    } else if (method == "poisson") {
       tau_thres = (log(1 / A + 1) - sig2 / m0) / (1 + 1 / m0);
     }
     tau_thres = (tau_thres < 0) ? 0 : tau_thres;
@@ -125,9 +125,9 @@ arma::vec update_theta_u(
     double theta_star = R::rnorm(theta(reg), theta_sd(reg));
     double rk1        = Y(reg) * (theta_star - theta(reg));
     double rk2        = 0;
-    if (method == "binom") {
+    if (method == "binomial") {
       rk2 = n(reg) * (log(1 + exp(theta_star)) - log(1 + exp(theta(reg))));
-    } else if (method == "pois") {
+    } else if (method == "poisson") {
       rk2 = n(reg) * (exp(theta_star) - exp(theta(reg)));
     }
     double rk3a = pow(theta_star - beta(island_id[reg]) - Z(reg), 2);
@@ -161,7 +161,7 @@ arma::vec update_beta_u(
     if (A >= 1e2) {
       beta[isl] = R::rnorm(mean_beta, sd_beta);
     } else if (A < 1e2) {
-      if (method == "binom") {
+      if (method == "binomial") {
         double var_t      = tau2 + (tau2 + sig2) / m0;
         double pi_beta    = pow(A - 1, 2) + 4 * (A - 1 / var_t);
         double beta_thres = ((1 - A) + sqrt(pi_beta)) / 2;
@@ -172,7 +172,7 @@ arma::vec update_beta_u(
           double u  = R::runif(0, beta_max);
           beta[isl] = R::qnorm(u, mean_beta, sd_beta, true, false);
         }
-      } else if (method == "pois") {
+      } else if (method == "poisson") {
         beta[isl] = R::rnorm(mean_beta, sd_beta);
       }
     }

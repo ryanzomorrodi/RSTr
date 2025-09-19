@@ -19,8 +19,6 @@ reference:
   - initialize_model
   - run_sampler
   - get_medians
-  - get_credible_intervals
-  - get_relative_precision
 - title: Aggregation
   contents:
   - age_standardize

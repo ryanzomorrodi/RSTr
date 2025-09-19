@@ -69,7 +69,7 @@ Reliability can be easily tested in CAR models using two criteria:
 Let's get some reliability metrics for our dataset. First, let's generate our relative precisions at 95% credibility using the `get_relative_precision()` function and then create a `logical` `array` that tells us which estimates are unreliable:
 
 ```{r}
-rel_prec <- get_relative_precision(output = theta, medians = medians, perc_ci = 0.95)
+rel_prec <- get_relative_precision(sample = theta, medians = medians, perc_ci = 0.95)
 low_rel_prec <- rel_prec < 1
 ```
 
@@ -102,7 +102,7 @@ In this group in 1979, it seems only one region has been suppressed (i.e., graye
 
 ```{r}
 rel_prec <- get_relative_precision(
-  output = theta,
+  sample = theta,
   medians = medians,
   perc_ci = 0.5
 )
@@ -126,7 +126,7 @@ As we widen our credible interval, the reliability criteria will become more con
 
 ```{r}
 rel_prec <- get_relative_precision(
-  output = theta,
+  sample = theta,
   medians = medians,
   perc_ci = 0.995
 )

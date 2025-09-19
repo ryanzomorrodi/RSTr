@@ -88,7 +88,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     for(it in 1:T_inc) {
       #### impute missing Y's ####
       if (length(miss)) {
-        if (method == "binom") {
+        if (method == "binomial") {
           rate <- expit(theta[miss])
           rp   <- stats::runif(
             length(miss),
@@ -97,7 +97,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
           )
           Y[miss] <- stats::qbinom(rp, round(n[miss]), rate)
         }
-        if (method == "pois") {
+        if (method == "poisson") {
           rate <- n[miss] * exp(theta[miss])
           rp   <- stats::runif(
             length(miss),

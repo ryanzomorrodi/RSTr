@@ -48,8 +48,8 @@ load_samples_u <- function(name, dir, param, burn) {
   files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
-    if (params$method == "binom") output <- expit(output)
-    if (params$method == "pois")  output <- exp(output)
+    if (params$method == "binomial") output <- expit(output)
+    if (params$method == "poisson")  output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {
@@ -78,8 +78,8 @@ load_samples_m <- function(name, dir, param, burn) {
   files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
-    if (params$method == "binom") output <- expit(output)
-    if (params$method == "pois")  output <- exp(output)
+    if (params$method == "binomial") output <- expit(output)
+    if (params$method == "poisson")  output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {
@@ -114,8 +114,8 @@ load_samples_mst <- function(name, dir, param, burn) {
   files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
-    if (params$method == "binom") output <- expit(output)
-    if (params$method == "pois")  output <- exp(output)
+    if (params$method == "binomial") output <- expit(output)
+    if (params$method == "poisson")  output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {

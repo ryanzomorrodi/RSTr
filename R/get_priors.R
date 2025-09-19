@@ -29,7 +29,7 @@ get_priors_u <- function(priors, num_region, .ignore_checks) {
     check_priors_u(priors, num_region)
   }
   if (!is.null(primiss)) {
-    message("The following objects were created using defaults in 'priors':", paste(primiss, collapse = " "), "")
+    message("The following objects were created using defaults in 'priors': ", paste(primiss, collapse = " "), "")
   }
   priors
 }

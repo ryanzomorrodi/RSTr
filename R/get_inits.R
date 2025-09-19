@@ -10,11 +10,11 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
   initmiss <- NULL
   if (is.null(inits$theta)) {
     theta <- Y / n
-    if (method == "pois") {
+    if (method == "poisson") {
       theta <- log(theta)
       theta[!is.finite(theta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       theta <- logit(theta)
       theta[!is.finite(theta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
@@ -24,10 +24,10 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
   # beta
   if (is.null(inits$beta)) {
     beta <- sum(Y, na.rm = TRUE) / sum(n)
-    if (method == "pois") {
+    if (method == "poisson") {
       beta <- rep(log(beta), num_island)
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       beta <- rep(logit(beta), num_island)
     }
     inits$beta <- beta
@@ -71,11 +71,11 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
   # beta
   if (is.null(inits$beta)) {
     beta <- apply(Y, 2, sum, na.rm = TRUE) / apply(n, 2, sum)
-    if (method == "pois") {
+    if (method == "poisson") {
       beta <- t(array(log(beta), dim = c(num_group, num_island)))
       beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       beta <- t(array(logit(beta), dim = c(num_group, num_island)))
       beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
@@ -83,11 +83,11 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
     initmiss   <- c(initmiss, "beta")
   }
   if (is.null(inits$theta)) {
-    if (method == "pois") {
+    if (method == "poisson") {
       theta <- log(Y / n)
       theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       theta <- logit(Y / n)
       theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
     }
@@ -133,11 +133,11 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
   # beta
   if (is.null(inits$beta)) {
     beta <- apply(Y, 2:3, sum, na.rm = TRUE) / apply(n, 2:3, sum)
-    if (method == "pois") {
+    if (method == "poisson") {
       beta <- array(log(beta), dim = c(num_island, num_group, num_time))
       beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       beta <- array(logit(beta), dim = c(num_island, num_group, num_time))
       beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
@@ -146,11 +146,11 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
   }
   # theta
   if (is.null(inits$theta)) {
-    if (method == "pois") {
+    if (method == "poisson") {
       theta <- log(Y / n)
       theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
     }
-    if (method == "binom") {
+    if (method == "binomial") {
       theta <- logit(Y / n)
       theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
     }
@@ -186,7 +186,7 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
     check_inits_mst(inits, num_region, num_group, num_time, num_island)
   }
   if (!is.null(initmiss)) {
-    message("The following objects were created using defaults in 'inits':", paste(initmiss, collapse = " "), "")
+    message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "), "")
   }
   inits
 }
