@@ -24,9 +24,8 @@ reference:
 - title: Aggregation
   contents:
   - age_standardize
-  - aggregate_group
+  - aggregate_groups
   - aggregate_pop
-  - bind_samples
 - title: Loading data
   contents:
   - load_samples
