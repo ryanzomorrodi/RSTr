@@ -20,7 +20,7 @@ age_standardize(
 
 \item{margin}{The margin on which the groups of interest are stratified}
 
-\item{groups}{A vector of either indices for each group or a vector of strings for each group name. If set to NULL, will use all groups in the dataset.}
+\item{groups}{A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.}
 
 \item{bind_new}{If set to \code{TRUE}, will bind to the original sample dataset using \code{abind::abind()}. Otherwise, will generate a standalone array of samples.}
 

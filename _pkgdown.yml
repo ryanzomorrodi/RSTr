@@ -19,8 +19,8 @@ reference:
   - initialize_model
   - run_sampler
   - get_medians
+  - get_credible_intervals
   - get_relative_precision
-  - get_credible_interval
 - title: Aggregation
   contents:
   - age_standardize
@@ -30,10 +30,6 @@ reference:
   contents:
   - load_samples
   - load_pop
-- title: Transformations
-  contents:
-  - logit
-  - expit
 - title: Example data
   contents:
   - miheart
