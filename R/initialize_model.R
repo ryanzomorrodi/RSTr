@@ -158,10 +158,9 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
 
   # Graph of total cases
   par(mfrow = c(1, 2))
-  plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
-  plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
-
   if (!.ignore_checks) {
+    plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
+    plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
     check_data(data)
   }
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
