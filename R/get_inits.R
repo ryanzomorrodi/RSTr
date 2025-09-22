@@ -52,7 +52,7 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
     check_inits_u(inits, num_region, num_island)
   }
   if (!is.null(initmiss)) {
-    message("The following objects were created using defaults in 'inits':", paste(initmiss, collapse = " "), "")
+    message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "), "")
   }
   inits
 }
@@ -113,7 +113,7 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
     check_inits_m(inits, num_region, num_group, num_island)
   }
   if (!is.null(initmiss)) {
-    message("The following objects were created using defaults in 'inits':", paste(initmiss, collapse = " "), "")
+    message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "), "")
   }
   inits
 }
