@@ -2,8 +2,13 @@ url: ~
 template:
   bootstrap: 5
   math-rendering: mathjax
-articles:
-- title: Articles
+  light-switch: true
+navbar:
+  structure:
+    left:  [intro, tutorials, reference]
+    right: [search, github, lightswitch]
+tutorials:
+- title: Tutorials
   navbar: ~
   contents:
   - RSTr-event
