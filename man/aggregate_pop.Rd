@@ -24,11 +24,11 @@ An \code{array} of aggregated population data
 Aggregate population arrays
 }
 \examples{
-margin_time = 3
+margin_time <- 3
 # aggregate population from all years for each county-group
-pop_7988 = aggregate_pop(miheart$n, margin_time)
+pop_7988 <- aggregate_pop(miheart$n, margin_time)
 # aggregate population from 1980-1984 for each county-group
-pop_8084 = aggregate_pop(miheart$n, margin_time, groups = as.character(1980:1984))
+pop_8084 <- aggregate_pop(miheart$n, margin_time, groups = as.character(1980:1984))
 # bind aggregated pop from all years to population data
-pop_agg = aggregate_pop(miheart$n, margin_time, bind_new = TRUE, new_name = "1979-1988")
+pop_agg <- aggregate_pop(miheart$n, margin_time, bind_new = TRUE, new_name = "1979-1988")
 }

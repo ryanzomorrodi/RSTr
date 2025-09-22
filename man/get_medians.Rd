@@ -30,12 +30,12 @@ An \code{array} of estimates/credible intervals/relative precisions for each reg
 \code{get_relative_precision()} generates the relative precision of each estimate using samples loaded from \code{load_samples()}. The relative precision for an estimate is defined as the ratio of the estimate's median divided by the width of its credible interval.
 }
 \examples{
-minmedians = get_medians(minsample)
-minci = get_credible_interval(minsample)
+minmedians <- get_medians(minsample)
+minci <- get_credible_interval(minsample)
 # Reducing perc_ci narrows the credible interval
-minci_75 = get_credible_interval(minsample, perc_ci = 0.75)
+minci_75 <- get_credible_interval(minsample, perc_ci = 0.75)
 # low relative precision due to small data size
-minrp = get_relative_precision(minsample, minmedians) 
+minrp <- get_relative_precision(minsample, minmedians) 
 # reducing CI increases relative precision
-minrp_75 = get_relative_precision(minsample, minmedians, perc_ci = 0.75)
+minrp_75 <- get_relative_precision(minsample, minmedians, perc_ci = 0.75)
 }

@@ -12,14 +12,14 @@
 #' @param perc_ci Number from 0 to 1. Determines width of credible interval
 #' @returns An \code{array} of estimates/credible intervals/relative precisions for each region/group/time, depending on the model used
 #' @examples
-#' minmedians = get_medians(minsample)
-#' minci = get_credible_interval(minsample)
+#' minmedians <- get_medians(minsample)
+#' minci <- get_credible_interval(minsample)
 #' # Reducing perc_ci narrows the credible interval
-#' minci_75 = get_credible_interval(minsample, perc_ci = 0.75)
+#' minci_75 <- get_credible_interval(minsample, perc_ci = 0.75)
 #' # low relative precision due to small data size
-#' minrp = get_relative_precision(minsample, minmedians) 
+#' minrp <- get_relative_precision(minsample, minmedians) 
 #' # reducing CI increases relative precision
-#' minrp_75 = get_relative_precision(minsample, minmedians, perc_ci = 0.75)
+#' minrp_75 <- get_relative_precision(minsample, minmedians, perc_ci = 0.75)
 #' @export
 get_medians <- function(sample) {
   ndims <- length(dim(sample)) - 1
