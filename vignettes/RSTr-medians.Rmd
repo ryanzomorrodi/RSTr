@@ -50,3 +50,19 @@ ggplot(mishp) +
   scale_fill_viridis_c() +
   theme_void()
 ```
+
+Recall, though, in the previous vignette, we discovered that some traceplots were not as stable (i.e., reliable) as others. How can we test for reliability in our estimates?
+
+## Estimate reliability
+
+Reliability can be easily tested in CAR models using two criteria:
+
+-   Relative precision: In [Quick, et al 2024](https://doi.org/10.1177/0282423X241244917), relative precision is measured as a ratio of the posterior median to its credible interval. If an estimate's ratio is less than 1, then that estimate is considered unreliable at that level of credibility. Effectively, this means that unreliable estimates have a spread of samples larger than the value of the estimate itself; and
+-   Population counts: Though `RSTr` is designed to stabilize low-population regions, there is a limit to the amount of information the model can gather, and estimates from exceedingly low-population regions may be over-smoothed. Therefore, estimates from any region that fall below a specified threshold will be considered unreliable, regardless of relative precision. Use your judgment when setting this threshold depending on what kind of data you are working with: for example, 1,000 population is generally a good rule of thumb for mortality data, whereas an appropriate cutoff for birth data is closer to 100.
+
+Let's get some reliability metrics for our dataset. First, let's generate our relative precisions at 95% credibility using the `get_relative_precision()` function and then create a `logical` `array` that tells us which estimates are unreliable:
+
+```{r}
+rel_prec <- get_relative_precision(sample = theta, medians = medians, perc_ci = 0.95)
+low_rel_prec <- rel_prec < 1
+```
