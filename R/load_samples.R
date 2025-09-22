@@ -1,6 +1,6 @@
 #' Load MCMC samples
 #' 
-#' \code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{theta}, but any model parameters can be loaded. Users can also specify a burn-in period to get more stable data.
+#' \code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{theta}, but any model parameters can be loaded. Users can also specify a burn-in period.
 #' @param name  Name of model
 #' @param dir   Directory where model lives
 #' @param param Which parameter samples to load
