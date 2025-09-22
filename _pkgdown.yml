@@ -2,8 +2,8 @@ url: ~
 template:
   bootstrap: 5
   math-rendering: mathjax
-tutorials:
-- title: Tutorials
+articles:
+- title: Articles
   navbar: ~
   contents:
   - RSTr-event
