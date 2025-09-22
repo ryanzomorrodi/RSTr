@@ -17,3 +17,15 @@ knitr::opts_chunk$set(
 ## Overview
 
 In the previous vignette, we finally ran our model using `run_sampler()`, imported estimates using `load_samples()`, age-standardized and year-aggregated our estimates, and finally did some cursory exploration of large- and small-population counties in our dataset. Now, we can calculate our estimates, investigate measures of reliability, and investigate the implications of our measures of reliability. Note that this process is identical for all types of models.
+## The `get_medians()` function
+
+```{r, include = FALSE}
+library(RSTr)
+initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
+run_sampler("my_test_model")
+std_pop <- c(113154, 100640, 95799)
+margin_age <- 2
+theta <- load_samples("my_test_model") * 1e5
+theta <- age_standardize(theta, std_pop, margin_age, groups = 1:3, bind_new = TRUE, new_name = "35-64")
+```
+In the `RSTr-samples` vignette, we generated age-standardized estimates for `theta` based on our example Michigan dataset. To get the medians, we simply load our samples into `get_medians()`:
