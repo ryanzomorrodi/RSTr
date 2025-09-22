@@ -29,3 +29,24 @@ theta <- load_samples("my_test_model") * 1e5
 theta <- age_standardize(theta, std_pop, margin_age, groups = 1:3, bind_new = TRUE, new_name = "35-64")
 ```
 In the `RSTr-samples` vignette, we generated age-standardized estimates for `theta` based on our example Michigan dataset. To get the medians, we simply load our samples into `get_medians()`:
+
+```{r}
+medians <- get_medians(theta)
+```
+
+From here, we can map our estimates:
+
+```{r}
+library(ggplot2)
+
+est_35_64 <- medians[, "35-64", "1979"]
+
+ggplot(mishp) +
+  geom_sf(aes(fill = est_35_64)) +
+  labs(
+    title = "Smoothed Myocardial Infarction Death Rates in MI, Ages 35-64, 1979",
+    fill = "Deaths per 100,000"
+  ) +
+  scale_fill_viridis_c() +
+  theme_void()
+```
