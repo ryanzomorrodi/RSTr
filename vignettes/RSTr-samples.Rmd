@@ -2,7 +2,7 @@
 title: "04: Gathering and Loading Samples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{05: Gathering and Loading Samples}
+  %\VignetteIndexEntry{04: Gathering and Loading Samples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

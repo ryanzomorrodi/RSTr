@@ -2,7 +2,7 @@
 title: "05: Calculating Parameter Medians"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{06: Calculating Parameter Medians}
+  %\VignetteIndexEntry{05: Calculating Parameter Medians}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
