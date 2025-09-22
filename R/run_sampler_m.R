@@ -48,7 +48,9 @@ run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .d
   plot_its <- NULL
   for (batch in batches) {
     T_inc <- 100
-    display_progress(batch, max(batches), total, 0, T_inc, sampler_start)
+    if (.show_progress) {
+      display_progress(batch, max(batches), total, 0, T_inc, sampler_start)
+    }
     output$theta <- array(dim = c(dim(theta),   T_inc / 10))
     output$beta  <- array(dim = c(dim(beta),    T_inc / 10))
     output$G     <- array(dim = c(dim(G),       T_inc / 10))
