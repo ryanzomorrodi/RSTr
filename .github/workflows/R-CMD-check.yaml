@@ -45,12 +45,6 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Try rendering RSTr-medians vignette (manual pre-check)
-        run: |
-          install.packages(c("rmarkdown", "knitr", "ggplot2", "dplyr", "tidyr")) # Add any others
-          rmarkdown::render("vignettes/RSTr-medians.Rmd")
-        shell: Rscript {0}
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
