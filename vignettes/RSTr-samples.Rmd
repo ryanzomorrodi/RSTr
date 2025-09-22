@@ -111,6 +111,10 @@ Note that the process of age- and group-standardization is identical for both MS
 
 Before we generate our median estimates for our samples, let's quickly check some high- and low-population counties to see the stability of the samples:
 
+```{r, include = FALSE}
+oldpar <- graphics::par(no.readonly = TRUE)
+on.exit(graphics::par(oldpar))
+```
 ```{r}
 counties <- c(
   which.max(miheart$n[, "55-64", "1979"]),
