@@ -23,10 +23,11 @@ LinkingTo:
     RcppDist
 Suggests: 
     dplyr,
-	knitr,
-	ggplot2,
-	rmarkdown,
-    spdep
+    knitr,
+    ggplot2,
+    rmarkdown,
+    spdep,
+    testthat (>= 3.0.0)
 Imports:
     abind,
     Rcpp,
@@ -37,3 +38,4 @@ Depends:
 LazyData: true
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
+Config/testthat/edition: 3
