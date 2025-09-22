@@ -3,10 +3,6 @@ template:
   bootstrap: 5
   math-rendering: mathjax
   light-switch: true
-navbar:
-  structure:
-    left:  [intro, tutorials, reference]
-    right: [search, github, lightswitch]
 tutorials:
 - title: Tutorials
   navbar: ~
