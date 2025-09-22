@@ -22,7 +22,7 @@ In the previous vignette, we finally ran our model using `run_sampler()`, import
 
 ```{r, include = FALSE}
 library(RSTr)
-initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
+initialize_model(name = "my_test_model", dir = tempdir(), data = miheart, adjacency = miadj)
 run_sampler("my_test_model")
 std_pop <- c(113154, 100640, 95799)
 margin_age <- 2

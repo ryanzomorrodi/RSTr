@@ -65,6 +65,7 @@ library(RSTr)
 
 initialize_model(
   name = "my_test_model",
+  dir = tempdir(),
   data = miheart,
   adjacency = miadj
 )
@@ -72,7 +73,8 @@ initialize_model(
 
 Here, we use the `initialize_model()` function to specify our model. `initialize_model()` accepts a few different arguments in this case:
 
--   The `name` argument specifies the directory where the model data lives;
+-   The `name` argument specifies the folder where the model data lives;
+-   The `dir` argument specifies the directory where to save the folder;
 -   The `data` argument specifies our event data; and
 -   The `adjacency` argument specifies our adjacency structure.
 

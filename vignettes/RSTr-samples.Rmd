@@ -25,11 +25,11 @@ After initializing the model with `initialize_model()`, you can gather and load 
 ```{r}
 library(RSTr)
 
-initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
+initialize_model(name = "my_test_model", dir = tempdir(), data = miheart, adjacency = miadj)
 ```
 
 ```{r, results = "hide", fig.keep = "last"}
-run_sampler("my_test_model")
+run_sampler("my_test_model", dir = tempdir())
 ```
 
 ## The `load_samples()` function
