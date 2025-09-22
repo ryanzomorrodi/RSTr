@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/CEHI-code-repos/RSTr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CEHI-code-repos/RSTr/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 # RSTr <img src="man/figures/logo.png" align="right" height="138" alt="" />
 The Rate Stabilizing Tool R Package (RSTr): Gibbs Samplers for Bayesian Spatiotemporal CAR Models
 
