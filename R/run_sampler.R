@@ -1,5 +1,5 @@
 #' Run Gibbs sampler
-#' 
+#'
 #' \code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{initialize_model()}.
 #' @param name Name of model and corresponding folder
 #' @param dir Directory where model lives
@@ -9,11 +9,13 @@
 #' @param .discard_burnin If set to \code{TRUE}, won't save burn-in samples
 #' @returns No output, saves sampler output to \code{dir}
 #' @examples
-#' data_min = lapply(miheart, \(x) x[1:2, 1:3, 1:3])
-#' adj_min = list(2, 1)
+#' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
+#' adj_min <- list(2, 1)
 #' initialize_model("test", tempdir(), data_min, adj_min)
 #' run_sampler("test", .show_plots = FALSE, .show_progress = FALSE)
-#' \dontshow{unlink(paste0(tempdir(), "\\test"), recursive = TRUE)}
+#' \dontshow{
+#' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
+#' }
 #' @export
 run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
   oldpar <- graphics::par(no.readonly = TRUE)
@@ -21,7 +23,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  iterations = iterations - iterations %% 100
+  iterations <- iterations - iterations %% 100
   model <- readRDS(paste0(dir, name, "/params.Rds"))$model
   if (model == "ucar") {
     run_sampler_u(name, dir, iterations, .show_plots, .show_progress, .discard_burnin)

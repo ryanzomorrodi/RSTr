@@ -2,7 +2,7 @@
 #' @noRd
 get_elapsed_time <- function(start_time) {
   start_time <- as.POSIXct(start_time)
-  dt <- difftime(Sys.time(), start_time, units="secs")
+  dt <- difftime(Sys.time(), start_time, units = "secs")
   format(.POSIXct(dt, tz = "GMT"), "%H:%M:%OS")
 }
 

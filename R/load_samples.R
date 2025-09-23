@@ -1,5 +1,5 @@
 #' Load MCMC samples
-#' 
+#'
 #' \code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{theta}, but any model parameters can be loaded. Users can also specify a burn-in period.
 #' @param name  Name of model
 #' @param dir   Directory where model lives
@@ -14,7 +14,9 @@
 #' initialize_model("test", tempdir(), data_min, adj_min, .show_plots = FALSE)
 #' run_sampler("test", .show_plots = FALSE, .show_progress = FALSE)
 #' theta <- load_samples("test", tempdir()) * 1e5
-#' \dontshow{unlink(paste0(tempdir(), "\\test"), recursive = TRUE)}
+#' \dontshow{
+#' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
+#' }
 #' @export
 load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
@@ -37,17 +39,17 @@ load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
 #'
 #' @noRd
 load_samples_u <- function(name, dir, param, burn) {
-  mar    <- c("theta" = 2, "beta" = 2, "Z" = 2, "sig2" = 1, "tau2" = 1)
+  mar <- c("theta" = 2, "beta" = 2, "Z" = 2, "sig2" = 1, "tau2" = 1)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
-  batch  <- which(1:params$batch * 100 > burn)
+  batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
+  files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
     if (params$method == "binomial") output <- expit(output)
-    if (params$method == "poisson")  output <- exp(output)
+    if (params$method == "poisson") output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {
@@ -67,17 +69,17 @@ load_samples_u <- function(name, dir, param, burn) {
 #'
 #' @noRd
 load_samples_m <- function(name, dir, param, burn) {
-  mar   <- c("theta" = 3, "beta" = 3, "Z" = 3, "G" = 3, "tau2" = 2)
+  mar <- c("theta" = 3, "beta" = 3, "Z" = 3, "G" = 3, "tau2" = 2)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
-  batch  <- which(1:params$batch * 100 > burn)
+  batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
+  files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
     if (params$method == "binomial") output <- expit(output)
-    if (params$method == "poisson")  output <- exp(output)
+    if (params$method == "poisson") output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {
@@ -103,17 +105,17 @@ load_samples_m <- function(name, dir, param, burn) {
 #'
 #' @noRd
 load_samples_mst <- function(name, dir, param, burn) {
-  mar   <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 2, "rho" = 2)
+  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 2, "rho" = 2)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
-  batch  <- which(1:params$batch * 100 > burn)
+  batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  files  <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
+  files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
     if (params$method == "binomial") output <- expit(output)
-    if (params$method == "poisson")  output <- exp(output)
+    if (params$method == "poisson") output <- exp(output)
   }
   dims <- params$dimnames
   if (!is.null(dims)) {

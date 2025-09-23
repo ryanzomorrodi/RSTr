@@ -91,7 +91,7 @@ county_key
 We can see that Barnstable has an index of 1, Dukes has an index of 4, and Nantucket has an index of 10. Now, let's add neighbors as necessary to our adjacency structure using `add_neighbors()`:
 
 ```{r}
-new_neighs = c(1, 4, 10)
+new_neighs <- c(1, 4, 10)
 ma_adj <- add_neighbors(adjacency = ma_adj, neighs = new_neighs)
 ```
 

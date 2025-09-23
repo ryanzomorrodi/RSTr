@@ -1,7 +1,7 @@
 #' Initialize CAR model
-#' 
+#'
 #' This function performs checks and prepares data for use with either an MSTCAR, MCAR, or UCAR model. This function additionally specifies all of the model parameters, such as model type, event data type, intensity of smoothing in the UCAR model, and more.
-#' 
+#'
 #' @param name Name of model and corresponding folder
 #' @param dir Directory where model will live
 #' @param data Dataset including mortality (Y) and population (n) information
@@ -31,26 +31,27 @@
 #' # Initialize a restricted UCAR model
 #' data_u <- lapply(miheart, \(x) x[, "65-74", "1979"])
 #' initialize_model("test", tempdir(), data_u, miadj, model = "ucar", A = 6)
-#' \dontshow{unlink(paste0(tempdir(), "\\test"), recursive = TRUE)}
+#' \dontshow{
+#' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
+#' }
 #' @export
 initialize_model <- function(
-  name,
-  dir = tempdir(),
-  data,
-  adjacency,
-  inits     = NULL,
-  priors    = NULL,
-  model     = c("mstcar", "ucar", "mcar"),
-  method    = c("binomial", "poisson"),
-  m0        = 3,
-  A         = NULL,
-  rho_up    = FALSE,
-  impute_lb = 1,
-  impute_ub = 9,
-  seed      = 1234,
-  .show_plots = TRUE,
-  .ignore_checks = FALSE
-) {
+    name,
+    dir = tempdir(),
+    data,
+    adjacency,
+    inits = NULL,
+    priors = NULL,
+    model = c("mstcar", "ucar", "mcar"),
+    method = c("binomial", "poisson"),
+    m0 = 3,
+    A = NULL,
+    rho_up = FALSE,
+    impute_lb = 1,
+    impute_ub = 9,
+    seed = 1234,
+    .show_plots = TRUE,
+    .ignore_checks = FALSE) {
   method <- match.arg(method)
   model <- match.arg(model)
   oldpar <- graphics::par(no.readonly = TRUE)
@@ -106,13 +107,13 @@ initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method
     dimnames  = names(n)
   )
   spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors       <- get_priors_u(priors, num_region, .ignore_checks)
-  inits        <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks)
-  saveRDS(data,         file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params,       file = paste0(dir, name, "/params.Rds"))
+  priors <- get_priors_u(priors, num_region, .ignore_checks)
+  inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks)
+  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
+  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
+  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
+  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
   message("Model ready!")
 }
 
@@ -140,7 +141,7 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
   }
 
   num_region <- dim(Y)[1]
-  num_group  <- dim(Y)[2]
+  num_group <- dim(Y)[2]
 
   set.seed(seed)
   params <- list(
@@ -156,13 +157,13 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
     dimnames  = dimnames(n)
   )
   spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors       <- get_priors_m(priors, num_region, num_group, .ignore_checks)
-  inits        <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks)
-  saveRDS(data,         file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params,       file = paste0(dir, name, "/params.Rds"))
+  priors <- get_priors_m(priors, num_region, num_group, .ignore_checks)
+  inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks)
+  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
+  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
+  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
+  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
   message("Model ready!")
 }
 
@@ -199,8 +200,8 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
   }
 
   num_region <- dim(Y)[1]
-  num_group  <- dim(Y)[2]
-  num_time   <- dim(Y)[3]
+  num_group <- dim(Y)[2]
+  num_time <- dim(Y)[3]
   set.seed(seed)
   params <- list(
     seed      = .Random.seed,
@@ -216,12 +217,12 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
     dimnames  = dimnames(n)
   )
   spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors       <- get_priors_mst(priors, num_region, num_group, num_time, .ignore_checks)
-  inits        <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks)
-  saveRDS(data,         file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params,       file = paste0(dir, name, "/params.Rds"))
+  priors <- get_priors_mst(priors, num_region, num_group, num_time, .ignore_checks)
+  inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks)
+  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
+  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors,       file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits,        file = paste0(dir, name, "/inits.Rds"))
+  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
+  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
   message("Model ready!")
 }

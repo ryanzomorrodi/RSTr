@@ -132,9 +132,9 @@ head(medians) * 1e5
 You can also inspect rates by age group, year, or region:
 
 ```{r, results = "hide"}
-medians["26005", "65-74",       ] * 1e5 # explore between time periods
-medians[       , "65-74", "1979"] * 1e5 # explore between counties
-medians["26005",        , "1979"] * 1e5 # explore between age groups
+medians["26005", "65-74", ] * 1e5 # explore between time periods
+medians[, "65-74", "1979"] * 1e5 # explore between counties
+medians["26005", , "1979"] * 1e5 # explore between age groups
 ```
 
 For more information about the median estimates, read `vignette("RSTr-medians")`.
