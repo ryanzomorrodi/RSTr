@@ -20,7 +20,7 @@ After initializing the model with `initialize_model()`, you can gather and load 
 
 ## The `run_sampler()` function
 
-`run_sampler()` takes in four arguments: `name`, `dir`, `.show_plots`, and `.discard_burnin`. `name` and `dir` are associated wtih the name of the folder that contains the model content and the directory where that folder lives, respectively. `.show_plots` allows you to hide the traceplots generated while the model runs and `.discard_burnin` prevents samples from being saved before the 2000-iteration burn-in period in case the dataset is particularly large. The information needed to generate the model is already saved in `name`, and so `run_sampler()` pulls this information in to generate parameter samples. When running `run_sampler()`, the R console will generate outputs describing the batch number, the total iteration number, and the time when the last batch started. By default, `run_sampler()` will generate 6000 samples, but other values can be specified as desired, rounded down to the nearest 100. For example, we can begin a simple model and generate samples:
+`run_sampler()` takes in four arguments: `name`, `dir`, `.show_plots`, and `.discard_burnin`. `name` and `dir` are associated with the name of the folder that contains the model content and the directory where that folder lives, respectively. `.show_plots` allows you to hide the traceplots generated while the model runs and `.discard_burnin` prevents samples from being saved before the 2000-iteration burn-in period in case the dataset is particularly large. The information needed to generate the model is already saved in `name`, and so `run_sampler()` pulls this information in to generate parameter samples. When running `run_sampler()`, the R console will generate outputs describing the batch number, the total iteration number, and the time when the last batch started. By default, `run_sampler()` will generate 6000 samples, but other values can be specified as desired, rounded down to the nearest 100. For example, we can begin a simple model and generate samples:
 
 ```{r}
 library(RSTr)
@@ -51,7 +51,7 @@ theta <- load_samples("my_test_model") * 1e5
 
 ### Group aggregation
 
-In many cases, we will want to aggregate our data across non-age groups, such as when looking at prevalence estimates or to simply consolidate other sociodemographic groups. In our Michigan dataset, we have 11 years of data over which we can consolidate to look at prevalence. In these cases, we need to pull in the population array as a weight. First, we need to check which margin contains our year information using the `dim()` function:
+In many cases, we will want to aggregate our data across non-age groups, such as when looking at prevalence estimates or to simply consolidate other sociodemographic groups. In our Michigan dataset, we have 10 years of data over which we can consolidate to look at prevalence. In these cases, we need to pull in the population array as a weight. First, we need to check which margin contains our year information using the `dim()` function:
 
 ```{r}
 dim(theta)
@@ -102,18 +102,19 @@ Now, we have a standalone array for our age-standardized 35-64 age group. Simila
 theta <- age_standardize(theta, std_pop, margin_age, groups = c("35-44", "45-54", "55-64"), bind_new = TRUE, new_name = "35-64")
 ```
 
-Now, our samples for `theta` are aggregated by year and age-standardized and we have matching array values for `pop`. Note that if you plan on doing a mix of non-age aggregation and age-standardization, do age-standardization after all aggregation, as doing age-standardization first will alter the results of any aggregation done afterward.
+Now, our samples for `theta` are aggregated by year and age-standardized, and we have matching array values for `pop`. Note that if you plan on doing a mix of non-age aggregation and age-standardization, do age-standardization *after* aggregation, as doing age-standardization first will alter the results of any aggregation done afterward.
 
 Note that the process of age- and group-standardization is identical for both MSTCAR and MCAR models, and that age/group-standardization is not possible for UCAR models.
 
 ### Traceplots
 
-Before we generate our median estimates for our samples, let's quickly check some high- and low-population counties to see the stability of the samples:
+Before we generate the median estimates for our samples, let's quickly check some high- and low-population counties to see the stability of the samples:
 
 ```{r, include = FALSE}
 oldpar <- graphics::par(no.readonly = TRUE)
 on.exit(graphics::par(oldpar))
 ```
+
 ```{r}
 counties <- c(
   which.max(miheart$n[, "55-64", "1979"]),

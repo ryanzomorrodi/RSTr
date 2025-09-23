@@ -70,7 +70,7 @@ Most of these arguments are not needed, as the model has defaults for most argum
 
 -   `Ag`: The general spatial covariance matrix. This parameter describes the overall relationship between groups across the entire model and is used in the prior distribution for the matrices in `G`. `Ag` is a positive-definite symmetric matrix with dimensions `num_group x num_group`.
 
-Note that you don't have to specify inits for *all* parameters if you only want to specify some of them - any undefined inits will be defined by the default values. For example, you can specify only the prior for the `theta` values and all other values will be generated on their own. However, if one value is specified for a certain parameter in `inits`, all values must be specified for that parameter in `inits`: you cannot, for example, define priors for just one year of `theta`. Finally, any values included in your `inits` list that aren't aligned with the above names will be ignored.
+Note that you don't have to specify inits for *all* parameters if you only want to specify some of them - any undefined inits will be defined by the default values. For example, you can specify only the initial values for `theta` and all other values will be generated on their own. However, if one value is specified for a certain parameter in `inits`, all values must be specified for that parameter in `inits`: you cannot, for example, define initial values for just one year of `theta`. Finally, any values included in your `inits` list that aren't aligned with the above names will be ignored.
 
 ### The `priors` argument
 

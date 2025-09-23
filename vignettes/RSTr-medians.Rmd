@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-In the previous vignette, we finally ran our model using `run_sampler()`, imported estimates using `load_samples()`, age-standardized and year-aggregated our estimates, and finally did some cursory exploration of large- and small-population counties in our dataset. Now, we can calculate our estimates, investigate measures of reliability, and investigate the implications of our measures of reliability. Note that this process is identical for all types of models.
+In the previous vignette, we ran our model using `run_sampler()`, imported estimates using `load_samples()`, age-standardized and year-aggregated our estimates, and finally did some cursory exploration of large- and small-population counties in our dataset. Now, we can calculate our estimates, investigate measures of reliability, and investigate the implications of our measures of reliability. Note that this process is identical for all types of models.
 
 ## The `get_medians()` function
 
@@ -24,13 +24,13 @@ In the previous vignette, we finally ran our model using `run_sampler()`, import
 library(RSTr)
 initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
 run_sampler("my_test_model")
-std_pop <- c(113154, 100640, 95799)
-margin_age <- 2
 ```
 
 In `RSTr-samples`, we generated age-standardized estimates for `theta` based on our example Michigan dataset. To get the medians, we simply put our samples into `get_medians()`:
 
 ```{r}
+std_pop <- c(113154, 100640, 95799)
+margin_age <- 2
 theta <- load_samples("my_test_model") * 1e5
 theta <- age_standardize(theta, std_pop, margin_age, groups = 1:3, bind_new = TRUE, new_name = "35-64")
 medians <- get_medians(theta)
@@ -62,7 +62,7 @@ Reliability can be easily tested in CAR models using two criteria:
 -   Relative precision: In [Quick, et al 2024](https://doi.org/10.1177/0282423X241244917), relative precision is measured as a ratio of the posterior median to its credible interval. If an estimate's ratio is less than 1, then that estimate is considered unreliable at that level of credibility. Effectively, this means that unreliable estimates have a spread of samples larger than the value of the estimate itself; and
 -   Population counts: Though `RSTr` is designed to stabilize low-population regions, there is a limit to the amount of information the model can gather, and estimates from exceedingly low-population regions may be over-smoothed. Therefore, estimates from any region that fall below a specified threshold will be considered unreliable, regardless of relative precision. Use your judgment when setting this threshold depending on what kind of data you are working with: for example, 1,000 population is generally a good rule of thumb for mortality data, whereas an appropriate cutoff for birth data is closer to 100.
 
-Let's get some reliability metrics for our dataset. First, let's generate our relative precisions at 95% credibility using the `get_credible interval()` and `get_relative_precision()` functions, then create a `logical` `array` that tells us which estimates are unreliable:
+Let's get some reliability metrics for our dataset. First, let's generate our relative precisions at 95% credibility using the `get_credible_interval()` and `get_relative_precision()` functions, then create a `logical` `array` that tells us which estimates are unreliable:
 
 ```{r}
 ci <- get_credible_interval(sample = theta, perc_ci = 0.95)
@@ -70,10 +70,10 @@ rel_prec <- get_relative_precision(medians, ci)
 low_rel_prec <- rel_prec < 1
 ```
 
-Now, let's generate a similar `logical` `array` for populations less than 1000 and use both of these criteria to create a set of suppressed medians. A median will be suppressed if it meets either of the two criteria. Note that since our samples are age-standardized, we also have to extend our `pop` array to match in size:
+Now, let's generate a similar `logical` `array` for populations less than 1000 and use these criteria to create a set of suppressed medians. A median will be suppressed if it meets either of the two criteria. Note that since our samples are age-standardized, we also have to extend our `pop` array to match in size:
 
 ```{r}
-pop <- miheart$n
+pop <- load_pop("my_test_model")
 pop <- aggregate_pop(pop, margin_age, groups = 1:3, bind_new = TRUE, new_name = "35-64")
 low_population <- pop < 1000
 medians_supp <- medians
@@ -98,12 +98,8 @@ ggplot(mishp) +
 In this group in 1979, it seems only one region has been suppressed (i.e., grayed out). This is because age-standardizing the samples after running the model both helps to bolster our relative precisions and to increase the total population in our groups, increasing values for both suppression criteria. If we suppress our estimates in our more granular, non-age-standardized `theta` samples, we will see that, even with a small credible interval, many more counties are suppressed:
 
 ```{r}
-rel_prec <- get_relative_precision(
-  sample = theta,
-  medians = medians,
-  perc_ci = 0.5
-)
-low_rel_prec <- rel_prec < 1
+rel_prec50 <- get_relative_precision(medians, ci = get_credible_interval(theta, 0.5))
+low_rel_prec <- rel_prec50 < 1
 medians_supp <- medians
 medians_supp[low_rel_prec | low_population] <- NA
 est_35_44 <- medians_supp[, "35-44", "1979"]
@@ -122,12 +118,8 @@ ggplot(mishp) +
 As we widen our credible interval, the reliability criteria will become more conservative and suppress more counties:
 
 ```{r}
-rel_prec <- get_relative_precision(
-  sample = theta,
-  medians = medians,
-  perc_ci = 0.995
-)
-low_rel_prec <- rel_prec < 1
+rel_prec995 <- get_relative_precision(medians, get_credible_interval(theta, 0.995))
+low_rel_prec <- rel_prec995 < 1
 medians_supp <- medians
 medians_supp[low_rel_prec | low_population] <- NA
 est_35_44 <- medians_supp[, "35-44", "1979"]
@@ -143,7 +135,7 @@ ggplot(mishp) +
   theme_void()
 ```
 
-If we continue increasing our CI width from 0.50 to 0.95 to 0.99 and 0.995, our estimates must be more precise and more counties become grayed out. It is important to find a good balance between credible interval choice and displaying of estimates. Usually, a 95% credible interval provides a happy medium and is the value that is traditionally used.
+As we increase our CI width from 0.50 to 0.95 to 0.99 and 0.995, our estimates must be more precise and more counties become grayed out. It is important to find a good balance between credible interval choice and displaying of estimates. Usually, a 95% credible interval provides a happy medium and is the value that is traditionally used.
 
 ## Final thoughts
 
