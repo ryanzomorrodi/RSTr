@@ -24,10 +24,11 @@ reference:
   - age_standardize
   - aggregate_groups
   - aggregate_pop
-- title: Loading data
+- title: Loading and preparing data
   contents:
   - load_samples
   - load_pop
+  - add_neighbors
 - title: Example data
   contents:
   - miheart
