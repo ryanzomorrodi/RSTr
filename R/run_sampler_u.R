@@ -72,28 +72,12 @@ run_sampler_u <- function(name, dir, iterations, .show_plots, .show_progress, .d
     )
     t_accept <- rep(0, num_region)
     for (it in 1:T_inc) {
-      #### impute missing Y's ####
+      #### Impute missing Y's ####
       if (length(miss)) {
-        if (method == "binomial") {
-          rate <- expit(theta[miss])
-          rp <- stats::runif(
-            length(miss),
-            stats::pbinom(impute_lb - 0.1, round(n[miss]), rate),
-            stats::pbinom(impute_ub + 0.1, round(n[miss]), rate)
-          )
-          Y[miss] <- stats::qbinom(rp, round(n[miss]), rate)
-        }
-        if (method == "poisson") {
-          rate <- n[miss] * exp(theta[miss])
-          rp <- stats::runif(
-            length(miss),
-            stats::ppois(impute_lb - 0.1, rate),
-            stats::ppois(impute_ub + 0.1, rate)
-          )
-          Y[miss] <- stats::qpois(rp, rate)
-        }
+        Y <- impute_events(Y, n, theta, miss, method, impute_lb, impute_ub)
       }
 
+      ### Update parameters ####
       Z <- update_Z_u(Z, sig2, theta, beta, tau2, adjacency, num_adj, island_region, island_id)
       sig2 <- update_sig2_u(sig2, Z, beta, tau2, adjacency, num_adj, island_region, num_island_region, A, m0, sig_a, sig_b, method)
       tau2 <- update_tau2_u(tau2, theta, beta, Z, sig2, num_island_region, island_id, A, m0, tau_a, tau_b, method)

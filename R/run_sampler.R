@@ -35,3 +35,27 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     run_sampler_mst(name, dir, iterations, .show_plots, .show_progress, .discard_burnin)
   }
 }
+
+#' Impute event values
+#' @noRd
+impute_events <- function(Y, n, theta, miss, method, impute_lb, impute_ub) {
+  if (method == "binomial") {
+    rate <- expit(theta[miss])
+    rp <- stats::runif(
+      length(miss),
+      stats::pbinom(impute_lb - 0.1, round(n[miss]), rate),
+      stats::pbinom(impute_ub + 0.1, round(n[miss]), rate)
+    )
+    Y[miss] <- stats::qbinom(rp, round(n[miss]), rate)
+  }
+  if (method == "poisson") {
+    rate <- n[miss] * exp(theta[miss])
+    rp <- stats::runif(
+      length(miss),
+      stats::ppois(impute_lb - 0.1, rate),
+      stats::ppois(impute_ub + 0.1, rate)
+    )
+    Y[miss] <- stats::qpois(rp, rate)
+  }
+  Y
+}
