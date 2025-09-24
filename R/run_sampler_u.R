@@ -44,11 +44,11 @@ run_sampler_u <- function(name, dir, iterations, .show_plots, .show_progress, .d
   impute_lb <- params$impute_lb
   impute_ub <- params$impute_ub
   start_batch <- params$batch
+
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
   num_region <- length(Y)
-  num_island <- length(beta)
 
-  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   plots <- output <- vector("list", length(inits))
   names(plots) <- names(output) <- par_up <- names(inits)
   plot_its <- NULL
@@ -70,7 +70,7 @@ run_sampler_u <- function(name, dir, iterations, .show_plots, .show_progress, .d
       theta_sd * t_accept / 0.5,
       ifelse(t_accept < 0.35, theta_sd * t_accept / 0.35, theta_sd)
     )
-    t_accept <- rep(0, num_region)
+    t_accept <- t_accept * 0
     for (it in 1:T_inc) {
       #### Impute missing Y's ####
       if (length(miss)) {
@@ -136,5 +136,5 @@ run_sampler_u <- function(name, dir, iterations, .show_plots, .show_progress, .d
       )
     }
   }
-  message("Model finished at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Model finished at ", format(Sys.time(), "%a %b %d %X"))
 }

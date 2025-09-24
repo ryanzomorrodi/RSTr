@@ -42,7 +42,7 @@ run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .d
   start_batch <- params$batch
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
-  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   plots <- output <- vector("list", length(inits))
   names(plots) <- names(output) <- par_up <- names(inits)
   plot_its <- NULL
@@ -68,7 +68,7 @@ run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .d
     for (it in 1:T_inc) {
       #### impute missing Y's ####
       if (length(miss)) {
-        Y <- impute_events(Y, n, theta, miss, method, impute_lb, impute_ub)
+        Y <- impute_missing_events(Y, n, theta, miss, method, impute_lb, impute_ub)
       }
 
       #### Update parameters ####
@@ -129,5 +129,5 @@ run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .d
       )
     }
   }
-  message("Model finished at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Model finished at ", format(Sys.time(), "%a %b %d %X"))
 }

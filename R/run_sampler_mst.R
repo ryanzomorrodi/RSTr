@@ -50,7 +50,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
   start_batch <- params$batch
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
-  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   par_up <- names(inits)
   if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   plots <- output <- vector("list", length(par_up))
@@ -91,7 +91,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     for (it in 1:T_inc) {
       #### Impute missing Y's ####
       if (length(miss)) {
-        Y <- impute_events(Y, n, theta, miss, method, impute_lb, impute_ub)
+        Y <- impute_missing_events(Y, n, theta, miss, method, impute_lb, impute_ub)
       }
 
       ##### Update parameters ####
@@ -171,5 +171,5 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
       )
     }
   }
-  message("Model finished at ", format(Sys.time(), "%a %b %d %X"), "")
+  message("Model finished at ", format(Sys.time(), "%a %b %d %X"))
 }
