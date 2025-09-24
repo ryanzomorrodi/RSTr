@@ -20,5 +20,7 @@ Imports the population array from the model directory.
 \examples{
 initialize_model("test", tempdir(), miheart, miadj, .show_plots = FALSE)
 pop <- load_pop("test", tempdir())
-\dontshow{unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)}
+\dontshow{
+unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
+}
 }

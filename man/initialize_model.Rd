@@ -74,5 +74,7 @@ initialize_model("test", tempdir(), data_m, miadj, model = "mcar", method = "poi
 # Initialize a restricted UCAR model
 data_u <- lapply(miheart, \(x) x[, "65-74", "1979"])
 initialize_model("test", tempdir(), data_u, miadj, model = "ucar", A = 6)
-\dontshow{unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)}
+\dontshow{
+unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
+}
 }

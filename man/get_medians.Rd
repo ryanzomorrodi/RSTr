@@ -37,7 +37,7 @@ minci <- get_credible_interval(minsample)
 # Reducing perc_ci narrows the credible interval
 minci_75 <- get_credible_interval(minsample, perc_ci = 0.75)
 # low relative precision due to small data size
-minrp <- get_relative_precision(minmedians, minci) 
+minrp <- get_relative_precision(minmedians, minci)
 # reducing CI increases relative precision
 minrp_75 <- get_relative_precision(minmedians, minci_75)
 # find estimates with low relative precision
