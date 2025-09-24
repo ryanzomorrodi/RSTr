@@ -29,8 +29,10 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
   rho_b <- priors$rho_b
   theta_sd <- priors$theta_sd
   rho_sd <- priors$rho_sd
-  t_accept <- priors$t_accept
-  r_accept <- priors$r_accept
+  t_accept <- theta_sd
+  r_accept <- rho_sd
+  r_accept[] <- 0
+  t_accept[] <- 0
 
   inits <- readRDS(paste0(dir, name, "/inits.Rds"))
   theta <- inits$theta
@@ -70,31 +72,13 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     if (rho_up) {
       output$rho <- array(dim = c(length(rho), T_inc / 10))
     }
-
-    r_accept <- ifelse(r_accept < 1 / 6, 1 / 6, ifelse(r_accept > 0.75, 0.75, r_accept))
-    rho_sd <- ifelse(
-      r_accept > 0.5,
-      rho_sd * r_accept / 0.5,
-      ifelse(r_accept < 0.25, rho_sd * r_accept / 0.25, rho_sd)
-    )
-    r_accept <- rep(0, length(rho))
-
-    # Metropolis for Yikt
-    t_accept <- ifelse(t_accept < 1 / 6, 1 / 6, ifelse(t_accept > 0.75, 0.75, t_accept))
-    theta_sd <- ifelse(
-      t_accept > 0.5,
-      theta_sd * t_accept / 0.5,
-      ifelse(t_accept < 0.35, theta_sd * t_accept / 0.35, theta_sd)
-    )
-    t_accept <- array(0, dim = dim(theta))
+    r_accept[] <- 0
+    t_accept[] <- 0
     
     for (it in 1:T_inc) {
-      #### Impute missing Y's ####
       if (length(miss)) {
         Y <- impute_missing_events(Y, n, theta, miss, method, impute_lb, impute_ub)
       }
-
-      ##### Update parameters ####
       beta <- update_beta_mst(beta, theta, Z, tau2, island_region)
       Z <- update_Z_mst(Z, G, theta, beta, rho, tau2, adjacency, num_adj, island_region, island_id)
       G <- update_G_mst(G, Z, Ag, rho, G_df, adjacency, num_island)
@@ -104,8 +88,6 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
       if (rho_up) {
         rho <- update_rho_mst(rho, r_accept, G, Z, rho_a, rho_b, rho_sd, adjacency, num_island)
       }
-
-      #### Save outputs ####
       if (it %% 10 == 0) {
         output$beta[, , , it / 10] <- beta
         output$G[, , , it / 10] <- G
@@ -123,9 +105,9 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     }
 
     # modify meta-parameters, save outputs to respective files
+    rho_sd <- tune_metropolis_sd(rho_sd, r_accept / T_inc)
+    theta_sd <- tune_metropolis_sd(theta_sd, t_accept / T_inc)
     total <- total + T_inc
-    r_accept <- r_accept / T_inc
-    t_accept <- t_accept / T_inc
     inits <- list(
       theta = theta,
       beta  = beta,
@@ -137,8 +119,6 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     )
     priors$theta_sd <- theta_sd
     priors$rho_sd <- rho_sd
-    priors$t_accept <- t_accept
-    priors$r_accept <- r_accept
     params$total <- total
     params$batch <- batch
     saveRDS(params, paste0(dir, name, "/params.Rds"))
