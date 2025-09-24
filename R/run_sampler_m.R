@@ -118,6 +118,7 @@ run_sampler_m <- function(name, dir, iterations, .show_plots, .show_progress, .d
       plots$tau2 <- c(plots$tau2, output$tau2[1, ])
       plots$G <- c(plots$G, output$G[1, 1, ])
       grid <- c(2, 3)
+      par(mfrow = grid)
       # Gradually remove plots in burn-in, then plot
       if (plot_its[1] < 2000) {
         plots <- lapply(plots, \(par) par[-(1:5)])
