@@ -59,3 +59,12 @@ impute_missing_events <- function(Y, n, theta, miss, method, impute_lb, impute_u
   }
   Y
 }
+
+#' Tune metropolis standard deviation
+#' @noRd
+tune_metropolis_sd <- function(sd, accept) {
+  accept <- pmin(pmax(accept, 1 / 6), 0.75)
+  sd <- ifelse(accept > 0.5, sd * accept / 0.5, sd)
+  sd <- ifelse(accept < 0.35, sd * accept / 0.35, sd)
+  sd
+}
