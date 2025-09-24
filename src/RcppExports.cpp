@@ -83,89 +83,68 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_beta_m
-arma::mat update_beta_m(arma::mat& beta, const arma::mat& theta, const arma::mat& Z, const arma::rowvec& tau2, const arma::field<arma::uvec>& island_region);
-RcppExport SEXP _RSTr_update_beta_m(SEXP betaSEXP, SEXP thetaSEXP, SEXP ZSEXP, SEXP tau2SEXP, SEXP island_regionSEXP) {
+arma::mat update_beta_m(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_beta_m(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec>& >::type island_region(island_regionSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_m(beta, theta, Z, tau2, island_region));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_beta_m(inits, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_Z_m
-arma::mat update_Z_m(arma::mat& Z, const arma::mat& G, const arma::mat& theta, const arma::mat& beta, const arma::vec& tau2, const arma::field<arma::uvec> adjacency, const arma::vec& num_adj, const arma::field<arma::uvec> island_region, const arma::uvec& island_id);
-RcppExport SEXP _RSTr_update_Z_m(SEXP ZSEXP, SEXP GSEXP, SEXP thetaSEXP, SEXP betaSEXP, SEXP tau2SEXP, SEXP adjacencySEXP, SEXP num_adjSEXP, SEXP island_regionSEXP, SEXP island_idSEXP) {
+arma::mat update_Z_m(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_Z_m(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type G(GSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec> >::type adjacency(adjacencySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type num_adj(num_adjSEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec> >::type island_region(island_regionSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Z_m(Z, G, theta, beta, tau2, adjacency, num_adj, island_region, island_id));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Z_m(inits, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_G_m
-arma::mat update_G_m(arma::mat& G, const arma::mat& Z, const double& G_df, const arma::mat& G_scale, const arma::field<arma::uvec>& adjacency, const arma::uword& num_island);
-RcppExport SEXP _RSTr_update_G_m(SEXP GSEXP, SEXP ZSEXP, SEXP G_dfSEXP, SEXP G_scaleSEXP, SEXP adjacencySEXP, SEXP num_islandSEXP) {
+arma::mat update_G_m(List inits, List priors, List spatial_data);
+RcppExport SEXP _RSTr_update_G_m(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double& >::type G_df(G_dfSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type G_scale(G_scaleSEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec>& >::type adjacency(adjacencySEXP);
-    Rcpp::traits::input_parameter< const arma::uword& >::type num_island(num_islandSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_G_m(G, Z, G_df, G_scale, adjacency, num_island));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_G_m(inits, priors, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_tau2_m
-arma::vec update_tau2_m(arma::vec& tau2, const arma::mat& theta, const arma::mat& beta, const arma::mat& Z, const double& tau_a, const double& tau_b, const arma::uvec& island_id);
-RcppExport SEXP _RSTr_update_tau2_m(SEXP tau2SEXP, SEXP thetaSEXP, SEXP betaSEXP, SEXP ZSEXP, SEXP tau_aSEXP, SEXP tau_bSEXP, SEXP island_idSEXP) {
+arma::rowvec update_tau2_m(List inits, List priors, List spatial_data);
+RcppExport SEXP _RSTr_update_tau2_m(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau_a(tau_aSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau_b(tau_bSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_m(tau2, theta, beta, Z, tau_a, tau_b, island_id));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_tau2_m(inits, priors, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_theta_m
-arma::mat update_theta_m(arma::mat& theta, arma::mat& t_accept, const arma::mat& Y, const arma::mat& n, const arma::mat& Z, const arma::mat& beta, const arma::vec& tau2, const arma::mat& theta_sd, const arma::uvec& island_id, const String& method);
-RcppExport SEXP _RSTr_update_theta_m(SEXP thetaSEXP, SEXP t_acceptSEXP, SEXP YSEXP, SEXP nSEXP, SEXP ZSEXP, SEXP betaSEXP, SEXP tau2SEXP, SEXP theta_sdSEXP, SEXP island_idSEXP, SEXP methodSEXP) {
+arma::mat update_theta_m(List inits, List data, List priors, List spatial_data, List params, arma::mat& t_accept);
+RcppExport SEXP _RSTr_update_theta_m(SEXP initsSEXP, SEXP dataSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP t_acceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type t_accept(t_acceptSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type n(nSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type theta_sd(theta_sdSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    Rcpp::traits::input_parameter< const String& >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_theta_m(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method));
+    rcpp_result_gen = Rcpp::wrap(update_theta_m(inits, data, priors, spatial_data, params, t_accept));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -262,105 +241,71 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_Z_u
-arma::vec update_Z_u(arma::vec& Z, const double& sig2, const arma::vec& theta, const arma::vec& beta, const double& tau2, const arma::field<arma::uvec> adjacency, const arma::vec& num_adj, const arma::field<arma::uvec>& island_region, const arma::uvec& island_id);
-RcppExport SEXP _RSTr_update_Z_u(SEXP ZSEXP, SEXP sig2SEXP, SEXP thetaSEXP, SEXP betaSEXP, SEXP tau2SEXP, SEXP adjacencySEXP, SEXP num_adjSEXP, SEXP island_regionSEXP, SEXP island_idSEXP) {
+arma::vec update_Z_u(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_Z_u(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double& >::type sig2(sig2SEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec> >::type adjacency(adjacencySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type num_adj(num_adjSEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec>& >::type island_region(island_regionSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Z_u(Z, sig2, theta, beta, tau2, adjacency, num_adj, island_region, island_id));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Z_u(inits, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_sig2_u
-double update_sig2_u(double& sig2, const arma::vec& Z, const arma::vec& beta, const double& tau2, const arma::field<arma::uvec> adjacency, const arma::vec& num_adj, const arma::field<arma::uvec>& island_region, const arma::uvec& num_island_region, const double& A, const double& m0, const double& sig_a, const double& sig_b, const String& method);
-RcppExport SEXP _RSTr_update_sig2_u(SEXP sig2SEXP, SEXP ZSEXP, SEXP betaSEXP, SEXP tau2SEXP, SEXP adjacencySEXP, SEXP num_adjSEXP, SEXP island_regionSEXP, SEXP num_island_regionSEXP, SEXP ASEXP, SEXP m0SEXP, SEXP sig_aSEXP, SEXP sig_bSEXP, SEXP methodSEXP) {
+double update_sig2_u(List inits, List spatial_data, List params, List priors);
+RcppExport SEXP _RSTr_update_sig2_u(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double& >::type sig2(sig2SEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec> >::type adjacency(adjacencySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type num_adj(num_adjSEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec>& >::type island_region(island_regionSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type num_island_region(num_island_regionSEXP);
-    Rcpp::traits::input_parameter< const double& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const double& >::type m0(m0SEXP);
-    Rcpp::traits::input_parameter< const double& >::type sig_a(sig_aSEXP);
-    Rcpp::traits::input_parameter< const double& >::type sig_b(sig_bSEXP);
-    Rcpp::traits::input_parameter< const String& >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_sig2_u(sig2, Z, beta, tau2, adjacency, num_adj, island_region, num_island_region, A, m0, sig_a, sig_b, method));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_sig2_u(inits, spatial_data, params, priors));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_tau2_u
-double update_tau2_u(double& tau2, const arma::vec& theta, const arma::vec& beta, const arma::vec& Z, const double& sig2, const arma::uvec& num_island_region, const arma::uvec& island_id, const double& A, const double& m0, const double& tau_a, const double& tau_b, const String& method);
-RcppExport SEXP _RSTr_update_tau2_u(SEXP tau2SEXP, SEXP thetaSEXP, SEXP betaSEXP, SEXP ZSEXP, SEXP sig2SEXP, SEXP num_island_regionSEXP, SEXP island_idSEXP, SEXP ASEXP, SEXP m0SEXP, SEXP tau_aSEXP, SEXP tau_bSEXP, SEXP methodSEXP) {
+double update_tau2_u(List inits, List spatial_data, List params, List priors);
+RcppExport SEXP _RSTr_update_tau2_u(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double& >::type sig2(sig2SEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type num_island_region(num_island_regionSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    Rcpp::traits::input_parameter< const double& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const double& >::type m0(m0SEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau_a(tau_aSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau_b(tau_bSEXP);
-    Rcpp::traits::input_parameter< const String& >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_u(tau2, theta, beta, Z, sig2, num_island_region, island_id, A, m0, tau_a, tau_b, method));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_tau2_u(inits, spatial_data, params, priors));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_theta_u
-arma::vec update_theta_u(arma::vec& theta, arma::vec& t_accept, const arma::vec& Y, const arma::vec& n, const arma::vec& Z, const arma::vec& beta, const double& tau2, const arma::vec& theta_sd, const arma::uvec& island_id, const String& method);
-RcppExport SEXP _RSTr_update_theta_u(SEXP thetaSEXP, SEXP t_acceptSEXP, SEXP YSEXP, SEXP nSEXP, SEXP ZSEXP, SEXP betaSEXP, SEXP tau2SEXP, SEXP theta_sdSEXP, SEXP island_idSEXP, SEXP methodSEXP) {
+arma::vec update_theta_u(List inits, List data, List priors, List spatial_data, List params, arma::vec& t_accept);
+RcppExport SEXP _RSTr_update_theta_u(SEXP initsSEXP, SEXP dataSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP t_acceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_accept(t_acceptSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type n(nSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type theta_sd(theta_sdSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type island_id(island_idSEXP);
-    Rcpp::traits::input_parameter< const String& >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_theta_u(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method));
+    rcpp_result_gen = Rcpp::wrap(update_theta_u(inits, data, priors, spatial_data, params, t_accept));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_beta_u
-arma::vec update_beta_u(arma::vec& beta, const arma::vec& theta, const arma::vec& Z, const double& tau2, const double& sig2, const double& A, const double& m0, const arma::field<arma::uvec>& island_region, const String& method);
-RcppExport SEXP _RSTr_update_beta_u(SEXP betaSEXP, SEXP thetaSEXP, SEXP ZSEXP, SEXP tau2SEXP, SEXP sig2SEXP, SEXP ASEXP, SEXP m0SEXP, SEXP island_regionSEXP, SEXP methodSEXP) {
+arma::vec update_beta_u(List inits, List spatial_data, List params);
+RcppExport SEXP _RSTr_update_beta_u(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double& >::type tau2(tau2SEXP);
-    Rcpp::traits::input_parameter< const double& >::type sig2(sig2SEXP);
-    Rcpp::traits::input_parameter< const double& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const double& >::type m0(m0SEXP);
-    Rcpp::traits::input_parameter< const arma::field<arma::uvec>& >::type island_region(island_regionSEXP);
-    Rcpp::traits::input_parameter< const String& >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_u(beta, theta, Z, tau2, sig2, A, m0, island_region, method));
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_beta_u(inits, spatial_data, params));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -372,11 +317,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_Sig_eta", (DL_FUNC) &_RSTr_Sig_eta, 1},
     {"_RSTr_cpp_rmvnorm", (DL_FUNC) &_RSTr_cpp_rmvnorm, 2},
     {"_RSTr_geteig", (DL_FUNC) &_RSTr_geteig, 1},
-    {"_RSTr_update_beta_m", (DL_FUNC) &_RSTr_update_beta_m, 5},
-    {"_RSTr_update_Z_m", (DL_FUNC) &_RSTr_update_Z_m, 9},
-    {"_RSTr_update_G_m", (DL_FUNC) &_RSTr_update_G_m, 6},
-    {"_RSTr_update_tau2_m", (DL_FUNC) &_RSTr_update_tau2_m, 7},
-    {"_RSTr_update_theta_m", (DL_FUNC) &_RSTr_update_theta_m, 10},
+    {"_RSTr_update_beta_m", (DL_FUNC) &_RSTr_update_beta_m, 2},
+    {"_RSTr_update_Z_m", (DL_FUNC) &_RSTr_update_Z_m, 2},
+    {"_RSTr_update_G_m", (DL_FUNC) &_RSTr_update_G_m, 3},
+    {"_RSTr_update_tau2_m", (DL_FUNC) &_RSTr_update_tau2_m, 3},
+    {"_RSTr_update_theta_m", (DL_FUNC) &_RSTr_update_theta_m, 6},
     {"_RSTr_update_beta_mst", (DL_FUNC) &_RSTr_update_beta_mst, 2},
     {"_RSTr_update_Z_mst", (DL_FUNC) &_RSTr_update_Z_mst, 2},
     {"_RSTr_update_G_mst", (DL_FUNC) &_RSTr_update_G_mst, 3},
@@ -384,11 +329,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_update_tau2_mst", (DL_FUNC) &_RSTr_update_tau2_mst, 3},
     {"_RSTr_update_theta_mst", (DL_FUNC) &_RSTr_update_theta_mst, 6},
     {"_RSTr_update_rho_mst", (DL_FUNC) &_RSTr_update_rho_mst, 4},
-    {"_RSTr_update_Z_u", (DL_FUNC) &_RSTr_update_Z_u, 9},
-    {"_RSTr_update_sig2_u", (DL_FUNC) &_RSTr_update_sig2_u, 13},
-    {"_RSTr_update_tau2_u", (DL_FUNC) &_RSTr_update_tau2_u, 12},
-    {"_RSTr_update_theta_u", (DL_FUNC) &_RSTr_update_theta_u, 10},
-    {"_RSTr_update_beta_u", (DL_FUNC) &_RSTr_update_beta_u, 9},
+    {"_RSTr_update_Z_u", (DL_FUNC) &_RSTr_update_Z_u, 2},
+    {"_RSTr_update_sig2_u", (DL_FUNC) &_RSTr_update_sig2_u, 4},
+    {"_RSTr_update_tau2_u", (DL_FUNC) &_RSTr_update_tau2_u, 4},
+    {"_RSTr_update_theta_u", (DL_FUNC) &_RSTr_update_theta_u, 6},
+    {"_RSTr_update_beta_u", (DL_FUNC) &_RSTr_update_beta_u, 3},
     {NULL, NULL, 0}
 };
 

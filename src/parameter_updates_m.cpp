@@ -6,13 +6,12 @@ using namespace Rcpp;
 using namespace arma;
 
 //[[Rcpp::export]]
-arma::mat update_beta_m(
-  arma::mat& beta,
-  const arma::mat& theta,
-  const arma::mat& Z,
-  const arma::rowvec& tau2,
-  const arma::field<arma::uvec>& island_region
-) {
+arma::mat update_beta_m(List inits, List spatial_data) {
+  mat beta = inits["beta"];
+  mat theta = inits["theta"];
+  mat Z = inits["Z"];
+  rowvec tau2 = inits["tau2"];
+  field<uvec> island_region = spatial_data["island_region"];
   uword num_group  = Z.n_cols;
   uword num_island = island_region.n_elem;
   for (uword isl = 0; isl < num_island; isl++) {
@@ -24,17 +23,16 @@ arma::mat update_beta_m(
 }
 
 //[[Rcpp::export]]
-arma::mat update_Z_m(
-  arma::mat& Z,
-  const arma::mat& G,
-  const arma::mat& theta,
-  const arma::mat& beta,
-  const arma::vec& tau2,
-  const arma::field<arma::uvec> adjacency,
-  const arma::vec& num_adj,
-  const arma::field<arma::uvec> island_region,
-  const arma::uvec& island_id
-) {
+arma::mat update_Z_m(List inits, List spatial_data) {
+  mat Z = inits["Z"];
+  mat G = inits["G"];
+  mat theta = inits["theta"];
+  mat beta = inits["beta"];
+  vec tau2 = inits["tau2"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  vec num_adj = spatial_data["num_adj"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uvec island_id = spatial_data["island_id"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   uword num_island = island_region.n_elem;
@@ -60,14 +58,13 @@ arma::mat update_Z_m(
 }
 
 //[[Rcpp::export]]
-arma::mat update_G_m(
-  arma::mat& G,
-  const arma::mat& Z,
-  const double& G_df,
-  const arma::mat& G_scale,
-  const arma::field<arma::uvec>& adjacency,
-  const arma::uword& num_island
-) {
+arma::mat update_G_m(List inits, List priors, List spatial_data) {
+  mat G = inits["G"];
+  mat Z = inits["Z"];
+  double G_df = priors["G_df"];
+  mat G_scale = priors["G_scale"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  uword num_island = spatial_data["num_island"];
   uword num_region = Z.n_rows;
   double df_G = num_region - num_island + G_df;
   mat scale_G = G_scale;
@@ -80,15 +77,14 @@ arma::mat update_G_m(
 }
 
 //[[Rcpp::export]]
-arma::vec update_tau2_m(
-  arma::vec& tau2,
-  const arma::mat& theta,
-  const arma::mat& beta,
-  const arma::mat& Z,
-  const double& tau_a,
-  const double& tau_b,
-  const arma::uvec& island_id
-) {
+arma::rowvec update_tau2_m(List inits, List priors, List spatial_data) {
+  rowvec tau2 = inits["tau2"];
+  mat theta = inits["theta"];
+  mat beta = inits["beta"];
+  mat Z = inits["Z"];
+  double tau_a = priors["tau_a"];
+  double tau_b = priors["tau_b"];
+  uvec island_id = spatial_data["island_id"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   double tau_shape = num_region / 2 + tau_a;
@@ -101,18 +97,16 @@ arma::vec update_tau2_m(
 }
 
 //[[Rcpp::export]]
-arma::mat update_theta_m(
-  arma::mat& theta,
-  arma::mat& t_accept,
-  const arma::mat& Y,
-  const arma::mat& n,
-  const arma::mat& Z,
-  const arma::mat& beta,
-  const arma::vec& tau2,
-  const arma::mat& theta_sd,
-  const arma::uvec& island_id,
-  const String& method
-) {
+arma::mat update_theta_m(List inits, List data, List priors, List spatial_data, List params, arma::mat& t_accept) {
+  mat theta = inits["theta"];
+  mat Z = inits["Z"];
+  mat beta = inits["beta"];
+  vec tau2 = inits["tau2"];
+  mat Y = data["Y"];
+  mat n = data["n"];
+  mat theta_sd = priors["theta_sd"];
+  uvec island_id = spatial_data["island_id"];
+  String method = params["method"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   for (uword reg = 0; reg < num_region; reg++) {

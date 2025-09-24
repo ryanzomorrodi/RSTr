@@ -18,12 +18,13 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
   start_batch <- params$batch
   t_accept <- priors$theta_sd
   t_accept[] <- 0
+  batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
   rho_up <- params$rho_up # unique to MSTCAR
   r_accept <- priors$rho_sd # unique to MSTCAR
   if (rho_up) r_accept[] <- 0 # unique to MSTCAR
 
-  batches <- seq(start_batch + 1, start_batch + iterations / 100)
+  
 
   message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   par_up <- names(inits)
@@ -42,7 +43,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
       display_progress(batch, max(batches), total, 0, T_inc, sampler_start)
     }
     output <- vector("list", length(par_up))
-    names(output) <- names(par_up)
+    names(output) <- par_up
     if (rho_up) r_accept[] <- 0 # unique to MSTCAR
     t_accept[] <- 0
     

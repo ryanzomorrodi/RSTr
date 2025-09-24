@@ -3,17 +3,16 @@ using namespace Rcpp;
 using namespace arma;
 
 //[[Rcpp::export]]
-arma::vec update_Z_u(
-  arma::vec& Z,
-  const double& sig2,
-  const arma::vec& theta,
-  const arma::vec& beta,
-  const double& tau2,
-  const arma::field<arma::uvec> adjacency,
-  const arma::vec& num_adj,
-  const arma::field<arma::uvec>& island_region,
-  const arma::uvec& island_id
-) {
+arma::vec update_Z_u(List inits, List spatial_data) {
+  vec Z = inits["Z"];
+  double sig2 = inits["sig2"];
+  vec theta = inits["theta"];
+  vec beta = inits["beta"];
+  double tau2 = inits["tau2"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  vec num_adj = spatial_data["num_adj"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uvec island_id = spatial_data["island_id"];
   uword num_region = Z.n_elem;
   uword num_island = island_region.n_elem;
   for (uword reg = 0; reg < num_region; reg++) {
@@ -30,21 +29,20 @@ arma::vec update_Z_u(
 }
 
 //[[Rcpp::export]]
-double update_sig2_u(
-  double& sig2,
-  const arma::vec& Z,
-  const arma::vec& beta,
-  const double& tau2,
-  const arma::field<arma::uvec> adjacency,
-  const arma::vec& num_adj,
-  const arma::field<arma::uvec>& island_region,
-  const arma::uvec& num_island_region,
-  const double& A,
-  const double& m0,
-  const double& sig_a,
-  const double& sig_b,
-  const String& method
-) {
+double update_sig2_u(List inits, List spatial_data, List params, List priors) {
+  double sig2 = inits["sig2"];
+  vec Z = inits["Z"];
+  vec beta = inits["beta"];
+  double tau2 = inits["tau2"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  vec num_adj = spatial_data["num_adj"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uvec num_island_region = spatial_data["num_island_region"];
+  double A = params["A"];
+  double m0 = params["m0"];
+  String method = params["method"];
+  double sig_a = priors["sig_a"];
+  double sig_b = priors["sig_b"];
   uword num_region = Z.n_elem;
   uword num_island = island_region.n_elem;
   double sum_adj   = 0;
@@ -72,20 +70,19 @@ double update_sig2_u(
 }
 
 //[[Rcpp::export]]
-double update_tau2_u(
-  double& tau2,
-  const arma::vec& theta,
-  const arma::vec& beta,
-  const arma::vec& Z,
-  const double& sig2,
-  const arma::uvec& num_island_region,
-  const arma::uvec& island_id,
-  const double& A,
-  const double& m0,
-  const double& tau_a,
-  const double& tau_b,
-  const String& method
-) {
+double update_tau2_u(List inits, List spatial_data, List params, List priors) {
+  double tau2 = inits["tau2"];
+  vec theta = inits["theta"];
+  vec beta = inits["beta"];
+  vec Z = inits["Z"];
+  double sig2 = inits["sig2"];
+  uvec num_island_region = spatial_data["num_island_region"];
+  uvec island_id = spatial_data["island_id"];
+  double A = params["A"];
+  double m0 = params["m0"];
+  String method = params["method"];
+  double tau_a = priors["tau_a"];
+  double tau_b = priors["tau_b"];
   uword num_region = Z.n_elem;
   double a_tau     = num_region / 2 + tau_a;
   double b_tau     = 1 / (sum(pow(theta - beta.elem(island_id) - Z, 2)) / 2 + tau_b);
@@ -108,18 +105,16 @@ double update_tau2_u(
 }
 
 //[[Rcpp::export]]
-arma::vec update_theta_u(
-  arma::vec& theta,
-  arma::vec& t_accept,
-  const arma::vec& Y,
-  const arma::vec& n,
-  const arma::vec& Z,
-  const arma::vec& beta,
-  const double& tau2,
-  const arma::vec& theta_sd,
-  const arma::uvec& island_id,
-  const String& method
-) {
+arma::vec update_theta_u(List inits, List data, List priors, List spatial_data, List params, arma::vec& t_accept) {
+  vec theta = inits["theta"];
+  vec Z = inits["Z"];
+  vec beta = inits["beta"];
+  double tau2 = inits["tau2"];
+  vec Y = data["Y"];
+  vec n = data["n"];
+  vec theta_sd = priors["theta_sd"];
+  uvec island_id = spatial_data["island_id"];
+  String method = params["method"];
   uword num_region = Z.n_elem;
   for (uword reg = 0; reg < num_region; reg++) {
     double theta_star = R::rnorm(theta(reg), theta_sd(reg));
@@ -142,17 +137,16 @@ arma::vec update_theta_u(
 }
 
 //[[Rcpp::export]]
-arma::vec update_beta_u(
-  arma::vec& beta,
-  const arma::vec& theta,
-  const arma::vec& Z,
-  const double& tau2,
-  const double& sig2,
-  const double& A,
-  const double& m0,
-  const arma::field<arma::uvec>& island_region,
-  const String& method
-) {
+arma::vec update_beta_u(List inits, List spatial_data, List params) {
+  vec beta = inits["beta"];
+  vec theta = inits["theta"];
+  vec Z = inits["Z"];
+  double tau2 = inits["tau2"];
+  double sig2 = inits["sig2"];
+  field<uvec> island_region = spatial_data["island_region"];
+  double A = params["A"];
+  double m0 = params["m0"];
+  String method = params["method"];
   uword num_island = island_region.n_elem;
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region[isl].n_elem;

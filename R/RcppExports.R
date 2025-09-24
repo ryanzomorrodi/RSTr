@@ -25,24 +25,24 @@ geteig <- function(covar) {
     .Call(`_RSTr_geteig`, covar)
 }
 
-update_beta_m <- function(beta, theta, Z, tau2, island_region) {
-    .Call(`_RSTr_update_beta_m`, beta, theta, Z, tau2, island_region)
+update_beta_m <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_beta_m`, inits, spatial_data)
 }
 
-update_Z_m <- function(Z, G, theta, beta, tau2, adjacency, num_adj, island_region, island_id) {
-    .Call(`_RSTr_update_Z_m`, Z, G, theta, beta, tau2, adjacency, num_adj, island_region, island_id)
+update_Z_m <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_m`, inits, spatial_data)
 }
 
-update_G_m <- function(G, Z, G_df, G_scale, adjacency, num_island) {
-    .Call(`_RSTr_update_G_m`, G, Z, G_df, G_scale, adjacency, num_island)
+update_G_m <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_G_m`, inits, priors, spatial_data)
 }
 
-update_tau2_m <- function(tau2, theta, beta, Z, tau_a, tau_b, island_id) {
-    .Call(`_RSTr_update_tau2_m`, tau2, theta, beta, Z, tau_a, tau_b, island_id)
+update_tau2_m <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_tau2_m`, inits, priors, spatial_data)
 }
 
-update_theta_m <- function(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method) {
-    .Call(`_RSTr_update_theta_m`, theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method)
+update_theta_m <- function(inits, data, priors, spatial_data, params, t_accept) {
+    .Call(`_RSTr_update_theta_m`, inits, data, priors, spatial_data, params, t_accept)
 }
 
 update_beta_mst <- function(inits, spatial_data) {
@@ -73,23 +73,23 @@ update_rho_mst <- function(inits, priors, spatial_data, r_accept) {
     .Call(`_RSTr_update_rho_mst`, inits, priors, spatial_data, r_accept)
 }
 
-update_Z_u <- function(Z, sig2, theta, beta, tau2, adjacency, num_adj, island_region, island_id) {
-    .Call(`_RSTr_update_Z_u`, Z, sig2, theta, beta, tau2, adjacency, num_adj, island_region, island_id)
+update_Z_u <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_u`, inits, spatial_data)
 }
 
-update_sig2_u <- function(sig2, Z, beta, tau2, adjacency, num_adj, island_region, num_island_region, A, m0, sig_a, sig_b, method) {
-    .Call(`_RSTr_update_sig2_u`, sig2, Z, beta, tau2, adjacency, num_adj, island_region, num_island_region, A, m0, sig_a, sig_b, method)
+update_sig2_u <- function(inits, spatial_data, params, priors) {
+    .Call(`_RSTr_update_sig2_u`, inits, spatial_data, params, priors)
 }
 
-update_tau2_u <- function(tau2, theta, beta, Z, sig2, num_island_region, island_id, A, m0, tau_a, tau_b, method) {
-    .Call(`_RSTr_update_tau2_u`, tau2, theta, beta, Z, sig2, num_island_region, island_id, A, m0, tau_a, tau_b, method)
+update_tau2_u <- function(inits, spatial_data, params, priors) {
+    .Call(`_RSTr_update_tau2_u`, inits, spatial_data, params, priors)
 }
 
-update_theta_u <- function(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method) {
-    .Call(`_RSTr_update_theta_u`, theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method)
+update_theta_u <- function(inits, data, priors, spatial_data, params, t_accept) {
+    .Call(`_RSTr_update_theta_u`, inits, data, priors, spatial_data, params, t_accept)
 }
 
-update_beta_u <- function(beta, theta, Z, tau2, sig2, A, m0, island_region, method) {
-    .Call(`_RSTr_update_beta_u`, beta, theta, Z, tau2, sig2, A, m0, island_region, method)
+update_beta_u <- function(inits, spatial_data, params) {
+    .Call(`_RSTr_update_beta_u`, inits, spatial_data, params)
 }
 

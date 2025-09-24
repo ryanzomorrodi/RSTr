@@ -7,6 +7,7 @@ get_spatial_data <- function(adjacency, num_region, .ignore_checks) {
   }
   num_adj <- sapply(adjacency, length)
   island_region <- lapply(get_islands(adjacency), \(x) x - 1)
+  num_island_region <- sapply(island_region, length)
   adjacency <- lapply(adjacency, \(x) x - 1)
   num_island <- length(island_region)
   island_id <- rep(NA, num_region)
@@ -14,11 +15,12 @@ get_spatial_data <- function(adjacency, num_region, .ignore_checks) {
     island_id[island_region[[isl]] + 1] <- isl - 1
   }
   list(
-    adjacency     = adjacency,
-    num_adj       = num_adj,
+    adjacency = adjacency,
+    num_adj = num_adj,
     island_region = island_region,
-    island_id     = island_id,
-    num_island    = num_island
+    num_island_region = num_island_region,
+    island_id = island_id,
+    num_island = num_island
   )
 }
 

@@ -106,7 +106,7 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
   }
   # tau2
   if (is.null(inits$tau2)) {
-    inits$tau2 <- rep(1 / 100, num_group)
+    inits$tau2 <- matrix(1 / 100, 1, num_group)
     initmiss <- c(initmiss, "tau2")
   }
   if (!.ignore_checks) {
