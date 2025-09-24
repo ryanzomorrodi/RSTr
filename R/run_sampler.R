@@ -38,26 +38,26 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
 
 #' Impute event values
 #' @noRd
-impute_missing_events <- function(Y, n, theta, miss, method, impute_lb, impute_ub) {
-  if (method == "binomial") {
-    rate <- expit(theta[miss])
+impute_missing_events <- function(data, inits, params, miss) {
+  if (params$method == "binomial") {
+    rate <- expit(inits$theta[miss])
     rp <- stats::runif(
       length(miss),
-      stats::pbinom(impute_lb - 0.1, round(n[miss]), rate),
-      stats::pbinom(impute_ub + 0.1, round(n[miss]), rate)
+      stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
+      stats::pbinom(params$impute_ub + 0.1, round(data$n[miss]), rate)
     )
-    Y[miss] <- stats::qbinom(rp, round(n[miss]), rate)
+    data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
   }
-  if (method == "poisson") {
-    rate <- n[miss] * exp(theta[miss])
+  if (params$method == "poisson") {
+    rate <- data$n[miss] * exp(inits$theta[miss])
     rp <- stats::runif(
       length(miss),
-      stats::ppois(impute_lb - 0.1, rate),
-      stats::ppois(impute_ub + 0.1, rate)
+      stats::ppois(params$impute_lb - 0.1, rate),
+      stats::ppois(params$impute_ub + 0.1, rate)
     )
-    Y[miss] <- stats::qpois(rp, rate)
+    data$Y[miss] <- stats::qpois(rp, rate)
   }
-  Y
+  data$Y
 }
 
 #' Tune metropolis standard deviation
@@ -67,4 +67,40 @@ tune_metropolis_sd <- function(sd, accept) {
   sd <- ifelse(accept > 0.5, sd * accept / 0.5, sd)
   sd <- ifelse(accept < 0.35, sd * accept / 0.35, sd)
   sd
+}
+
+#' Append new values to output
+#' @noRd
+append_to_output <- function(output, inits, output_mar) {
+  onames = names(output)
+  output <- lapply(names(output), \(par) abind::abind(output[[par]], inits[[par]], along = output_mar[par]))
+  names(output) <- onames
+  output
+}
+
+#' Append new values to plots
+#' @noRd
+append_to_plots <- function(plots, inits) {
+  pnames = names(plots)
+  plots <- lapply(names(plots), \(par) c(plots[[par]], inits[[par]][1]))
+  names(plots) <- pnames
+  plots
+}
+
+#' MSTCAR parameter updates
+#' @noRd
+update_inits_mst <- function(data, inits, spatial_data, priors, params, miss, t_accept, r_accept) {
+  if (length(miss)) {
+    data$Y <- impute_missing_events(data, inits, params, miss)
+  }
+  inits$beta <- update_beta_mst(inits, spatial_data)
+  inits$Z <- update_Z_mst(inits, spatial_data)
+  inits$G <- update_G_mst(inits, priors, spatial_data)
+  inits$Ag <- update_Ag_mst(inits, priors)
+  inits$tau2 <- update_tau2_mst(inits, priors, spatial_data)
+  inits$theta <- update_theta_mst(inits, data, priors, spatial_data, params, t_accept)
+  if (rho_up) {
+    inits$rho <- update_rho_mst(inits, priors, spatial_data, r_accept)
+  }
+  inits
 }

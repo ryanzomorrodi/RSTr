@@ -8,117 +8,70 @@
 run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, .discard_burnin) {
   sampler_start <- Sys.time()
   data <- readRDS(paste0(dir, name, "/data.Rds"))
-  Y <- data$Y
-  n <- data$n
-  miss <- which(!is.finite(Y))
-
+  inits <- readRDS(paste0(dir, name, "/inits.Rds"))
   spatial_data <- readRDS(paste0(dir, name, "/spatial_data.Rds"))
-  adjacency <- spatial_data$adjacency
-  num_adj <- spatial_data$num_adj
-  island_region <- spatial_data$island_region
-  island_id <- spatial_data$island_id
-  num_island <- spatial_data$num_island
-
   priors <- readRDS(paste0(dir, name, "/priors.Rds"))
-  Ag_scale <- priors$Ag_scale
-  G_df <- priors$G_df
-  Ag_df <- priors$Ag_df
-  tau_a <- priors$tau_a
-  tau_b <- priors$tau_b
-  rho_a <- priors$rho_a
-  rho_b <- priors$rho_b
-  theta_sd <- priors$theta_sd
-  rho_sd <- priors$rho_sd
-  t_accept <- theta_sd
-  r_accept <- rho_sd
-  r_accept[] <- 0
+  params <- readRDS(paste0(dir, name, "/params.Rds"))
+
+  miss <- which(!is.finite(data$Y))
+  total <- params$total
+  start_batch <- params$batch
+  t_accept <- priors$theta_sd
   t_accept[] <- 0
 
-  inits <- readRDS(paste0(dir, name, "/inits.Rds"))
-  theta <- inits$theta
-  beta <- inits$beta
-  Z <- inits$Z
-  G <- inits$G
-  rho <- inits$rho
-  tau2 <- inits$tau2
-  Ag <- inits$Ag
+  rho_up <- params$rho_up # unique to MSTCAR
+  r_accept <- priors$rho_sd # unique to MSTCAR
+  if (rho_up) r_accept[] <- 0 # unique to MSTCAR
 
-  params <- readRDS(paste0(dir, name, "/params.Rds"))
-  total <- params$total
-  rho_up <- params$rho_up
-  method <- params$method
-  impute_lb <- params$impute_lb
-  impute_ub <- params$impute_ub
-  start_batch <- params$batch
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
   message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   par_up <- names(inits)
-  if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
-  plots <- output <- vector("list", length(par_up))
-  names(plots) <- names(output) <- par_up
-  plot_its <- NULL
+
+  if (!rho_up) par_up <- par_up[-which(par_up == "rho")] # unique to MSTCAR
+  output_mar = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2) # unique to MSTCAR
+  
+  if (.show_plots) {
+    plots <- vector("list", length(par_up))
+    names(plots) <- par_up
+    plot_its <- NULL
+  }
   for (batch in batches) {
     T_inc <- 100
     if (.show_progress) {
       display_progress(batch, max(batches), total, 0, T_inc, sampler_start)
     }
-    output$theta <- array(dim = c(dim(theta), T_inc / 10))
-    output$beta <- array(dim = c(dim(beta), T_inc / 10))
-    output$G <- array(dim = c(dim(G), T_inc / 10))
-    output$tau2 <- array(dim = c(length(tau2), T_inc / 10))
-    output$Ag <- array(dim = c(dim(Ag), T_inc / 10))
-    output$Z <- array(dim = c(dim(Z), T_inc / 10))
-    if (rho_up) {
-      output$rho <- array(dim = c(length(rho), T_inc / 10))
-    }
-    r_accept[] <- 0
+    output <- vector("list", length(par_up))
+    names(output) <- names(par_up)
+    if (rho_up) r_accept[] <- 0 # unique to MSTCAR
     t_accept[] <- 0
     
     for (it in 1:T_inc) {
       if (length(miss)) {
-        Y <- impute_missing_events(Y, n, theta, miss, method, impute_lb, impute_ub)
+        data$Y <- impute_missing_events(data, inits, params, miss)
       }
-      beta <- update_beta_mst(beta, theta, Z, tau2, island_region)
-      Z <- update_Z_mst(Z, G, theta, beta, rho, tau2, adjacency, num_adj, island_region, island_id)
-      G <- update_G_mst(G, Z, Ag, rho, G_df, adjacency, num_island)
-      Ag <- update_Ag_mst(Ag, G, Ag_scale, G_df, Ag_df)
-      tau2 <- update_tau2_mst(tau2, theta, beta, Z, tau_a, tau_b, island_id)
-      theta <- update_theta_mst(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method)
-      if (rho_up) {
-        rho <- update_rho_mst(rho, r_accept, G, Z, rho_a, rho_b, rho_sd, adjacency, num_island)
-      }
+      ### unique to MSTCAR ###
+      inits$beta <- update_beta_mst(inits, spatial_data)
+      inits$Z <- update_Z_mst(inits, spatial_data)
+      inits$G <- update_G_mst(inits, priors, spatial_data)
+      inits$Ag <- update_Ag_mst(inits, priors)
+      inits$tau2 <- update_tau2_mst(inits, priors, spatial_data)
+      inits$theta <- update_theta_mst(inits, data, priors, spatial_data, params, t_accept)
+      if (rho_up) inits$rho <- update_rho_mst(inits, priors, spatial_data, r_accept)
+      ###
       if (it %% 10 == 0) {
-        output$beta[, , , it / 10] <- beta
-        output$G[, , , it / 10] <- G
-        output$tau2[, it / 10] <- tau2
-        output$theta[, , , it / 10] <- theta
-        output$Z[, , , it / 10] <- Z
-        output$Ag[, , it / 10] <- Ag
-        if (rho_up) {
-          output$rho[, it / 10] <- rho
+        output <- append_to_output(output, inits, output_mar)
+        if (.show_plots) {
+          plots <- append_to_plots(plots, inits)
         }
       }
       if (.show_progress) {
         display_progress(batch, max(batches), total, it, T_inc, sampler_start)
       }
     }
-
-    # modify meta-parameters, save outputs to respective files
-    rho_sd <- tune_metropolis_sd(rho_sd, r_accept / T_inc)
-    theta_sd <- tune_metropolis_sd(theta_sd, t_accept / T_inc)
+    if (rho_up) priors$rho_sd <- tune_metropolis_sd(priors$rho_sd, r_accept / T_inc) # unique to MSTCAR
+    priors$theta_sd <- tune_metropolis_sd(priors$theta_sd, t_accept / T_inc)
     total <- total + T_inc
-    inits <- list(
-      theta = theta,
-      beta  = beta,
-      Z     = Z,
-      G     = G,
-      rho   = rho,
-      tau2  = tau2,
-      Ag    = Ag
-    )
-    priors$theta_sd <- theta_sd
-    priors$rho_sd <- rho_sd
     params$total <- total
     params$batch <- batch
     saveRDS(params, paste0(dir, name, "/params.Rds"))
@@ -129,16 +82,7 @@ run_sampler_mst <- function(name, dir, iterations, .show_plots, .show_progress, 
     if (.show_plots) {
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)
       plot_its <- c(plot_its, output_its)
-      plots$theta <- c(plots$theta, output$theta[1, 1, 1, ])
-      plots$beta <- c(plots$beta, output$beta[1, 1, 1, ])
-      plots$Z <- c(plots$Z, output$Z[1, 1, 1, ])
-      plots$G <- c(plots$G, output$G[1, 1, 1, ])
-      plots$tau2 <- c(plots$tau2, output$tau2[1, ])
-      plots$Ag <- c(plots$Ag, output$Ag[1, 1, ])
-      if (rho_up) {
-        plots$rho <- c(plots$rho, output$rho[1, ])
-      }
-      grid <- c(2, ifelse(rho_up, 4, 3))
+      grid <- c(2, ifelse(rho_up, 4, 3)) # unique to MSTCAR
       graphics::par(mfrow = grid)
       # Gradually remove plots in burn-in, then plot
       if (plot_its[1] < 2000) {

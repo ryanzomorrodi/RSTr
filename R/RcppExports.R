@@ -45,32 +45,32 @@ update_theta_m <- function(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, islan
     .Call(`_RSTr_update_theta_m`, theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method)
 }
 
-update_beta_mst <- function(beta, theta, Z, tau2, island_region) {
-    .Call(`_RSTr_update_beta_mst`, beta, theta, Z, tau2, island_region)
+update_beta_mst <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_beta_mst`, inits, spatial_data)
 }
 
-update_Z_mst <- function(Z, G, theta, beta, rho, tau2, adjacency, num_adj, island_region, island_id) {
-    .Call(`_RSTr_update_Z_mst`, Z, G, theta, beta, rho, tau2, adjacency, num_adj, island_region, island_id)
+update_Z_mst <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_mst`, inits, spatial_data)
 }
 
-update_G_mst <- function(G, Z, Ag, rho, G_df, adjacency, num_island) {
-    .Call(`_RSTr_update_G_mst`, G, Z, Ag, rho, G_df, adjacency, num_island)
+update_G_mst <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_G_mst`, inits, priors, spatial_data)
 }
 
-update_Ag_mst <- function(Ag, G, Ag_scale, G_df, Ag_df) {
-    .Call(`_RSTr_update_Ag_mst`, Ag, G, Ag_scale, G_df, Ag_df)
+update_Ag_mst <- function(inits, priors) {
+    .Call(`_RSTr_update_Ag_mst`, inits, priors)
 }
 
-update_tau2_mst <- function(tau2, theta, beta, Z, tau_a, tau_b, island_id) {
-    .Call(`_RSTr_update_tau2_mst`, tau2, theta, beta, Z, tau_a, tau_b, island_id)
+update_tau2_mst <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_tau2_mst`, inits, priors, spatial_data)
 }
 
-update_theta_mst <- function(theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method) {
-    .Call(`_RSTr_update_theta_mst`, theta, t_accept, Y, n, Z, beta, tau2, theta_sd, island_id, method)
+update_theta_mst <- function(inits, data, priors, spatial_data, params, t_accept) {
+    .Call(`_RSTr_update_theta_mst`, inits, data, priors, spatial_data, params, t_accept)
 }
 
-update_rho_mst <- function(rho, r_accept, G, Z, rho_a, rho_b, rho_sd, adjacency, num_island) {
-    .Call(`_RSTr_update_rho_mst`, rho, r_accept, G, Z, rho_a, rho_b, rho_sd, adjacency, num_island)
+update_rho_mst <- function(inits, priors, spatial_data, r_accept) {
+    .Call(`_RSTr_update_rho_mst`, inits, priors, spatial_data, r_accept)
 }
 
 update_Z_u <- function(Z, sig2, theta, beta, tau2, adjacency, num_adj, island_region, island_id) {

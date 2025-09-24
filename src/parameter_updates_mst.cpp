@@ -5,13 +5,12 @@ using namespace Rcpp;
 using namespace arma;
 
 //[[Rcpp::export]]
-arma::cube update_beta_mst(
-  arma::cube& beta,
-  const arma::cube& theta,
-  const arma::cube& Z,
-  const arma::vec& tau2,
-  const arma::field<arma::uvec>& island_region
-) {
+arma::cube update_beta_mst(List inits, List spatial_data) {
+  cube beta = inits["beta"];
+  cube theta = inits["theta"];
+  cube Z = inits["Z"];
+  vec tau2 = inits["tau2"];
+  field<uvec> island_region = spatial_data["island_region"];
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
   uword num_island = island_region.n_elem;
@@ -25,18 +24,17 @@ arma::cube update_beta_mst(
 }
 
 //[[Rcpp::export]]
-arma::cube update_Z_mst(
-  arma::cube& Z,
-  const arma::cube& G,
-  const arma::cube& theta,
-  const arma::cube& beta,
-  const arma::vec& rho,
-  const arma::vec& tau2,
-  const arma::field<arma::uvec>& adjacency,
-  const arma::vec& num_adj,
-  const arma::field<arma::uvec>& island_region,
-  const arma::uvec& island_id
-) {
+arma::cube update_Z_mst(List inits, List spatial_data) {
+  cube Z = inits["Z"];
+  cube G = inits["G"];
+  cube theta = inits["theta"];
+  cube beta = inits["beta"];
+  vec rho = inits["rho"];
+  vec tau2 = inits["tau2"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  vec num_adj = spatial_data["num_adj"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uvec island_id = spatial_data["island_id"];
   uword num_region  = Z.n_rows;
   uword num_group   = Z.n_cols;
   uword num_time    = Z.n_slices;
@@ -79,15 +77,14 @@ arma::cube update_Z_mst(
 }
 
 //[[Rcpp::export]]
-arma::cube update_G_mst(
-    arma::cube& G,
-    const arma::cube& Z,
-    const arma::mat& Ag,
-    const arma::vec& rho,
-    const double& G_df,
-    const arma::field<arma::uvec>& adjacency,
-    const arma::uword& num_island
-) {
+arma::cube update_G_mst(List inits, List priors, List spatial_data) {
+  cube G = inits["G"];
+  cube Z = inits["Z"];
+  mat Ag = inits["Ag"];
+  vec rho = inits["rho"];
+  double G_df = priors["G_df"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  uword num_island = spatial_data["num_island"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
@@ -115,13 +112,12 @@ arma::cube update_G_mst(
 }
 
 //[[Rcpp::export]]
-arma::mat update_Ag_mst(
-  arma::mat& Ag,
-  const arma::cube& G,
-  const arma::mat& Ag_scale,
-  const double& G_df,
-  const double& Ag_df
-) {
+arma::mat update_Ag_mst(List inits, List priors) {
+  mat Ag = inits["Ag"];
+  cube G = inits["G"];
+  mat Ag_scale = priors["Ag_scale"];
+  double G_df = priors["G_df"];
+  double Ag_df = priors["Ag_df"];
   uword num_time  = G.n_slices;
   uword num_group = G.n_rows;
   mat Ag_covar(num_group, num_group, fill::zeros);
@@ -134,15 +130,14 @@ arma::mat update_Ag_mst(
 }
 
 //[[Rcpp::export]]
-arma::vec update_tau2_mst(
-  arma::vec& tau2,
-  const arma::cube& theta,
-  const arma::cube& beta,
-  const arma::cube& Z,
-  const double& tau_a,
-  const double& tau_b,
-  const arma::uvec& island_id
-) {
+arma::rowvec update_tau2_mst(List inits, List priors, List spatial_data) {
+  rowvec tau2 = inits["tau2"];
+  cube theta = inits["theta"];
+  cube beta = inits["beta"];
+  cube Z = inits["Z"];
+  double tau_a = priors["tau_a"];
+  double tau_b = priors["tau_b"];
+  uvec island_id = spatial_data["island_id"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
@@ -156,18 +151,16 @@ arma::vec update_tau2_mst(
 }
 
 //[[Rcpp::export]]
-arma::cube update_theta_mst(
-  arma::cube& theta,
-  arma::cube& t_accept,
-  const arma::cube& Y,
-  const arma::cube& n,
-  const arma::cube& Z,
-  const arma::cube& beta,
-  const arma::vec& tau2,
-  const arma::cube& theta_sd,
-  const arma::uvec& island_id,
-  const String& method
-) {
+arma::cube update_theta_mst(List inits, List data, List priors, List spatial_data, List params, arma::cube& t_accept) {
+  cube theta = inits["theta"];
+  cube Z = inits["Z"];
+  cube beta = inits["beta"];
+  vec tau2 = inits["tau2"];
+  cube Y = data["Y"];
+  cube n = data["n"];
+  cube theta_sd = priors["theta_sd"];
+  uvec island_id = spatial_data["island_id"];
+  String method = params["method"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
@@ -197,17 +190,15 @@ arma::cube update_theta_mst(
 }
 
 //[[Rcpp::export]]
-arma::vec update_rho_mst(
-  arma::vec& rho,
-  arma::vec& r_accept,
-  const arma::cube& G,
-  const arma::cube& Z,
-  const double& rho_a,
-  const double& rho_b,
-  const arma::vec& rho_sd,
-  const arma::field<arma::uvec>& adjacency,
-  const arma::uword& num_island
-) {
+arma::rowvec update_rho_mst(List inits, List priors, List spatial_data, arma::vec& r_accept) {
+  vec rho = inits["rho"];
+  cube G = inits["G"];
+  cube Z = inits["Z"];
+  double rho_a = priors["rho_a"];
+  double rho_b = priors["rho_b"];
+  vec rho_sd = priors["rho_sd"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  uword num_island = spatial_data["num_island"];
   uword num_region = Z.n_rows;
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
@@ -254,5 +245,5 @@ arma::vec update_rho_mst(
       rho[grp] = rho_star[grp];
     }
   }
-  return rho;
+  return rho.t();
 }

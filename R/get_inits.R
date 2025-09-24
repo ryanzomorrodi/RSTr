@@ -169,12 +169,12 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
   }
   # rho
   if (is.null(inits$rho)) {
-    inits$rho <- rep(0.95, num_group)
+    inits$rho <- matrix(0.95, 1, num_group)
     initmiss <- c(initmiss, "rho")
   }
   # tau2
   if (is.null(inits$tau2)) {
-    inits$tau2 <- rep(1 / 100, num_group)
+    inits$tau2 <- matrix(1 / 100, 1, num_group)
     initmiss <- c(initmiss, "tau2")
   }
   # Ag
