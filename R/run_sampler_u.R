@@ -74,7 +74,7 @@ run_sampler_u <- function(name, dir, iterations, .show_plots, .show_progress, .d
     for (it in 1:T_inc) {
       #### Impute missing Y's ####
       if (length(miss)) {
-        Y <- impute_events(Y, n, theta, miss, method, impute_lb, impute_ub)
+        Y <- impute_missing_events(Y, n, theta, miss, method, impute_lb, impute_ub)
       }
 
       ### Update parameters ####
