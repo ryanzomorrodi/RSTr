@@ -38,7 +38,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
 
 #' Impute event values
 #' @noRd
-impute_events <- function(Y, n, theta, miss, method, impute_lb, impute_ub) {
+impute_missing_events <- function(Y, n, theta, miss, method, impute_lb, impute_ub) {
   if (method == "binomial") {
     rate <- expit(theta[miss])
     rp <- stats::runif(
