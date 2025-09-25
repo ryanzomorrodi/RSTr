@@ -55,22 +55,22 @@ initialize_model <- function(
   method <- match.arg(method)
   model <- match.arg(model)
   oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(graphics::par(oldpar))
+  suppressWarnings(on.exit(graphics::par(oldpar)))
   if (model == "ucar") {
-    initialize_model_u(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
+    initialize_model_u(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
   }
   if (model == "mcar") {
-    initialize_model_m(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
+    initialize_model_m(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
   }
   if (model == "mstcar") {
-    initialize_model_mst(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks)
+    initialize_model_mst(name, dir, data, adjacency, inits, priors, model, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks)
   }
 }
 
 #' Initialize UCAR model
 #'
 #' @noRd
-initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
+initialize_model_u <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
   Y <- data$Y
   n <- data$n
   if (!.ignore_checks) {
@@ -98,7 +98,7 @@ initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method
     seed      = .Random.seed,
     batch     = 0,
     total     = 0,
-    model     = "ucar",
+    model     = model,
     method    = method,
     m0        = m0,
     A         = A,
@@ -120,7 +120,7 @@ initialize_model_u <- function(name, dir, data, adjacency, inits, priors, method
 #' Initialize MCAR model
 #'
 #' @noRd
-initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
+initialize_model_m <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
   Y <- data$Y
   n <- data$n
 
@@ -148,7 +148,7 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
     seed      = .Random.seed,
     batch     = 0,
     total     = 0,
-    model     = "mcar",
+    model     = model,
     method    = method,
     m0        = m0,
     A         = A,
@@ -170,7 +170,7 @@ initialize_model_m <- function(name, dir, data, adjacency, inits, priors, method
 #' Initialize MSTCAR model
 #'
 #' @noRd
-initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks) {
+initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks) {
   Y <- data$Y
   n <- data$n
 
@@ -207,7 +207,7 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, meth
     seed      = .Random.seed,
     batch     = 0,
     total     = 0,
-    model     = "mstcar",
+    model     = model,
     method    = method,
     rho_up    = rho_up,
     m0        = m0,

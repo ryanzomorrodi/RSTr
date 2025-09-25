@@ -67,6 +67,10 @@ append_to_plots <- function(plots, inits) {
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
+#' @useDynLib RSTr, .registration = TRUE
+#' @importFrom Rcpp evalCpp
+#' @importFrom RcppDist bayeslm
+#' @importFrom RcppArmadillo fastLm
 #' @export
 run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
   oldpar <- graphics::par(no.readonly = TRUE)
