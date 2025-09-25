@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-After initializing the model with `initialize_model()`, you can gather and load samples using the `run_sampler()` and `load_samples()` functions. Finally, using some basic plotting, we can look at our results and make sure they make sense.
+After initializing the model with `initialize_*()`, you can gather and load samples using the `run_sampler()` and `load_samples()` functions. Finally, using some basic plotting, we can look at our results and make sure they make sense.
 
 ## The `run_sampler()` function
 
@@ -24,7 +24,7 @@ After initializing the model with `initialize_model()`, you can gather and load 
 
 ```{r}
 library(RSTr)
-initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
+initialize_mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
 ```
 
 ```{r, results = "hide", fig.keep = "last"}
@@ -39,7 +39,7 @@ Once `run_sampler()` tells you that the model is finished running, you can impor
 
 -   `dir`: Directory of the model. Saves to R's temporary directory by default;
 
--   `param`: The parameter to import samples for. By default, imports `theta`. Values for `theta` and `beta` are expit- or exp-transformed, depending on the `method` chosen in `initialize_model()`; and
+-   `param`: The parameter to import samples for. By default, imports `theta`. Values for `theta` and `beta` are expit- or exp-transformed, depending on the `method` chosen in `initialize_*()`; and
 
 -   `burn`: Specifies a burn-in period for samples. This allows the model time to stabilize before using samples to generate estimates. By default, has a burn-in period of 2000 samples. Because of the way that `load_samples()` utilizes `burn`, it is safest to choose a burn-in period that is a multiple of 500.
 

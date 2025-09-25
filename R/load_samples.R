@@ -11,7 +11,7 @@
 #' # prepare truncated dataset
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
-#' initialize_model("test", tempdir(), data_min, adj_min, show_plots = FALSE)
+#' initialize_mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
 #' run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
 #' theta <- load_samples("test", tempdir()) * 1e5
 #' \dontshow{

@@ -6,6 +6,11 @@
 \usage{
 load_pop(name, dir = tempdir())
 }
+\arguments{
+\item{name}{Name of model and corresponding folder}
+
+\item{dir}{Directory where model will live}
+}
 \value{
 The population array for the specified model.
 }
@@ -13,7 +18,7 @@ The population array for the specified model.
 Imports the population array from the model directory.
 }
 \examples{
-initialize_model("test", tempdir(), miheart, miadj, show_plots = FALSE)
+initialize_mstcar("test", miheart, miadj, tempdir(), show_plots = FALSE)
 pop <- load_pop("test", tempdir())
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)

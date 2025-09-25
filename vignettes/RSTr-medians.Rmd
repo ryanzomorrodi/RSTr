@@ -22,7 +22,7 @@ In the previous vignette, we ran our model using `run_sampler()`, imported estim
 
 ```{r, include = FALSE}
 library(RSTr)
-initialize_model(name = "my_test_model", data = miheart, adjacency = miadj)
+initialize_mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
 run_sampler("my_test_model")
 ```
 

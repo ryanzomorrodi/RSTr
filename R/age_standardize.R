@@ -111,10 +111,10 @@ aggregate_groups <- function(sample, pop, margin, groups = NULL, bind_new = FALS
 #'
 #' Imports the population array from the model directory.
 #'
-#' @inheritParams initialize_model
+#' @inheritParams initialize_ucar
 #' @returns The population array for the specified model.
 #' @examples
-#' initialize_model("test", tempdir(), miheart, miadj, show_plots = FALSE)
+#' initialize_mstcar("test", miheart, miadj, tempdir(), show_plots = FALSE)
 #' pop <- load_pop("test", tempdir())
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)

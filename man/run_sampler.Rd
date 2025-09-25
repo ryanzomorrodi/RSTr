@@ -30,12 +30,12 @@ run_sampler(
 No output, saves sampler output to \code{dir}
 }
 \description{
-\code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{initialize_model()}.
+\code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{initialize_*()}.
 }
 \examples{
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
-initialize_model("test", tempdir(), data_min, adj_min)
+initialize_mstcar("test", data_min, adj_min, tempdir())
 run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)

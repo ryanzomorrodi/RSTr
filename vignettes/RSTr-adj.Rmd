@@ -107,7 +107,7 @@ for (i in seq_along(ma_adj)) {
 
 The above code assigns each FIPS code to each element of `ma_adj`, then assigns the indices inside of each element of `ma_adj` to its associated FIPS code.
 
-Note that if you run a model in `RSTr` and load in the adjacency information saved in your model's `spatial_data.Rds` file, the indices will have changed. This is because `ma_adj` is only used within Rcpp, which uses a 0-indexing system as opposed to the 1-indexing system used by R. When inputting data into `initialize_model()`, only use a 1-indexed adjacency structure.
+Note that if you run a model in `RSTr` and load in the adjacency information saved in your model's `spatial_data.Rds` file, the indices will have changed. This is because `ma_adj` is only used within Rcpp, which uses a 0-indexing system as opposed to the 1-indexing system used by R. When inputting data into `initialize_*()`, only use a 1-indexed adjacency structure.
 
 Finally, even though we connected the two island counties to the mainland counties of MA, as long as each region has at least one neighbor, it is usable within `RSTr`. This means that, theoretically, we could have made just Dukes and Nantucket neighbors of each other, creating two separate "islands" of regions with no related neighbors, but every region on both "islands" still has at least one neighbor.
 
