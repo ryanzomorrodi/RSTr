@@ -1,16 +1,16 @@
 #' Get spatial data
 #'
 #' @noRd
-get_spatial_data <- function(adjacency, num_region, .ignore_checks) {
+get_spatial_data <- function(adjacency, .ignore_checks) {
   if (!.ignore_checks) {
-    check_spatial_data(adjacency, num_region)
+    check_spatial_data(adjacency)
   }
   num_adj <- sapply(adjacency, length)
   island_region <- lapply(get_islands(adjacency), \(x) x - 1)
   num_island_region <- sapply(island_region, length)
   adjacency <- lapply(adjacency, \(x) x - 1)
   num_island <- length(island_region)
-  island_id <- rep(NA, num_region)
+  island_id <- rep(NA, length(adjacency))
   for (isl in 1:num_island) {
     island_id[island_region[[isl]] + 1] <- isl - 1
   }

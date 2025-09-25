@@ -44,7 +44,7 @@ initialize_model <- function(
     priors = NULL,
     model = c("mstcar", "ucar", "mcar"),
     method = c("binomial", "poisson"),
-    m0 = 3,
+    m0 = NULL,
     A = NULL,
     rho_up = FALSE,
     impute_lb = 1,
@@ -54,136 +54,16 @@ initialize_model <- function(
     .ignore_checks = FALSE) {
   method <- match.arg(method)
   model <- match.arg(model)
-  if (.show_plots & model == "mstcar") {
+  miss <- which(!is.finite(data$Y))
+  if (!.ignore_checks) {
+    check_data(data)
+  }
+  if (model == "mstcar" & .show_plots) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
-  }
-  if (model == "ucar") {
-    initialize_model_u(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
-  }
-  if (model == "mcar") {
-    initialize_model_m(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
-  }
-  if (model == "mstcar") {
-    initialize_model_mst(name, dir, data, adjacency, inits, priors, model, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks)
-  }
-}
-
-#' Initialize UCAR model
-#'
-#' @noRd
-initialize_model_u <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
-  Y <- data$Y
-  n <- data$n
-  if (!.ignore_checks) {
-    check_data(data)
-  }
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  if (!dir.exists(paste0(dir, name))) {
-    dir.create(paste0(dir, name))
-  }
-  pars <- c("theta", "beta", "Z", "sig2", "tau2")
-  for (par in pars) {
-    if (!dir.exists(paste0(dir, name, "/", par))) {
-      dir.create(paste0(dir, name, "/", par))
-    }
-  }
-  if (is.null(A)) {
-    A <- 6
-  }
-
-  num_region <- length(Y)
-  set.seed(seed)
-  params <- list(
-    seed      = .Random.seed,
-    batch     = 0,
-    total     = 0,
-    model     = model,
-    method    = method,
-    m0        = m0,
-    A         = A,
-    impute_lb = impute_lb,
-    impute_ub = impute_ub,
-    dimnames  = names(n)
-  )
-  spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors <- get_priors_u(priors, num_region, .ignore_checks)
-  inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks)
-  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
-  saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
-  message("Model ready!")
-}
-
-#' Initialize MCAR model
-#'
-#' @noRd
-initialize_model_m <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks) {
-  Y <- data$Y
-  n <- data$n
-
-  if (!.ignore_checks) {
-    check_data(data)
-  }
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  if (!dir.exists(paste0(dir, name))) {
-    dir.create(paste0(dir, name))
-  }
-  pars <- c("theta", "beta", "Z", "G", "tau2")
-  for (par in pars) {
-    if (!dir.exists(paste0(dir, name, "/", par))) {
-      dir.create(paste0(dir, name, "/", par))
-    }
-  }
-
-  num_region <- dim(Y)[1]
-  num_group <- dim(Y)[2]
-
-  set.seed(seed)
-  params <- list(
-    seed      = .Random.seed,
-    batch     = 0,
-    total     = 0,
-    model     = model,
-    method    = method,
-    m0        = m0,
-    A         = A,
-    impute_lb = impute_lb,
-    impute_ub = impute_ub,
-    dimnames  = dimnames(n)
-  )
-  spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors <- get_priors_m(priors, num_region, num_group, .ignore_checks)
-  inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks)
-  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
-  saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
-  message("Model ready!")
-}
-
-#' Initialize MSTCAR model
-#'
-#' @noRd
-initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, model, method, m0, A, rho_up, impute_lb, impute_ub, seed, .show_plots, .ignore_checks) {
-  Y <- data$Y
-  n <- data$n
-
-  # Graph of total cases
-  if (!.ignore_checks) {
-    check_data(data)
-  }
-  if (.show_plots) {
     par(mfrow = c(1, 2))
-    plot(dimnames(Y)[[3]], apply(Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
-    plot(dimnames(Y)[[3]], apply(n, 3, sum), xlab = "Year", ylab = "Population")
+    plot(dimnames(data$Y)[[3]], apply(data$Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
+    plot(dimnames(data$Y)[[3]], apply(data$n, 3, sum), xlab = "Year", ylab = "Population")
   }
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
@@ -191,36 +71,54 @@ initialize_model_mst <- function(name, dir, data, adjacency, inits, priors, mode
   if (!dir.exists(paste0(dir, name))) {
     dir.create(paste0(dir, name))
   }
-  pars <- c("theta", "beta", "Z", "G", "Ag", "tau2")
-  if (rho_up) {
-    pars <- c(pars, "rho")
-  }
+  pars <- list(
+    "ucar" = c("theta", "beta", "Z", "sig2", "tau2"),
+    "mcar" = c("theta", "beta", "Z", "G", "tau2"),
+    "mstcar" = c("theta", "beta", "Z", "G", "Ag", "tau2")
+  )[[model]]
+  if (model == "mstcar" & rho_up) pars <- c(pars, "rho")
   for (par in pars) {
     if (!dir.exists(paste0(dir, name, "/", par))) {
       dir.create(paste0(dir, name, "/", par))
     }
   }
-
-  num_region <- dim(Y)[1]
-  num_group <- dim(Y)[2]
-  num_time <- dim(Y)[3]
   set.seed(seed)
   params <- list(
-    seed      = .Random.seed,
-    batch     = 0,
-    total     = 0,
-    model     = model,
-    method    = method,
-    rho_up    = rho_up,
-    m0        = m0,
-    A         = A,
-    impute_lb = impute_lb,
-    impute_ub = impute_ub,
-    dimnames  = dimnames(n)
+    seed = .Random.seed,
+    batch = 0,
+    total = 0,
+    model = model,
+    method = method
   )
-  spatial_data <- get_spatial_data(adjacency, num_region, .ignore_checks)
-  priors <- get_priors_mst(priors, num_region, num_group, num_time, .ignore_checks)
-  inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks)
+  if (model == "ucar") { # the num_region/num_group/num_time will phase out from this statement
+    if (is.null(m0)) m0 <- 3
+    if (is.null(A)) A <- 6
+    params$m0 <- m0
+    params$A <- A
+    params$dimnames <- names(data$Y)
+  } else if (model == "mcar") {
+    params$dimnames <- dimnames(data$Y)
+  } else if (model == "mstcar") {
+    params$rho_up = rho_up
+    params$dimnames = dimnames(data$Y)
+  }
+  if (length(miss)) {
+    params$impute_lb = impute_lb
+    params$impute_ub = impute_ub
+  }
+
+  spatial_data <- get_spatial_data(adjacency, .ignore_checks)
+  if (model == "ucar") {
+    priors <- get_priors_u(priors, data, .ignore_checks) # unique to UCAR
+    inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to UCAR
+  } else if (model == "mcar") {
+    priors <- get_priors_m(priors, data, .ignore_checks) # unique to MCAR
+    inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to MCAR
+  } else if (model == "mstcar") {
+    priors <- get_priors_mst(priors, data, .ignore_checks) # unique to MSTCAR
+    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to MSTCAR
+  }
+
   saveRDS(data, file = paste0(dir, name, "/data.Rds"))
   saveRDS(params, file = paste0(dir, name, "/params.Rds"))
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))

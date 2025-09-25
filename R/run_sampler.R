@@ -1,54 +1,3 @@
-#' Impute event values
-#' @noRd
-impute_missing_events <- function(data, inits, params, miss) {
-  if (params$method == "binomial") {
-    rate <- expit(inits$theta[miss])
-    rp <- stats::runif(
-      length(miss),
-      stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
-      stats::pbinom(params$impute_ub + 0.1, round(data$n[miss]), rate)
-    )
-    data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
-  }
-  if (params$method == "poisson") {
-    rate <- data$n[miss] * exp(inits$theta[miss])
-    rp <- stats::runif(
-      length(miss),
-      stats::ppois(params$impute_lb - 0.1, rate),
-      stats::ppois(params$impute_ub + 0.1, rate)
-    )
-    data$Y[miss] <- stats::qpois(rp, rate)
-  }
-  data$Y
-}
-
-#' Tune metropolis standard deviation
-#' @noRd
-tune_metropolis_sd <- function(sd, accept) {
-  accept <- pmin(pmax(accept, 1 / 6), 0.75)
-  sd <- ifelse(accept > 0.5, sd * accept / 0.5, sd)
-  sd <- ifelse(accept < 0.35, sd * accept / 0.35, sd)
-  sd
-}
-
-#' Append new values to output
-#' @noRd
-append_to_output <- function(output, inits, output_mar) {
-  onames = names(output)
-  output <- lapply(names(output), \(par) abind::abind(output[[par]], inits[[par]], along = output_mar[par]))
-  names(output) <- onames
-  output
-}
-
-#' Append new values to plots
-#' @noRd
-append_to_plots <- function(plots, inits) {
-  pnames = names(plots)
-  plots <- lapply(names(plots), \(par) c(plots[[par]], inits[[par]][1]))
-  names(plots) <- pnames
-  plots
-}
-
 #' Run Gibbs sampler
 #'
 #' \code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{initialize_model()}.
@@ -190,4 +139,55 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     }
   }
   message("Model finished at ", format(Sys.time(), "%a %b %d %X"))
+}
+
+#' Impute event values
+#' @noRd
+impute_missing_events <- function(data, inits, params, miss) {
+  if (params$method == "binomial") {
+    rate <- expit(inits$theta[miss])
+    rp <- stats::runif(
+      length(miss),
+      stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
+      stats::pbinom(params$impute_ub + 0.1, round(data$n[miss]), rate)
+    )
+    data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
+  }
+  if (params$method == "poisson") {
+    rate <- data$n[miss] * exp(inits$theta[miss])
+    rp <- stats::runif(
+      length(miss),
+      stats::ppois(params$impute_lb - 0.1, rate),
+      stats::ppois(params$impute_ub + 0.1, rate)
+    )
+    data$Y[miss] <- stats::qpois(rp, rate)
+  }
+  data$Y
+}
+
+#' Tune metropolis standard deviation
+#' @noRd
+tune_metropolis_sd <- function(sd, accept) {
+  accept <- pmin(pmax(accept, 1 / 6), 0.75)
+  sd <- ifelse(accept > 0.5, sd * accept / 0.5, sd)
+  sd <- ifelse(accept < 0.35, sd * accept / 0.35, sd)
+  sd
+}
+
+#' Append new values to output
+#' @noRd
+append_to_output <- function(output, inits, output_mar) {
+  onames = names(output)
+  output <- lapply(names(output), \(par) abind::abind(output[[par]], inits[[par]], along = output_mar[par]))
+  names(output) <- onames
+  output
+}
+
+#' Append new values to plots
+#' @noRd
+append_to_plots <- function(plots, inits) {
+  pnames = names(plots)
+  plots <- lapply(names(plots), \(par) c(plots[[par]], inits[[par]][1]))
+  names(plots) <- pnames
+  plots
 }

@@ -1,7 +1,8 @@
 #' Get priors UCAR
 #'
 #' @noRd
-get_priors_u <- function(priors, num_region, .ignore_checks) {
+get_priors_u <- function(priors, data, .ignore_checks) {
+  num_region <- length(data$Y)
   # Prepare Hyperparameters
   primiss <- NULL
   if (is.null(priors$theta_sd)) {
@@ -37,7 +38,9 @@ get_priors_u <- function(priors, num_region, .ignore_checks) {
 #' Get priors MCAR
 #'
 #' @noRd
-get_priors_m <- function(priors, num_region, num_group, .ignore_checks) {
+get_priors_m <- function(priors, data, .ignore_checks) {
+  num_region <- dim(data$Y)[1]
+  num_group <- dim(data$Y)[2]
   # Prepare Hyperparameters
   primiss <- NULL
   if (is.null(priors$theta_sd)) {
@@ -73,7 +76,10 @@ get_priors_m <- function(priors, num_region, num_group, .ignore_checks) {
 #' Get priors MSTCAR
 #'
 #' @noRd
-get_priors_mst <- function(priors, num_region, num_group, num_time, .ignore_checks) {
+get_priors_mst <- function(priors, data, .ignore_checks) {
+  num_region <- dim(data$Y)[1]
+  num_group <- dim(data$Y)[2]
+  num_time <- dim(data$Y)[3]
   # Prepare Hyperparameters
   primiss <- NULL
   if (is.null(priors$theta_sd)) {

@@ -13,7 +13,7 @@ initialize_model(
   priors = NULL,
   model = c("mstcar", "ucar", "mcar"),
   method = c("binomial", "poisson"),
-  m0 = 3,
+  m0 = NULL,
   A = NULL,
   rho_up = FALSE,
   impute_lb = 1,
