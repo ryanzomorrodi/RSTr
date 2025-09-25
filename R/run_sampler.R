@@ -81,11 +81,17 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
         data$Y <- impute_missing_events(data, inits, params, miss)
       }
       if (model == "ucar") {
-        inits$Z <- update_Z_u(inits, spatial_data)
-        inits$sig2 <- update_sig2_u(inits, spatial_data, params, priors)
-        inits$tau2 <- update_tau2_u(inits, spatial_data, params, priors)
-        inits$theta <- update_theta_u(inits, data, priors, spatial_data, params, t_accept)
-        inits$beta <- update_beta_u(inits, spatial_data, params)
+        inits$Z <- update_Z_ucar(inits, spatial_data)
+        inits$theta <- update_theta_ucar(inits, data, priors, spatial_data, params, t_accept)
+        if (params$restricted) {
+          inits$sig2 <- update_sig2_ucar_restricted(inits, spatial_data, params, priors)
+          inits$tau2 <- update_tau2_ucar_restricted(inits, spatial_data, params, priors)
+          inits$beta <- update_beta_ucar_restricted(inits, spatial_data, params)
+        } else {
+          inits$sig2 <- update_sig2_ucar(inits, spatial_data, priors)
+          inits$tau2 <- update_tau2_ucar(inits, spatial_data, priors)
+          inits$beta <- update_beta_ucar(inits, spatial_data)
+        }
       } else if (model == "mcar") {
         inits$beta <- update_beta_m(inits, spatial_data)
         inits$Z <- update_Z_m(inits, spatial_data)

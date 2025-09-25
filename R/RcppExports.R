@@ -73,23 +73,35 @@ update_rho_mst <- function(inits, priors, spatial_data, r_accept) {
     .Call(`_RSTr_update_rho_mst`, inits, priors, spatial_data, r_accept)
 }
 
-update_Z_u <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_Z_u`, inits, spatial_data)
+update_Z_ucar <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_ucar`, inits, spatial_data)
 }
 
-update_sig2_u <- function(inits, spatial_data, params, priors) {
-    .Call(`_RSTr_update_sig2_u`, inits, spatial_data, params, priors)
+update_sig2_ucar <- function(inits, spatial_data, priors) {
+    .Call(`_RSTr_update_sig2_ucar`, inits, spatial_data, priors)
 }
 
-update_tau2_u <- function(inits, spatial_data, params, priors) {
-    .Call(`_RSTr_update_tau2_u`, inits, spatial_data, params, priors)
+update_sig2_ucar_restricted <- function(inits, spatial_data, params, priors) {
+    .Call(`_RSTr_update_sig2_ucar_restricted`, inits, spatial_data, params, priors)
 }
 
-update_theta_u <- function(inits, data, priors, spatial_data, params, t_accept) {
-    .Call(`_RSTr_update_theta_u`, inits, data, priors, spatial_data, params, t_accept)
+update_tau2_ucar <- function(inits, spatial_data, priors) {
+    .Call(`_RSTr_update_tau2_ucar`, inits, spatial_data, priors)
 }
 
-update_beta_u <- function(inits, spatial_data, params) {
-    .Call(`_RSTr_update_beta_u`, inits, spatial_data, params)
+update_tau2_ucar_restricted <- function(inits, spatial_data, params, priors) {
+    .Call(`_RSTr_update_tau2_ucar_restricted`, inits, spatial_data, params, priors)
+}
+
+update_theta_ucar <- function(inits, data, priors, spatial_data, params, t_accept) {
+    .Call(`_RSTr_update_theta_ucar`, inits, data, priors, spatial_data, params, t_accept)
+}
+
+update_beta_ucar <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_beta_ucar`, inits, spatial_data)
+}
+
+update_beta_ucar_restricted <- function(inits, spatial_data, params) {
+    .Call(`_RSTr_update_beta_ucar_restricted`, inits, spatial_data, params)
 }
 
