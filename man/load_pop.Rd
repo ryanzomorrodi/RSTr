@@ -6,11 +6,6 @@
 \usage{
 load_pop(name, dir = tempdir())
 }
-\arguments{
-\item{name}{Name of model and corresponding folder}
-
-\item{dir}{Directory where model will live}
-}
 \value{
 The population array for the specified model.
 }
