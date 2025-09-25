@@ -51,9 +51,13 @@ initialize_model <- function(
     impute_ub = 9,
     seed = 1234,
     .show_plots = TRUE,
-    .ignore_checks = FALSE) {
+    .ignore_checks = FALSE
+) {
   method <- match.arg(method)
   model <- match.arg(model)
+  if (model == "ucar") {
+    data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
+  }
   miss <- which(!is.finite(data$Y))
   if (!.ignore_checks) {
     check_data(data)
@@ -88,19 +92,16 @@ initialize_model <- function(
     batch = 0,
     total = 0,
     model = model,
-    method = method
+    method = method,
+    dimnames = dimnames(data$Y)
   )
-  if (model == "ucar") { # the num_region/num_group/num_time will phase out from this statement
+  if (model == "ucar") {
     if (is.null(m0)) m0 <- 3
     if (is.null(A)) A <- 6
     params$m0 <- m0
     params$A <- A
-    params$dimnames <- names(data$Y)
-  } else if (model == "mcar") {
-    params$dimnames <- dimnames(data$Y)
   } else if (model == "mstcar") {
     params$rho_up = rho_up
-    params$dimnames = dimnames(data$Y)
   }
   if (length(miss)) {
     params$impute_lb = impute_lb
@@ -109,15 +110,13 @@ initialize_model <- function(
 
   spatial_data <- get_spatial_data(adjacency, .ignore_checks)
   if (model == "ucar") {
-    priors <- get_priors_u(priors, data, .ignore_checks) # unique to UCAR
-    inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to UCAR
+    inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks)
   } else if (model == "mcar") {
-    priors <- get_priors_m(priors, data, .ignore_checks) # unique to MCAR
-    inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to MCAR
+    inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks)
   } else if (model == "mstcar") {
-    priors <- get_priors_mst(priors, data, .ignore_checks) # unique to MSTCAR
-    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks) # unique to MSTCAR
+    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks)
   }
+  priors <- get_priors(priors, data, model, .ignore_checks)
 
   saveRDS(data, file = paste0(dir, name, "/data.Rds"))
   saveRDS(params, file = paste0(dir, name, "/params.Rds"))

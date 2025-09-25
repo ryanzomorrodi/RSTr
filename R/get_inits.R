@@ -8,19 +8,6 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
   num_island <- length(unique(island_id))
   # Prepare initial values
   initmiss <- NULL
-  if (is.null(inits$theta)) {
-    theta <- Y / n
-    if (method == "poisson") {
-      theta <- log(theta)
-      theta[!is.finite(theta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
-    }
-    if (method == "binomial") {
-      theta <- logit(theta)
-      theta[!is.finite(theta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
-    }
-    inits$theta <- theta
-    initmiss <- c(initmiss, "theta")
-  }
   # beta
   if (is.null(inits$beta)) {
     beta <- sum(Y, na.rm = TRUE) / sum(n)
@@ -32,6 +19,14 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
     }
     inits$beta <- beta
     initmiss <- c(initmiss, "beta")
+  }
+  # theta
+  if (is.null(inits$theta)) {
+    if (method == "poisson") theta <- log(Y / n)
+    if (method == "binomial") theta <- logit(Y / n)
+    theta[!is.finite(theta)] <- beta[island_id + 1][!is.finite(theta)]
+    inits$theta <- theta
+    initmiss <- c(initmiss, "theta")
   }
   # Z
   if (is.null(inits$Z)) {
@@ -83,14 +78,9 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
     initmiss <- c(initmiss, "beta")
   }
   if (is.null(inits$theta)) {
-    if (method == "poisson") {
-      theta <- log(Y / n)
-      theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
-    }
-    if (method == "binomial") {
-      theta <- logit(Y / n)
-      theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
-    }
+    if (method == "poisson") theta <- log(Y / n)
+    if (method == "binomial") theta <- logit(Y / n)
+    theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
     inits$theta <- theta
     initmiss <- c(initmiss, "theta")
   }
@@ -146,14 +136,9 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
   }
   # theta
   if (is.null(inits$theta)) {
-    if (method == "poisson") {
-      theta <- log(Y / n)
-      theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
-    }
-    if (method == "binomial") {
-      theta <- logit(Y / n)
-      theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
-    }
+    if (method == "poisson") theta <- log(Y / n)
+    if (method == "binomial") theta <- logit(Y / n)
+    theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
     inits$theta <- theta
     initmiss <- c(initmiss, "theta")
   }

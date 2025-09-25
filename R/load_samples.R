@@ -59,7 +59,7 @@ load_samples_u <- function(name, dir, param, burn) {
       dimnames(output) <- list(island = 1:num_island, its = its)
     }
     if (param %in% c("Z", "theta")) {
-      dimnames(output) <- list(region = dims, its = its)
+      dimnames(output) <- list(region = dims[[1]], its = its)
     }
   }
   output

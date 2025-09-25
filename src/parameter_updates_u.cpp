@@ -118,8 +118,8 @@ arma::vec update_theta_u(List inits, List data, List priors, List spatial_data, 
   uword num_region = Z.n_elem;
   for (uword reg = 0; reg < num_region; reg++) {
     double theta_star = R::rnorm(theta(reg), theta_sd(reg));
-    double rk1        = Y(reg) * (theta_star - theta(reg));
-    double rk2        = 0;
+    double rk1 = Y(reg) * (theta_star - theta(reg));
+    double rk2 = 0;
     if (method == "binomial") {
       rk2 = n(reg) * (log(1 + exp(theta_star)) - log(1 + exp(theta(reg))));
     } else if (method == "poisson") {
