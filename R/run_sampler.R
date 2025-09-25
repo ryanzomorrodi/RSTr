@@ -73,13 +73,15 @@ append_to_plots <- function(plots, inits) {
 #' @importFrom RcppArmadillo fastLm
 #' @export
 run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
-  oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(graphics::par(oldpar))
+  if (.show_plots) {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+  }
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
   iterations <- iterations - iterations %% 100
-  
+
   sampler_start <- Sys.time()
   data <- readRDS(paste0(dir, name, "/data.Rds"))
   inits <- readRDS(paste0(dir, name, "/inits.Rds"))
@@ -107,7 +109,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     "mcar" = c("theta" = 3, "beta" = 3, "G" = 3, "tau2" = 2, "Z" = 3),
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
-  
+
   if (.show_plots) {
     plots <- vector("list", length(par_up))
     names(plots) <- par_up
@@ -124,7 +126,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     names(output) <- par_up
     if (model == "mstcar") if (rho_up) r_accept[] <- 0 # unique to MSTCAR
     t_accept[] <- 0
-    
+
     for (it in 1:T_inc) {
       if (length(miss)) {
         data$Y <- impute_missing_events(data, inits, params, miss)

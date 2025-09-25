@@ -54,8 +54,10 @@ initialize_model <- function(
     .ignore_checks = FALSE) {
   method <- match.arg(method)
   model <- match.arg(model)
-  oldpar <- graphics::par(no.readonly = TRUE)
-  suppressWarnings(on.exit(graphics::par(oldpar)))
+  if (.show_plots & model == "mstcar") {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+  }
   if (model == "ucar") {
     initialize_model_u(name, dir, data, adjacency, inits, priors, model, method, m0, A, impute_lb, impute_ub, seed, .ignore_checks)
   }
