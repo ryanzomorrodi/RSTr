@@ -1,7 +1,7 @@
 #' Get initial values UCAR
 #'
 #' @noRd
-get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
+get_inits_u <- function(inits, data, island_id, method, ignore_checks) {
   Y <- data$Y
   n <- data$n
   num_region <- length(Y)
@@ -43,7 +43,7 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
     inits$sig2 <- 1 / 100
     initmiss <- c(initmiss, "sig2")
   }
-  if (!.ignore_checks) {
+  if (!ignore_checks) {
     check_inits_u(inits, num_region, num_island)
   }
   if (!is.null(initmiss)) {
@@ -55,7 +55,7 @@ get_inits_u <- function(inits, data, island_id, method, .ignore_checks) {
 #' Get initial values MCAR
 #'
 #' @noRd
-get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
+get_inits_m <- function(inits, data, island_id, method, ignore_checks) {
   Y <- data$Y
   n <- data$n
   num_region <- dim(Y)[1]
@@ -99,7 +99,7 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
     inits$tau2 <- matrix(1 / 100, 1, num_group)
     initmiss <- c(initmiss, "tau2")
   }
-  if (!.ignore_checks) {
+  if (!ignore_checks) {
     check_inits_m(inits, num_region, num_group, num_island)
   }
   if (!is.null(initmiss)) {
@@ -111,7 +111,7 @@ get_inits_m <- function(inits, data, island_id, method, .ignore_checks) {
 #' Get initial values MSTCAR
 #'
 #' @noRd
-get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
+get_inits_mst <- function(inits, data, island_id, method, ignore_checks) {
   Y <- data$Y
   n <- data$n
   num_region <- dim(Y)[1]
@@ -167,7 +167,7 @@ get_inits_mst <- function(inits, data, island_id, method, .ignore_checks) {
     inits$Ag <- diag(1 / 7, num_group)
     initmiss <- c(initmiss, "Ag")
   }
-  if (!.ignore_checks) {
+  if (!ignore_checks) {
     check_inits_mst(inits, num_region, num_group, num_time, num_island)
   }
   if (!is.null(initmiss)) {

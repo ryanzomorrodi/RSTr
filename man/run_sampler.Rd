@@ -8,7 +8,7 @@ run_sampler(
   name,
   dir = tempdir(),
   iterations = 6000,
-  .show_plots = TRUE,
+  show_plots = TRUE,
   .show_progress = TRUE,
   .discard_burnin = FALSE
 )
@@ -20,7 +20,7 @@ run_sampler(
 
 \item{iterations}{Specifies number of iterations to run}
 
-\item{.show_plots}{If set to \code{FALSE}, hides traceplots}
+\item{show_plots}{If set to \code{FALSE}, hides traceplots}
 
 \item{.show_progress}{If set to \code{FALSE}, hides progress bar}
 
@@ -36,7 +36,7 @@ No output, saves sampler output to \code{dir}
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
 initialize_model("test", tempdir(), data_min, adj_min)
-run_sampler("test", .show_plots = FALSE, .show_progress = FALSE)
+run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }

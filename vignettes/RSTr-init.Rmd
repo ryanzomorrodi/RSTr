@@ -106,9 +106,9 @@ A `logical` that specifies whether to calculate estimates for the temporal corre
 
 Because of the stochastic nature of Bayesian inference and the inherent instability of the MSTCAR model, replicability is extremely important. `seed` allows the user to specify a seed for generating similar estimates, set by default to `1234`.
 
-### The `.ignore_checks` argument
+### The `ignore_checks` argument
 
-As development continues on `RSTr`, there are occasions where the checks performed on the inputs of `initialize_model()` throw an error, even though you may be certain that all of your inputs are behaving as expected. To override the checks, you can use the `.ignore_checks` argument. By default, this is marked as `FALSE`, but specifying `TRUE` will skip this step.
+As development continues on `RSTr`, there are occasions where the checks performed on the inputs of `initialize_model()` throw an error, even though you may be certain that all of your inputs are behaving as expected. To override the checks, you can use the `ignore_checks` argument. By default, this is marked as `FALSE`, but specifying `TRUE` will skip this step.
 
 ## Closing Thoughts
 

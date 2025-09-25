@@ -4,7 +4,7 @@
 #' @param name Name of model and corresponding folder
 #' @param dir Directory where model lives
 #' @param iterations Specifies number of iterations to run
-#' @param .show_plots If set to \code{FALSE}, hides traceplots
+#' @param show_plots If set to \code{FALSE}, hides traceplots
 #' @param .show_progress If set to \code{FALSE}, hides progress bar
 #' @param .discard_burnin If set to \code{TRUE}, won't save burn-in samples
 #' @returns No output, saves sampler output to \code{dir}
@@ -12,7 +12,7 @@
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
 #' initialize_model("test", tempdir(), data_min, adj_min)
-#' run_sampler("test", .show_plots = FALSE, .show_progress = FALSE)
+#' run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
@@ -21,8 +21,8 @@
 #' @importFrom RcppDist bayeslm
 #' @importFrom RcppArmadillo fastLm
 #' @export
-run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
-  if (.show_plots) {
+run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
+  if (show_plots) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
   }
@@ -59,7 +59,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
 
-  if (.show_plots) {
+  if (show_plots) {
     plots <- vector("list", length(par_up))
     names(plots) <- par_up
     plot_its <- NULL
@@ -103,7 +103,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
       }
       if (it %% 10 == 0) {
         output <- append_to_output(output, inits, output_mar)
-        if (.show_plots) {
+        if (show_plots) {
           plots <- append_to_plots(plots, inits)
         }
       }
@@ -121,7 +121,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, .show_plots = 
     saveRDS(inits, paste0(dir, name, "/inits.Rds"))
     save_output(output, batch, dir, name, .discard_burnin)
 
-    if (.show_plots) {
+    if (show_plots) {
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)
       plot_its <- c(plot_its, output_its)
       grid <- c(2, 3)

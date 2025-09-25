@@ -1,8 +1,8 @@
 #' Get spatial data
 #'
 #' @noRd
-get_spatial_data <- function(adjacency, .ignore_checks) {
-  if (!.ignore_checks) {
+get_spatial_data <- function(adjacency, ignore_checks) {
+  if (!ignore_checks) {
     check_spatial_data(adjacency)
   }
   num_adj <- sapply(adjacency, length)

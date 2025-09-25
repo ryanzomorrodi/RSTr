@@ -1,6 +1,6 @@
 #' Get priors
 #' @noRd
-get_priors <- function(priors, data, model, .ignore_checks) {
+get_priors <- function(priors, data, model, ignore_checks) {
   # Prepare Hyperparameters
   primiss <- NULL
   if (is.null(priors$theta_sd)) {
@@ -27,7 +27,7 @@ get_priors <- function(priors, data, model, .ignore_checks) {
       priors$sig_b <- 0.001
       primiss <- c(primiss, "sig_b")
     }
-    if (!.ignore_checks) {
+    if (!ignore_checks) {
       check_priors_u(priors, num_region)
     }
   } else if (model == "mcar") {
@@ -42,7 +42,7 @@ get_priors <- function(priors, data, model, .ignore_checks) {
       priors$G_df <- num_group + 2
       primiss <- c(primiss, "G_df")
     }
-    if (!.ignore_checks) {
+    if (!ignore_checks) {
       check_priors_m(priors, num_region, num_group)
     }
   } else if (model == "mstcar") {
@@ -74,7 +74,7 @@ get_priors <- function(priors, data, model, .ignore_checks) {
       priors$rho_sd <- rep(0.05, num_group)
       primiss <- c(primiss, "rho_sd")
     }
-    if (!.ignore_checks) {
+    if (!ignore_checks) {
       check_priors_mst(priors, num_region, num_group, num_time)
     }
   }

@@ -16,8 +16,8 @@
 #' @param impute_lb If counts are suppressed for privacy reasons, \code{impute_lb} is lower bound of suppression, typically 0 or 1
 #' @param impute_ub If counts are suppressed for privacy reasons, \code{impute_ub} is upper bound of suppression, typically 10
 #' @param seed Set of random seeds to use for data replication
-#' @param .show_plots If set to \code{FALSE}, suppresses check plots generated for MSTCAR models
-#' @param .ignore_checks If set to \code{TRUE}, ignores data checks. Only use if you are certain that your input data is
+#' @param show_plots If set to \code{FALSE}, suppresses check plots generated for MSTCAR models
+#' @param ignore_checks If set to \code{TRUE}, ignores data checks. Only use if you are certain that your input data is
 #' correct and you are encountering bugs during setup
 #' @returns No output, only sets up model and saves files to directory
 #' @examples
@@ -50,8 +50,8 @@ initialize_model <- function(
     impute_lb = 1,
     impute_ub = 9,
     seed = 1234,
-    .show_plots = TRUE,
-    .ignore_checks = FALSE
+    show_plots = TRUE,
+    ignore_checks = FALSE
 ) {
   method <- match.arg(method)
   model <- match.arg(model)
@@ -59,10 +59,10 @@ initialize_model <- function(
     data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
   }
   miss <- which(!is.finite(data$Y))
-  if (!.ignore_checks) {
+  if (!ignore_checks) {
     check_data(data)
   }
-  if (model == "mstcar" & .show_plots) {
+  if (model == "mstcar" & show_plots) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
     par(mfrow = c(1, 2))
@@ -108,15 +108,15 @@ initialize_model <- function(
     params$impute_ub = impute_ub
   }
 
-  spatial_data <- get_spatial_data(adjacency, .ignore_checks)
+  spatial_data <- get_spatial_data(adjacency, ignore_checks)
   if (model == "ucar") {
-    inits <- get_inits_u(inits, data, spatial_data$island_id, method, .ignore_checks)
+    inits <- get_inits_u(inits, data, spatial_data$island_id, method, ignore_checks)
   } else if (model == "mcar") {
-    inits <- get_inits_m(inits, data, spatial_data$island_id, method, .ignore_checks)
+    inits <- get_inits_m(inits, data, spatial_data$island_id, method, ignore_checks)
   } else if (model == "mstcar") {
-    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, .ignore_checks)
+    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, ignore_checks)
   }
-  priors <- get_priors(priors, data, model, .ignore_checks)
+  priors <- get_priors(priors, data, model, ignore_checks)
 
   saveRDS(data, file = paste0(dir, name, "/data.Rds"))
   saveRDS(params, file = paste0(dir, name, "/params.Rds"))

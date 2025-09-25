@@ -19,8 +19,8 @@ initialize_model(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  .show_plots = TRUE,
-  .ignore_checks = FALSE
+  show_plots = TRUE,
+  ignore_checks = FALSE
 )
 }
 \arguments{
@@ -52,9 +52,9 @@ initialize_model(
 
 \item{seed}{Set of random seeds to use for data replication}
 
-\item{.show_plots}{If set to \code{FALSE}, suppresses check plots generated for MSTCAR models}
+\item{show_plots}{If set to \code{FALSE}, suppresses check plots generated for MSTCAR models}
 
-\item{.ignore_checks}{If set to \code{TRUE}, ignores data checks. Only use if you are certain that your input data is
+\item{ignore_checks}{If set to \code{TRUE}, ignores data checks. Only use if you are certain that your input data is
 correct and you are encountering bugs during setup}
 }
 \value{

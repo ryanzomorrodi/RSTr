@@ -88,6 +88,6 @@ All checks that are run on the data check for general information, such as extra
 
 `Ag` is a covariance matrix of size `num_group x num_group`, where `num_group` is the number of groups in the model according to `dim(Y)[2]`. `Ag` is positive definite, and must follow the same rules as the `Ag_scale` prior.
 
-## `.ignore_checks`
+## `ignore_checks`
 
-If you have input data that you are certain is correct, yet are receiving error messages anyway, set the `.ignore_checks` argument to `TRUE` when setting up your model to skip data checks. This is *not* recommended as it is easy to break `RSTr` when data isn't properly checked, and should only be used as a last resort when using `RSTr`.
+If you have input data that you are certain is correct, yet are receiving error messages anyway, set the `ignore_checks` argument to `TRUE` when setting up your model to skip data checks. This is *not* recommended as it is easy to break `RSTr` when data isn't properly checked, and should only be used as a last resort when using `RSTr`.
