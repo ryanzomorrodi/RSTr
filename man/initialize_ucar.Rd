@@ -110,15 +110,15 @@ This function performs checks and prepares data for use with either an MSTCAR, M
 }
 \examples{
 # Initialize an MSTCAR model
-initialize_model(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
+initialize_mstcar(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
 # Initialize an MCAR model
 data_m <- lapply(miheart, \(x) x[, , "1979"])
-initialize_model("test", data_m, miadj, tempdir(), model = "mcar")
+initialize_mcar("test", data_m, miadj, tempdir())
 # Initialize an MCAR model with Poisson-distributed event data
-initialize_model("test", data_m, miadj, tempdir(), method = "poisson", model = "mcar")
+initialize_mcar("test", data_m, miadj, tempdir(), method = "poisson")
 # Initialize a restricted UCAR model
 data_u <- lapply(miheart, \(x) x[, "65-74", "1979"])
-initialize_model("test", data_u, miadj, tempdir(), model = "ucar", A = 6)
+initialize_ucar_restricted("test", data_u, miadj, tempdir(), A = 6)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }

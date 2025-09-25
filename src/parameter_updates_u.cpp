@@ -38,8 +38,13 @@ double update_sig2_u(List inits, List spatial_data, List params, List priors) {
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
   uvec num_island_region = spatial_data["num_island_region"];
-  double A = params["A"];
-  double m0 = params["m0"];
+  bool restricted = params["restricted"];
+  double A;
+  double m0;
+  if (restricted) {
+    A = params["A"];
+    m0 = params["m0"];
+  }
   String method = params["method"];
   double sig_a = priors["sig_a"];
   double sig_b = priors["sig_b"];
@@ -51,7 +56,7 @@ double update_sig2_u(List inits, List spatial_data, List params, List priors) {
   }
   double a_sig = (num_region - num_island) / 2 + sig_a;
   double b_sig = 1 / ((sum(pow(Z, 2) % num_adj) - sum_adj) / 2 + sig_b);
-  if (A >= 1e2) {
+  if (!restricted) {
     sig2 = 1 / R::rgamma(a_sig, b_sig);
   } else if (A < 1e2) {
     double sig_thres = 0;
@@ -78,15 +83,20 @@ double update_tau2_u(List inits, List spatial_data, List params, List priors) {
   double sig2 = inits["sig2"];
   uvec num_island_region = spatial_data["num_island_region"];
   uvec island_id = spatial_data["island_id"];
-  double A = params["A"];
-  double m0 = params["m0"];
+  bool restricted = params["restricted"];
+  double A;
+  double m0;
+  if (restricted) {
+    A = params["A"];
+    m0 = params["m0"];
+  }
   String method = params["method"];
   double tau_a = priors["tau_a"];
   double tau_b = priors["tau_b"];
   uword num_region = Z.n_elem;
   double a_tau     = num_region / 2 + tau_a;
   double b_tau     = 1 / (sum(pow(theta - beta.elem(island_id) - Z, 2)) / 2 + tau_b);
-  if (A >= 1e2) {
+  if (!restricted) {
     tau2 = 1 / R::rgamma(a_tau, b_tau);
   } else if (A < 1e2) {
     double tau_thres = 0;
@@ -144,15 +154,20 @@ arma::vec update_beta_u(List inits, List spatial_data, List params) {
   double tau2 = inits["tau2"];
   double sig2 = inits["sig2"];
   field<uvec> island_region = spatial_data["island_region"];
-  double A = params["A"];
-  double m0 = params["m0"];
+  bool restricted = params["restricted"];
+  double A;
+  double m0;
+  if (restricted) {
+    A = params["A"];
+    m0 = params["m0"];
+  }
   String method = params["method"];
   uword num_island = island_region.n_elem;
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region[isl].n_elem;
     double sd_beta   = sqrt(tau2 / num_island_region);
     double mean_beta = mean(theta.elem(island_region[isl]) - Z.elem(island_region[isl]));
-    if (A >= 1e2) {
+    if (!restricted) {
       beta[isl] = R::rnorm(mean_beta, sd_beta);
     } else if (A < 1e2) {
       if (method == "binomial") {
