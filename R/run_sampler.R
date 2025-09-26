@@ -54,7 +54,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   }
   output_mar <- list(
-    "ucar" = c("theta" = 2, "beta" = 2, "sig2" = 2, "tau2" = 2, "Z" = 2),
+    "ucar" = c("theta" = 4, "beta" = 4, "sig2" = 3, "tau2" = 3, "Z" = 4),
     "mcar" = c("theta" = 3, "beta" = 3, "G" = 3, "tau2" = 2, "Z" = 3),
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
@@ -73,7 +73,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     }
     output <- vector("list", length(par_up))
     names(output) <- par_up
-    if (model == "mstcar") if (rho_up) r_accept[] <- 0 # unique to MSTCAR
+    if (model == "mstcar") if (rho_up) r_accept[] <- 0
     t_accept[] <- 0
 
     for (it in 1:T_inc) {

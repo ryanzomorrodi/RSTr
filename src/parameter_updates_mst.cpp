@@ -130,8 +130,8 @@ arma::mat update_Ag_mst(List inits, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::rowvec update_tau2_mst(List inits, List priors, List spatial_data) {
-  rowvec tau2 = inits["tau2"];
+arma::vec update_tau2_mst(List inits, List priors, List spatial_data) {
+  vec tau2 = inits["tau2"];
   cube theta = inits["theta"];
   cube beta = inits["beta"];
   cube Z = inits["Z"];

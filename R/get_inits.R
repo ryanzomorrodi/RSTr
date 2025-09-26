@@ -1,21 +1,26 @@
 #' Get initial values UCAR
 #'
 #' @noRd
-get_inits_u <- function(inits, data, island_id, method, ignore_checks) {
+get_inits_u <- function(inits, data, spatial_data, method, ignore_checks) {
   Y <- data$Y
   n <- data$n
-  num_region <- length(Y)
+  island_id <- spatial_data$island_id
+  num_region <- dim(Y)[[1]]
+  num_group <- dim(Y)[[2]]
+  num_time <- dim(Y)[[3]]
   num_island <- length(unique(island_id))
   # Prepare initial values
   initmiss <- NULL
   # beta
   if (is.null(inits$beta)) {
-    beta <- sum(Y, na.rm = TRUE) / sum(n)
+    beta <- apply(Y, 2:3, sum, na.rm = TRUE) / apply(n, 2:3, sum)
     if (method == "poisson") {
-      beta <- rep(log(beta), num_island)
+      beta <- array(log(beta), dim = c(num_island, num_group, num_time))
+      beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
     if (method == "binomial") {
-      beta <- rep(logit(beta), num_island)
+      beta <- array(logit(beta), dim = c(num_island, num_group, num_time))
+      beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
     inits$beta <- beta
     initmiss <- c(initmiss, "beta")
@@ -24,27 +29,27 @@ get_inits_u <- function(inits, data, island_id, method, ignore_checks) {
   if (is.null(inits$theta)) {
     if (method == "poisson") theta <- log(Y / n)
     if (method == "binomial") theta <- logit(Y / n)
-    theta[!is.finite(theta)] <- beta[island_id + 1][!is.finite(theta)]
+    theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
     inits$theta <- theta
     initmiss <- c(initmiss, "theta")
   }
   # Z
   if (is.null(inits$Z)) {
-    inits$Z <- inits$theta - inits$beta[island_id + 1]
+    inits$Z <- inits$theta - inits$beta[island_id + 1, , , drop = FALSE]
     initmiss <- c(initmiss, "Z")
   }
   # tau2
   if (is.null(inits$tau2)) {
-    inits$tau2 <- 1 / 100
+    inits$tau2 <- matrix(1 / 100, num_group, num_time)
     initmiss <- c(initmiss, "tau2")
   }
   # sig2
   if (is.null(inits$sig2)) {
-    inits$sig2 <- 1 / 100
+    inits$sig2 <- matrix(1 / 100, num_group, num_time)
     initmiss <- c(initmiss, "sig2")
   }
   if (!ignore_checks) {
-    check_inits_u(inits, num_region, num_island)
+    check_inits_u(inits, data, num_island)
   }
   if (!is.null(initmiss)) {
     message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "))

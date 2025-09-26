@@ -39,7 +39,7 @@ load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
 #'
 #' @noRd
 load_samples_u <- function(name, dir, param, burn) {
-  mar <- c("theta" = 2, "beta" = 2, "Z" = 2, "sig2" = 1, "tau2" = 1)
+  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "sig2" = 3, "tau2" = 3)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
   batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
@@ -56,10 +56,10 @@ load_samples_u <- function(name, dir, param, burn) {
     its <- seq(burn + 10, max(batch) * 100, by = 10)
     if (param == "beta") {
       num_island <- readRDS(paste0(dir, name, "/spatial_data.Rds"))$num_island
-      dimnames(output) <- list(island = 1:num_island, its = its)
+      dimnames(output) <- list(island = 1:num_island, group = dims[[2]], time = dims[[3]], its = its)
     }
     if (param %in% c("Z", "theta")) {
-      dimnames(output) <- list(region = dims[[1]], its = its)
+      dimnames(output) <- c(dims, list(its = its))
     }
   }
   output

@@ -36,6 +36,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_row
+arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword time);
+RcppExport SEXP _RSTr_get_row(SEXP arrSEXP, SEXP grpSEXP, SEXP timeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type arr(arrSEXP);
+    Rcpp::traits::input_parameter< const arma::uword& >::type grp(grpSEXP);
+    Rcpp::traits::input_parameter< const arma::uword >::type time(timeSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_row(arr, grp, time));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Sig_eta_i
 arma::field<arma::mat> Sig_eta_i(const arma::cube& G, const arma::vec& rho);
 RcppExport SEXP _RSTr_Sig_eta_i(SEXP GSEXP, SEXP rhoSEXP) {
@@ -198,7 +211,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_tau2_mst
-arma::rowvec update_tau2_mst(List inits, List priors, List spatial_data);
+arma::vec update_tau2_mst(List inits, List priors, List spatial_data);
 RcppExport SEXP _RSTr_update_tau2_mst(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -241,7 +254,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_Z_ucar
-arma::vec update_Z_ucar(List inits, List spatial_data);
+arma::cube update_Z_ucar(List inits, List spatial_data);
 RcppExport SEXP _RSTr_update_Z_ucar(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -253,7 +266,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_sig2_ucar
-double update_sig2_ucar(List inits, List spatial_data, List priors);
+arma::mat update_sig2_ucar(List inits, List spatial_data, List priors);
 RcppExport SEXP _RSTr_update_sig2_ucar(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -266,7 +279,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_sig2_ucar_restricted
-double update_sig2_ucar_restricted(List inits, List spatial_data, List params, List priors);
+arma::mat update_sig2_ucar_restricted(List inits, List spatial_data, List params, List priors);
 RcppExport SEXP _RSTr_update_sig2_ucar_restricted(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -280,7 +293,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_tau2_ucar
-double update_tau2_ucar(List inits, List spatial_data, List priors);
+arma::mat update_tau2_ucar(List inits, List spatial_data, List priors);
 RcppExport SEXP _RSTr_update_tau2_ucar(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -293,7 +306,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_tau2_ucar_restricted
-double update_tau2_ucar_restricted(List inits, List spatial_data, List params, List priors);
+arma::mat update_tau2_ucar_restricted(List inits, List spatial_data, List params, List priors);
 RcppExport SEXP _RSTr_update_tau2_ucar_restricted(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP priorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -307,7 +320,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_theta_ucar
-arma::vec update_theta_ucar(List inits, List data, List priors, List spatial_data, List params, arma::vec& t_accept);
+arma::cube update_theta_ucar(List inits, List data, List priors, List spatial_data, List params, arma::cube& t_accept);
 RcppExport SEXP _RSTr_update_theta_ucar(SEXP initsSEXP, SEXP dataSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP t_acceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -317,13 +330,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
     Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_accept(t_acceptSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type t_accept(t_acceptSEXP);
     rcpp_result_gen = Rcpp::wrap(update_theta_ucar(inits, data, priors, spatial_data, params, t_accept));
     return rcpp_result_gen;
 END_RCPP
 }
 // update_beta_ucar
-arma::vec update_beta_ucar(List inits, List spatial_data);
+arma::cube update_beta_ucar(List inits, List spatial_data);
 RcppExport SEXP _RSTr_update_beta_ucar(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -335,7 +348,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_beta_ucar_restricted
-arma::vec update_beta_ucar_restricted(List inits, List spatial_data, List params);
+arma::cube update_beta_ucar_restricted(List inits, List spatial_data, List params);
 RcppExport SEXP _RSTr_update_beta_ucar_restricted(SEXP initsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -351,6 +364,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_get_regs", (DL_FUNC) &_RSTr_get_regs, 2},
     {"_RSTr_get_grp", (DL_FUNC) &_RSTr_get_grp, 3},
+    {"_RSTr_get_row", (DL_FUNC) &_RSTr_get_row, 3},
     {"_RSTr_Sig_eta_i", (DL_FUNC) &_RSTr_Sig_eta_i, 2},
     {"_RSTr_Sig_eta", (DL_FUNC) &_RSTr_Sig_eta, 1},
     {"_RSTr_cpp_rmvnorm", (DL_FUNC) &_RSTr_cpp_rmvnorm, 2},

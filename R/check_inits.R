@@ -2,8 +2,12 @@
 #'
 #' @noRd
 #'
-check_inits_u <- function(inits, num_region, num_island) {
+check_inits_u <- function(inits, data, num_island) {
   message("Checking inits...")
+  Y <- data$Y
+  num_region <- dim(Y)[[1]]
+  num_group <- dim(Y)[[2]]
+  num_time <- dim(Y)[[3]]
   theta <- inits$theta
   beta <- inits$beta
   sig2 <- inits$sig2
@@ -32,10 +36,10 @@ check_inits_u <- function(inits, num_region, num_island) {
   errout <- NULL
   errct <- 0
   # theta
-  # length doesn't match num_region
-  if (length(theta) != num_region) {
+  # dimensions don't match num_region num_group num_time
+  if (!all(dim(theta) == dim(Y))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": theta is not a length num_region vector. Ensure length(theta) == length(Y) or use default value")
+    errtxt <- paste(errct, ": theta is not a num_region x num_group x num_time array. Ensure dim(theta) == dim(Y) or use default value")
     errout <- c(errout, errtxt)
   }
   # values are infinite
@@ -47,9 +51,9 @@ check_inits_u <- function(inits, num_region, num_island) {
 
   # beta
   # length doesn't match num_island
-  if (length(beta) != num_island) {
+  if (!all(dim(beta) == c(num_island, num_group, num_time))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": theta is not a length num_island vector. Ensure length(beta) == num_island or use default value")
+    errtxt <- paste(errct, ": beta is not an num_island x num_group x num_time array. Ensure dim(beta) == num_island x num_group x num_time or use default value")
     errout <- c(errout, errtxt)
   }
   # values are infinite
@@ -60,25 +64,25 @@ check_inits_u <- function(inits, num_region, num_island) {
   }
   # sig2
   # is non-positive or infinite
-  if ((sig2 <= 0) | !is.finite(sig2)) {
+  if (any(sig2 <= 0) | any(!is.finite(sig2))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": sig2 is a non-positive or infinite value. Ensure sig2 > 0 and not infinite or use default value")
+    errtxt <- paste(errct, ": Some or all sig2 are non-positive or infinite. Ensure all sig2 > 0 and not infinite or use default value")
     errout <- c(errout, errtxt)
   }
 
   # tau2
   # is non-positive or infinite
-  if ((tau2 <= 0) | !is.finite(tau2)) {
+  if (any(tau2 <= 0) | any(!is.finite(tau2))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": tau2 is a non-positive or infinite value. Ensure tau2 > 0 and not infinite or use default value")
+    errtxt <- paste(errct, ": Some or all tau2 are non-positive or infinite. Ensure all tau2 > 0 and not infinite or use default value")
     errout <- c(errout, errtxt)
   }
 
   # Z
   # length doesn't match num_region
-  if (length(Z) != num_region) {
+  if (!all(dim(Z) == dim(Y))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": Z is not a length num_region vector. Ensure length(Z) == length(Y) or use default value")
+    errtxt <- paste(errct, ": Z is not an num_region x num_group x num_time array. Ensure dim(Z) == dim(Y) or use default value")
     errout <- c(errout, errtxt)
   }
   # values are infinite

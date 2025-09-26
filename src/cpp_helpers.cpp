@@ -18,6 +18,14 @@ arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uwo
   return arr_sub;
 }
 
+arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword time) {
+  arma::vec arr_sub(arr.n_rows);
+  for (uword row = 0; row < arr.n_rows; row++) {
+    arr_sub(row) = arr(row, grp, time);
+  }
+  return arr_sub;
+}
+
 arma::field<arma::mat> Sig_eta_i(const arma::cube& G, const arma::vec& rho) {
   uword num_group = rho.n_elem;
   uword num_time  = G.n_slices;

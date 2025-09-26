@@ -17,6 +17,9 @@ arma::cube get_regs(const arma::cube& arr, const arma::uvec& ind);
 arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword time);
 
 //[[Rcpp::export]]
+arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword time);
+
+//[[Rcpp::export]]
 arma::field<arma::mat> Sig_eta_i(const arma::cube& G, const arma::vec& rho);
 
 //[[Rcpp::export]]

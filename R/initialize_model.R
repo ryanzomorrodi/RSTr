@@ -21,7 +21,11 @@ initialize_model <- function(
 ) {
   model <- match.arg(model)
   if (model == "ucar") {
-    data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
+    if (is.null(dim(data$Y))) {
+      data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
+    } else if (length(dim(data$Y)) == 2) {
+      data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
+    }
   }
   miss <- which(!is.finite(data$Y))
   if (!ignore_checks) {
@@ -63,7 +67,7 @@ initialize_model <- function(
   if (model == "ucar") {
     params$restricted <- restricted
     if (restricted) {
-      params$A <- A
+      params$A <- array(1 / dim(data$Y)[2], dim = dim(data$Y)[-1])
       params$m0 <- m0
     }
   } else if (model == "mstcar") {
@@ -76,7 +80,7 @@ initialize_model <- function(
 
   spatial_data <- get_spatial_data(adjacency, ignore_checks)
   if (model == "ucar") {
-    inits <- get_inits_u(inits, data, spatial_data$island_id, method, ignore_checks)
+    inits <- get_inits_u(inits, data, spatial_data, method, ignore_checks)
   } else if (model == "mcar") {
     inits <- get_inits_m(inits, data, spatial_data$island_id, method, ignore_checks)
   } else if (model == "mstcar") {

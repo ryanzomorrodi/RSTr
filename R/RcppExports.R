@@ -9,6 +9,10 @@ get_grp <- function(arr, reg, time) {
     .Call(`_RSTr_get_grp`, arr, reg, time)
 }
 
+get_row <- function(arr, grp, time) {
+    .Call(`_RSTr_get_row`, arr, grp, time)
+}
+
 Sig_eta_i <- function(G, rho) {
     .Call(`_RSTr_Sig_eta_i`, G, rho)
 }
