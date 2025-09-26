@@ -5,14 +5,14 @@
 #' @param dir Directory where model lives
 #' @param iterations Specifies number of iterations to run
 #' @param show_plots If set to \code{FALSE}, hides traceplots
-#' @param .show_progress If set to \code{FALSE}, hides progress bar
-#' @param .discard_burnin If set to \code{TRUE}, won't save burn-in samples
+#' @param show_progress If set to \code{FALSE}, hides progress bar
+#' @param discard_burnin If set to \code{TRUE}, won't save burn-in samples
 #' @returns No output, saves sampler output to \code{dir}
 #' @examples
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
 #' initialize_mstcar("test", data_min, adj_min, tempdir())
-#' run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
+#' run_sampler("test", show_plots = FALSE, show_progress = FALSE)
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
@@ -21,7 +21,7 @@
 #' @importFrom RcppDist bayeslm
 #' @importFrom RcppArmadillo fastLm
 #' @export
-run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = TRUE, .show_progress = TRUE, .discard_burnin = FALSE) {
+run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = TRUE, show_progress = TRUE, discard_burnin = FALSE) {
   if (show_plots) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
@@ -68,7 +68,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
   message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   for (batch in batches) {
     T_inc <- 100
-    if (.show_progress) {
+    if (show_progress) {
       display_progress(batch, max(batches), total, 0, T_inc, sampler_start)
     }
     output <- vector("list", length(par_up))
@@ -113,7 +113,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
           plots <- append_to_plots(plots, inits)
         }
       }
-      if (.show_progress) {
+      if (show_progress) {
         display_progress(batch, max(batches), total, it, T_inc, sampler_start)
       }
     }
@@ -125,7 +125,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     saveRDS(params, paste0(dir, name, "/params.Rds"))
     saveRDS(priors, paste0(dir, name, "/priors.Rds"))
     saveRDS(inits, paste0(dir, name, "/inits.Rds"))
-    save_output(output, batch, dir, name, .discard_burnin)
+    save_output(output, batch, dir, name, discard_burnin)
 
     if (show_plots) {
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)

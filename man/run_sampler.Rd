@@ -9,8 +9,8 @@ run_sampler(
   dir = tempdir(),
   iterations = 6000,
   show_plots = TRUE,
-  .show_progress = TRUE,
-  .discard_burnin = FALSE
+  show_progress = TRUE,
+  discard_burnin = FALSE
 )
 }
 \arguments{
@@ -22,9 +22,9 @@ run_sampler(
 
 \item{show_plots}{If set to \code{FALSE}, hides traceplots}
 
-\item{.show_progress}{If set to \code{FALSE}, hides progress bar}
+\item{show_progress}{If set to \code{FALSE}, hides progress bar}
 
-\item{.discard_burnin}{If set to \code{TRUE}, won't save burn-in samples}
+\item{discard_burnin}{If set to \code{TRUE}, won't save burn-in samples}
 }
 \value{
 No output, saves sampler output to \code{dir}
@@ -36,7 +36,7 @@ No output, saves sampler output to \code{dir}
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
 initialize_mstcar("test", data_min, adj_min, tempdir())
-run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
+run_sampler("test", show_plots = FALSE, show_progress = FALSE)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }
