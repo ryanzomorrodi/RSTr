@@ -38,8 +38,6 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
   priors <- readRDS(paste0(dir, name, "/priors.Rds"))
   params <- readRDS(paste0(dir, name, "/params.Rds"))
 
-  num_group <- dim(data$Y)[2]
-  num_time <- dim(data$Y)[3]
   par_up <- names(inits)
   model <- params$model
   miss <- which(!is.finite(data$Y))
@@ -56,12 +54,10 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   }
   output_mar <- list(
-    "ucar" = c("theta" = 4, "beta" = 4, "sig2" = 3, "tau2" = 3, "Z" = 4),
+    "ucar" = c("theta" = 3, "beta" = 3, "sig2" = 2, "tau2" = 2, "Z" = 3),
     "mcar" = c("theta" = 3, "beta" = 3, "G" = 3, "tau2" = 2, "Z" = 3),
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
-
-  append_to_output(output, inits, output_mar)
 
   if (show_plots) {
     plots <- vector("list", length(par_up))
@@ -85,28 +81,16 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
         data$Y <- impute_missing_events(data, inits, params, miss)
       }
       if (model == "ucar") {
-        for (grp in 1:num_group) {
-          for (time in 1:num_time) {
-            inits_0 <- inits
-            inits$Z <- inits_0$Z[, grp, time]
-            inits$theta <- inits_0$theta[, grp, time]
-            inits$sig2 <- inits_0$sig2[grp, time]
-            inits$tau2 <- inits_0$tau2[grp, time]
-            inits$beta <- inits_0$beta[, grp, time]
-
-            inits_0$Z[, grp, time] <- update_Z_ucar(inits, spatial_data)
-            inits_0$theta[, grp, time] <- update_theta_ucar(inits, data, priors, spatial_data, params, t_accept)
-            if (params$restricted) {
-              inits_0$sig2[grp, time] <- update_sig2_ucar_restricted(inits, spatial_data, params, priors)
-              inits_0$tau2[grp, time] <- update_tau2_ucar_restricted(inits, spatial_data, params, priors)
-              inits_0$beta[, grp, time] <- update_beta_ucar_restricted(inits, spatial_data, params)
-            } else {
-              inits_0$sig2[grp, time] <- update_sig2_ucar(inits, spatial_data, priors)
-              inits_0$tau2[grp, time] <- update_tau2_ucar(inits, spatial_data, priors)
-              inits_0$beta[, grp, time] <- update_beta_ucar(inits, spatial_data)
-            }
-            inits <- inits_0
-          }
+        inits$Z <- update_Z_ucar(inits, spatial_data)
+        inits$theta <- update_theta_ucar(inits, data, priors, spatial_data, params, t_accept)
+        if (params$restricted) {
+          inits$sig2 <- update_sig2_ucar_restricted(inits, spatial_data, params, priors)
+          inits$tau2 <- update_tau2_ucar_restricted(inits, spatial_data, params, priors)
+          inits$beta <- update_beta_ucar_restricted(inits, spatial_data, params)
+        } else {
+          inits$sig2 <- update_sig2_ucar(inits, spatial_data, priors)
+          inits$tau2 <- update_tau2_ucar(inits, spatial_data, priors)
+          inits$beta <- update_beta_ucar(inits, spatial_data)
         }
       } else if (model == "mcar") {
         inits$beta <- update_beta_m(inits, spatial_data)

@@ -11,8 +11,8 @@
 #' # prepare truncated dataset
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
-#' initialize_mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
-#' run_sampler("test", show_plots = FALSE, .show_progress = FALSE)
+#' initialize_model("test", tempdir(), data_min, adj_min, .show_plots = FALSE)
+#' run_sampler("test", .show_plots = FALSE, .show_progress = FALSE)
 #' theta <- load_samples("test", tempdir()) * 1e5
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
@@ -39,7 +39,7 @@ load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
 #'
 #' @noRd
 load_samples_u <- function(name, dir, param, burn) {
-  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "sig2" = 3, "tau2" = 3)
+  mar <- c("theta" = 3, "beta" = 2, "Z" = 3, "sig2" = 1, "tau2" = 1)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
   batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
@@ -56,10 +56,10 @@ load_samples_u <- function(name, dir, param, burn) {
     its <- seq(burn + 10, max(batch) * 100, by = 10)
     if (param == "beta") {
       num_island <- readRDS(paste0(dir, name, "/spatial_data.Rds"))$num_island
-      dimnames(output) <- list(island = 1:num_island, group = dims[[2]], time = dims[[3]], its = its)
+      dimnames(output) <- list(island = 1:num_island, its = its)
     }
     if (param %in% c("Z", "theta")) {
-      dimnames(output) <- c(dims, list(its = its))
+      dimnames(output) <- list(region = dims[[1]], NULL, its = its)
     }
   }
   output
