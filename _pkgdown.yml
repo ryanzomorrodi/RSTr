@@ -16,7 +16,7 @@ articles:
 reference:
 - title: Modeling
   contents:
-  - initialize_model
+  - initialize_ucar
   - run_sampler
   - get_medians
 - title: Aggregation
