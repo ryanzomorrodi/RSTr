@@ -15,13 +15,14 @@ get_inits_u <- function(inits, data, spatial_data, method, ignore_checks) {
   if (is.null(inits$beta)) {
     beta <- apply(Y, 2:3, sum, na.rm = TRUE) / apply(n, 2:3, sum)
     if (method == "poisson") {
-      beta <- array(log(beta), dim = c(num_island, num_group, num_time))
+      beta <- array(log(beta), dim = c(num_group, num_time, num_island))
       beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
     if (method == "binomial") {
-      beta <- array(logit(beta), dim = c(num_island, num_group, num_time))
+      beta <- array(logit(beta), dim = c(num_group, num_time, num_island))
       beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
+    beta <- aperm(beta, c(3, 1, 2))
     inits$beta <- beta
     initmiss <- c(initmiss, "beta")
   }

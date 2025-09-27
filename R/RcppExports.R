@@ -81,6 +81,10 @@ update_Z_ucar <- function(inits, spatial_data) {
     .Call(`_RSTr_update_Z_ucar`, inits, spatial_data)
 }
 
+update_Z_ucar_old <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_ucar_old`, inits, spatial_data)
+}
+
 update_sig2_ucar <- function(inits, spatial_data, priors) {
     .Call(`_RSTr_update_sig2_ucar`, inits, spatial_data, priors)
 }

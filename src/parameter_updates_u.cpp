@@ -1,9 +1,45 @@
 #include <RcppArmadillo.h>
+#include "cpp_helpers.h"
 using namespace Rcpp;
 using namespace arma;
 
 //[[Rcpp::export]]
-arma::vec update_Z_ucar(List inits, List spatial_data) {
+arma::cube update_Z_ucar(List inits, List spatial_data) {
+  cube Z = inits["Z"];
+  mat sig2 = inits["sig2"];
+  cube theta = inits["theta"];
+  cube beta = inits["beta"];
+  mat tau2 = inits["tau2"];
+  field<uvec> adjacency = spatial_data["adjacency"];
+  vec num_adj = spatial_data["num_adj"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uvec island_id = spatial_data["island_id"];
+  uword num_region = Z.n_rows;
+  uword num_group  = Z.n_cols;
+  uword num_time   = Z.n_slices;
+  uword num_island = island_region.n_elem;
+
+  cube rate_diff = theta - get_regs(beta, island_id);
+  for (uword reg = 0; reg < num_region; reg++) {
+    mat Z_sum_reg = sum(get_regs(Z, adjacency[reg]), 0);
+    for (uword grp = 0; grp < num_group; grp++) {
+      for (uword time = 0; time < num_time; time++) {
+        double var_Z  = 1 / (1 / tau2(grp, time) + num_adj[reg] / sig2(grp, time));
+        double mean_Z = var_Z * (rate_diff(reg, grp, time) / tau2(grp, time) + Z_sum_reg(grp, time) / sig2(grp, time));
+        Z(reg, grp, time) = R::rnorm(mean_Z, sqrt(var_Z));
+      }
+    }
+  }
+  cube Zkt(num_island, num_group, num_time);
+  for (uword isl = 0; isl < num_island; isl++) {
+    Zkt.row(isl) = mean(get_regs(Z, island_region[isl]), 0);
+  }
+  Z -= get_regs(Zkt, island_id);
+  return Z;
+}
+
+//[[Rcpp::export]]
+arma::vec update_Z_ucar_old(List inits, List spatial_data) {
   vec Z = inits["Z"];
   double sig2 = inits["sig2"];
   vec theta = inits["theta"];

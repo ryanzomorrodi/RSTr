@@ -254,7 +254,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_Z_ucar
-arma::vec update_Z_ucar(List inits, List spatial_data);
+arma::cube update_Z_ucar(List inits, List spatial_data);
 RcppExport SEXP _RSTr_update_Z_ucar(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -262,6 +262,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
     rcpp_result_gen = Rcpp::wrap(update_Z_ucar(inits, spatial_data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_Z_ucar_old
+arma::vec update_Z_ucar_old(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_Z_ucar_old(SEXP initsSEXP, SEXP spatial_dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Z_ucar_old(inits, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -382,6 +394,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_update_theta_mst", (DL_FUNC) &_RSTr_update_theta_mst, 6},
     {"_RSTr_update_rho_mst", (DL_FUNC) &_RSTr_update_rho_mst, 4},
     {"_RSTr_update_Z_ucar", (DL_FUNC) &_RSTr_update_Z_ucar, 2},
+    {"_RSTr_update_Z_ucar_old", (DL_FUNC) &_RSTr_update_Z_ucar_old, 2},
     {"_RSTr_update_sig2_ucar", (DL_FUNC) &_RSTr_update_sig2_ucar, 3},
     {"_RSTr_update_sig2_ucar_restricted", (DL_FUNC) &_RSTr_update_sig2_ucar_restricted, 4},
     {"_RSTr_update_tau2_ucar", (DL_FUNC) &_RSTr_update_tau2_ucar, 3},

@@ -54,7 +54,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   }
   output_mar <- list(
-    "ucar" = c("theta" = 3, "beta" = 3, "sig2" = 2, "tau2" = 2, "Z" = 3),
+    "ucar" = c("theta" = 4, "beta" = 3, "sig2" = 2, "tau2" = 2, "Z" = 3),
     "mcar" = c("theta" = 3, "beta" = 3, "G" = 3, "tau2" = 2, "Z" = 3),
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
@@ -81,17 +81,61 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
         data$Y <- impute_missing_events(data, inits, params, miss)
       }
       if (model == "ucar") {
-        inits$Z <- update_Z_ucar(inits, spatial_data)
-        inits$theta <- update_theta_ucar(inits, data, priors, spatial_data, params, t_accept)
-        if (params$restricted) {
-          inits$sig2 <- update_sig2_ucar_restricted(inits, spatial_data, params, priors)
-          inits$tau2 <- update_tau2_ucar_restricted(inits, spatial_data, params, priors)
-          inits$beta <- update_beta_ucar_restricted(inits, spatial_data, params)
-        } else {
-          inits$sig2 <- update_sig2_ucar(inits, spatial_data, priors)
-          inits$tau2 <- update_tau2_ucar(inits, spatial_data, priors)
-          inits$beta <- update_beta_ucar(inits, spatial_data)
+        num_group <- dim(data$Y)[2]
+        num_time <- dim(data$Y)[3]
+        for (grp in 1:num_group) {
+          for (time in 1:num_time) {
+            inits_new <- inits
+            inits_new$Z <- inits$Z[, grp, time]
+            inits_new$theta <- inits$theta[, grp, time]
+            inits_new$sig2 <- inits$sig2[grp, time]
+            inits_new$tau2 <- inits$tau2[grp, time]
+            inits_new$beta <- inits$beta[, grp, time]
+            params_new <- params
+            params_new$A <- params$A[grp, time]
+            priors_new <- priors
+            priors_new$theta_sd <- priors$theta_sd[, grp, time]
+            t_accept_new <- t_accept[, grp, time]
+            data_new <- data
+            data_new$Y <- data$Y[, grp, time]
+            data_new$n <- data$n[, grp, time]
+
+            #inits_new$Z <- update_Z_ucar(inits_new, spatial_data)
+            #inits_new$theta <- update_theta_ucar(inits_new, data_new, priors_new, spatial_data, params_new, t_accept_new)
+            if (params_new$restricted) {
+              inits_new$sig2 <- update_sig2_ucar_restricted(inits_new, spatial_data, params_new, priors_new)
+              inits_new$tau2 <- update_tau2_ucar_restricted(inits_new, spatial_data, params_new, priors_new)
+              inits_new$beta <- update_beta_ucar_restricted(inits_new, spatial_data, params_new)
+            } else {
+              inits_new$sig2 <- update_sig2_ucar(inits_new, spatial_data, priors_new)
+              inits_new$tau2 <- update_tau2_ucar(inits_new, spatial_data, priors_new)
+              inits_new$beta <- update_beta_ucar(inits_new, spatial_data)
+            }
+
+            #inits$Z[, grp, time] <- inits_new$Z
+            #inits$theta[, grp, time] <- inits_new$theta
+            inits$sig2[grp, time] <- inits_new$sig2
+            inits$tau2[grp, time] <- inits_new$tau2
+            inits$beta[, grp, time] <- inits_new$beta
+            t_accept[, grp, time] <- t_accept_new
+          }
         }
+        inits$Z <- update_Z_ucar(inits, spatial_data)
+        inits$theta <- update_theta_mst(inits, data, priors, spatial_data, params, t_accept)
+
+
+        # THIS WORKS
+        # inits$Z <- update_Z_ucar(inits, spatial_data)
+        # inits$theta <- update_theta_ucar(inits, data, priors, spatial_data, params, t_accept)
+        # if (params$restricted) {
+        #   inits$sig2 <- update_sig2_ucar_restricted(inits, spatial_data, params, priors)
+        #   inits$tau2 <- update_tau2_ucar_restricted(inits, spatial_data, params, priors)
+        #   inits$beta <- update_beta_ucar_restricted(inits, spatial_data, params)
+        # } else {
+        #   inits$sig2 <- update_sig2_ucar(inits, spatial_data, priors)
+        #   inits$tau2 <- update_tau2_ucar(inits, spatial_data, priors)
+        #   inits$beta <- update_beta_ucar(inits, spatial_data)
+        # }
       } else if (model == "mcar") {
         inits$beta <- update_beta_m(inits, spatial_data)
         inits$Z <- update_Z_m(inits, spatial_data)
