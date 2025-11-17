@@ -10,7 +10,15 @@ arma::cube get_regs(const arma::cube& arr, const arma::uvec& ind) {
   return arr_sub;
 }
 
-arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword time) {
+arma::vec get_subregs(const arma::cube& arr, const arma::uvec& ind, const arma::uword& grp, const arma::uword& time) {
+  arma::vec arr_sub(arr.n_rows);
+  for (uword reg = 0; reg < ind.n_elem; reg++) {
+    arr_sub(reg) = arr(ind[reg], grp, time);
+  }
+  return arr_sub;
+}
+
+arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword& time) {
   arma::vec arr_sub(arr.n_cols);
   for (uword grp = 0; grp < arr.n_cols; grp++) {
     arr_sub(grp) = arr(reg, grp, time);
@@ -18,7 +26,7 @@ arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uwo
   return arr_sub;
 }
 
-arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword time) {
+arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword& time) {
   arma::vec arr_sub(arr.n_rows);
   for (uword row = 0; row < arr.n_rows; row++) {
     arr_sub(row) = arr(row, grp, time);
@@ -43,7 +51,7 @@ arma::field<arma::mat> Sig_eta_i(const arma::cube& G, const arma::vec& rho) {
   return Sei;
 }
 
-arma::field<arma::mat> Sig_eta(const arma::field<arma::mat> Sein) {
+arma::field<arma::mat> Sig_eta(const arma::field<arma::mat>& Sein) {
   uword num_time = Sein.n_rows;
   field<mat> SeSein(num_time, num_time);
   for (uword time = 0; time < num_time; time++) {

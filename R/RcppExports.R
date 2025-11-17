@@ -5,6 +5,10 @@ get_regs <- function(arr, ind) {
     .Call(`_RSTr_get_regs`, arr, ind)
 }
 
+get_subregs <- function(arr, ind, grp, time) {
+    .Call(`_RSTr_get_subregs`, arr, ind, grp, time)
+}
+
 get_grp <- function(arr, reg, time) {
     .Call(`_RSTr_get_grp`, arr, reg, time)
 }
@@ -79,10 +83,6 @@ update_rho_mst <- function(inits, priors, spatial_data, r_accept) {
 
 update_Z_ucar <- function(inits, spatial_data) {
     .Call(`_RSTr_update_Z_ucar`, inits, spatial_data)
-}
-
-update_Z_ucar_old <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_Z_ucar_old`, inits, spatial_data)
 }
 
 update_sig2_ucar <- function(inits, spatial_data, priors) {

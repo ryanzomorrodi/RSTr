@@ -162,8 +162,8 @@ arma::cube update_theta_mst(List inits, List data, List priors, List spatial_dat
   uvec island_id = spatial_data["island_id"];
   String method = params["method"];
   uword num_region = Z.n_rows;
-  uword num_group  = Z.n_cols;
-  uword num_time   = Z.n_slices;
+  uword num_group = Z.n_cols;
+  uword num_time = Z.n_slices;
   for (uword time = 0; time < num_time; time++) {
     for (uword reg = 0; reg < num_region; reg++) {
       for (uword grp = 0; grp < num_group; grp++) {

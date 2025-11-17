@@ -14,16 +14,19 @@ using namespace arma;
 arma::cube get_regs(const arma::cube& arr, const arma::uvec& ind);
 
 //[[Rcpp::export]]
-arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword time);
+arma::vec get_subregs(const arma::cube& arr, const arma::uvec& ind, const arma::uword& grp, const arma::uword& time);
 
 //[[Rcpp::export]]
-arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword time);
+arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword& time);
+
+//[[Rcpp::export]]
+arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword& time);
 
 //[[Rcpp::export]]
 arma::field<arma::mat> Sig_eta_i(const arma::cube& G, const arma::vec& rho);
 
 //[[Rcpp::export]]
-arma::field<arma::mat> Sig_eta(const arma::field<arma::mat> Sein);
+arma::field<arma::mat> Sig_eta(const arma::field<arma::mat>& Sein);
 
 //[[Rcpp::export]]
 arma::mat cpp_rmvnorm(const arma::vec& mean, const arma::mat& covar);
