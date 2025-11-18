@@ -149,4 +149,4 @@ The traceplot on the left is exactly what we want to see: it is clearly fluctuat
 
 ## Closing Thoughts
 
-In this vignette, we discussed generating samples with `run_sampler()`, importing those samples into R and age-standardization using `load_samples()`, and generating traceplots to get a gut-check on our dataset and the implications of sporadic traceplots.
+In this vignette, we discussed generating samples with `run_sampler()`, importing those samples into R, age-standardization using `load_samples()`, generating traceplots to get a gut-check on our dataset, along with the implications of sporadic traceplots.
