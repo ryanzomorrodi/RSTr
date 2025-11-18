@@ -11,8 +11,8 @@
 #' # prepare truncated dataset
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
-#' initialize_model("test", tempdir(), data_min, adj_min, .show_plots = FALSE)
-#' run_sampler("test", .show_plots = FALSE, show_progress = FALSE)
+#' initialize_model("test", tempdir(), data_min, adj_min, show_plots = FALSE)
+#' run_sampler("test", show_plots = FALSE, show_progress = FALSE)
 #' theta <- load_samples("test", tempdir()) * 1e5
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
@@ -22,49 +22,10 @@ load_samples <- function(name, dir = tempdir(), param = "theta", burn = 2000) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  model <- readRDS(paste0(dir, name, "/params.Rds"))$model
-  if (model == "ucar") {
-    samples <- load_samples_u(name, dir, param, burn)
-  }
-  if (model == "mcar") {
-    samples <- load_samples_m(name, dir, param, burn)
-  }
-  if (model == "mstcar") {
-    samples <- load_samples_mst(name, dir, param, burn)
-  }
-  samples
-}
-
-#' Load MCMC samples, UCAR
-#'
-#' @noRd
-load_samples_u <- function(name, dir, param, burn) {
-  mar <- c("theta" = 4, "beta" = 2, "Z" = 3, "sig2" = 1, "tau2" = 1)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
+  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 3, "sig2" = 3, "rho" = 2)
+  if (params$model == "mstcar") mar["tau2"] = 2
   batch <- which(1:params$batch * 100 > burn)
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
-  out_list <- lapply(files, readRDS)
-  output <- abind::abind(out_list, along = mar[param])
-  if (param %in% c("theta", "beta")) {
-    if (params$method == "binomial") output <- expit(output)
-    if (params$method == "poisson") output <- exp(output)
-  }
-  output
-}
-
-#' Load MCMC samples, MCAR
-#'
-#' @noRd
-load_samples_m <- function(name, dir, param, burn) {
-  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "tau2" = 3)
-  params <- readRDS(paste0(dir, name, "/params.Rds"))
-  batch <- which(1:params$batch * 100 > burn)
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
   files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])
   if (param %in% c("theta", "beta")) {
@@ -72,60 +33,26 @@ load_samples_m <- function(name, dir, param, burn) {
     if (params$method == "poisson") output <- exp(output)
   }
   dims <- params$dimnames
-  if (!is.null(dims)) {
-    its <- seq(burn + 10, max(batch) * 100, by = 10)
-    if (param == "beta") {
-      num_island <- readRDS(paste0(dir, name, "/spatial_data.Rds"))$num_island
-      dimnames(output) <- list(island = 1:num_island, group = dims[[2]], time = dims[[3]], its = its)
-    }
-    if (param %in% c("Z", "theta")) {
-      dimnames(output) <- c(dims, list(its = its))
-    }
-    if (param %in% c("tau2")) {
+  its <- seq(burn + 10, max(batch) * 100, by = 10)
+  if (param == "beta") {
+    num_island <- readRDS(paste0(dir, name, "/spatial_data.Rds"))$num_island
+    dimnames(output) <- list(island = 1:num_island, group = dims[[2]], time = dims[[3]], its = its)
+  } else if (param %in% c("Z", "theta")) {
+    dimnames(output) <- c(dims, list(its = its))
+  } else if (param == "rho") {
+    dimnames(output) <- list(group = dims[[2]], its = its)
+  } else if (param == "tau2") {
+    if (params$model == "mstcar") {
+      dimnames(output) <- list(group = dims[[2]], its = its)
+    } else if (params$model %in% c("ucar", "mcar")) {
       dimnames(output) <- list(group = dims[[2]], time = dims[[3]], its = its)
     }
-    if (param == "G") {
-      dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], time = dims[[3]], its = its)
-    }
-  }
-  output
-}
-
-#' Load MCMC samples, MSTCAR
-#'
-#' @noRd
-load_samples_mst <- function(name, dir, param, burn) {
-  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 2, "rho" = 2)
-  params <- readRDS(paste0(dir, name, "/params.Rds"))
-  batch <- which(1:params$batch * 100 > burn)
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  files <- paste0(dir, name, "/", param, "/", param, "_out_", batch, ".Rds")
-  output <- abind::abind(lapply(files, readRDS), along = mar[param])
-  if (param %in% c("theta", "beta")) {
-    if (params$method == "binomial") output <- expit(output)
-    if (params$method == "poisson") output <- exp(output)
-  }
-  dims <- params$dimnames
-  if (!is.null(dims)) {
-    its <- seq(burn + 10, max(batch) * 100, by = 10)
-    if (param == "beta") {
-      num_island <- readRDS(paste0(dir, name, "/spatial_data.Rds"))$num_island
-      dimnames(output) <- list(island = 1:num_island, group = dims[[2]], time = dims[[3]], its = its)
-    }
-    if (param %in% c("Z", "theta")) {
-      dimnames(output) <- c(dims, list(its = its))
-    }
-    if (param %in% c("tau2", "rho")) {
-      dimnames(output) <- list(group = dims[[2]], its = its)
-    }
-    if (param == "Ag") {
-      dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], its = its)
-    }
-    if (param == "G") {
-      dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], time = dims[[3]], its = its)
-    }
+  } else if (param == "Ag") {
+    dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], its = its)
+  } else if (param == "G") {
+    dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], time = dims[[3]], its = its)
+  } else if (param == "sig2") {
+    dimnames(output) <- list(group = dims[[2]], time = dims[[3]], its = its)
   }
   output
 }

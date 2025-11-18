@@ -20,35 +20,22 @@ initialize_model <- function(
   rho_up = NULL
 ) {
   model <- match.arg(model)
-  if (model == "ucar") {
-    if (is.null(dim(data$Y))) {
-      data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
-    } else if (length(dim(data$Y)) == 2) {
-      data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
-    }
-  }
-  if (model == "mcar") {
-    if (length(dim(data$Y)) == 2) {
-      data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
-    }
+  if (is.null(dim(data$Y))) {
+    data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
+  } else if (length(dim(data$Y)) == 2) {
+    data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
   }
   miss <- which(!is.finite(data$Y))
-  if (!ignore_checks) {
-    check_data(data)
-  }
-  if (model == "mstcar" & show_plots) {
+  if (!ignore_checks) check_data(data, model)
+  if (show_plots & (dim(data$Y)[3] > 1)) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
     par(mfrow = c(1, 2))
     plot(dimnames(data$Y)[[3]], apply(data$Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
     plot(dimnames(data$Y)[[3]], apply(data$n, 3, sum), xlab = "Year", ylab = "Population")
   }
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  if (!dir.exists(paste0(dir, name))) {
-    dir.create(paste0(dir, name))
-  }
+  if (substr(dir, nchar(dir), nchar(dir)) != "/") dir <- paste0(dir, "/")
+  if (!dir.exists(paste0(dir, name))) dir.create(paste0(dir, name))
   pars <- list(
     "ucar" = c("theta", "beta", "Z", "sig2", "tau2"),
     "mcar" = c("theta", "beta", "Z", "G", "tau2"),
@@ -72,7 +59,7 @@ initialize_model <- function(
   if (model == "ucar") {
     params$restricted <- restricted
     if (restricted) {
-      params$A <- array(1 / dim(data$Y)[2], dim = dim(data$Y)[-1])
+      params$A <- A
       params$m0 <- m0
     }
   } else if (model == "mstcar") {
@@ -84,14 +71,8 @@ initialize_model <- function(
   }
 
   spatial_data <- get_spatial_data(adjacency, ignore_checks)
-  if (model == "ucar") {
-    inits <- get_inits_u(inits, data, spatial_data, method, ignore_checks)
-  } else if (model == "mcar") {
-    inits <- get_inits_m(inits, data, spatial_data$island_id, method, ignore_checks)
-  } else if (model == "mstcar") {
-    inits <- get_inits_mst(inits, data, spatial_data$island_id, method, ignore_checks)
-  }
-  priors <- get_priors(priors, data, model, ignore_checks)
+  inits <- get_inits(inits, data, spatial_data, model, method, ignore_checks)
+  priors <- get_priors(priors, data, params, ignore_checks)
 
   saveRDS(data, file = paste0(dir, name, "/data.Rds"))
   saveRDS(params, file = paste0(dir, name, "/params.Rds"))
@@ -190,7 +171,7 @@ initialize_ucar_restricted <- function(
   priors = NULL
 ) {
   method <- match.arg(method)
-  if (is.null(A)) A <- 6
+  if (is.null(A)) A <- array(6 / dim(data$Y)[2], dim = dim(data$Y)[-1])
   if (is.null(m0)) m0 <- 3
   initialize_model(
     name = name,

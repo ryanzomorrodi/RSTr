@@ -1,6 +1,10 @@
 #' Get priors
 #' @noRd
-get_priors <- function(priors, data, model, ignore_checks) {
+get_priors <- function(priors, data, params, ignore_checks) {
+  model <- params$model
+  num_region <- dim(data$Y)[1]
+  num_group <- dim(data$Y)[2]
+  num_time <- dim(data$Y)[3]
   # Prepare Hyperparameters
   primiss <- NULL
   if (is.null(priors$theta_sd)) {
@@ -17,7 +21,6 @@ get_priors <- function(priors, data, model, ignore_checks) {
     primiss <- c(primiss, "tau_b")
   }
   if (model == "ucar") {
-    num_region <- length(data$Y) # this will be phased out
     if (is.null(priors$sig_a)) {
       priors$sig_a <- 0.001
       primiss <- c(primiss, "sig_a")
@@ -26,29 +29,18 @@ get_priors <- function(priors, data, model, ignore_checks) {
       priors$sig_b <- 0.001
       primiss <- c(primiss, "sig_b")
     }
-    if (!ignore_checks) {
-      check_priors_u(priors, data)
-    }
-  } else if (model == "mcar") {
-    num_region <- dim(data$Y)[1]
-    num_group <- dim(data$Y)[2]
-
-    if (is.null(priors$G_scale)) {
-      priors$G_scale <- diag(1 / 7, num_group)
-      primiss <- c(primiss, "G_scale")
-    }
+  }
+  if (model %in% c("mcar", "mstcar")) {
     if (is.null(priors$G_df)) {
       priors$G_df <- num_group + 2
       primiss <- c(primiss, "G_df")
     }
-    if (!ignore_checks) {
-      check_priors_m(priors, data)
+    if (is.null(priors$G_scale)) {
+      priors$G_scale <- diag(1 / 7, num_group)
+      primiss <- c(primiss, "G_scale")
     }
-  } else if (model == "mstcar") {
-    num_region <- dim(data$Y)[1]
-    num_group <- dim(data$Y)[2]
-    num_time <- dim(data$Y)[3]
-    
+  }
+  if (model == "mstcar") {
     if (is.null(priors$Ag_scale)) {
       priors$Ag_scale <- diag(1 / 7, num_group)
       primiss <- c(primiss, "Ag_scale")
@@ -73,9 +65,9 @@ get_priors <- function(priors, data, model, ignore_checks) {
       priors$rho_sd <- rep(0.05, num_group)
       primiss <- c(primiss, "rho_sd")
     }
-    if (!ignore_checks) {
-      check_priors_mst(priors, data)
-    }
+  }
+  if (!ignore_checks) {
+    check_priors(priors, data, params)
   }
   if (!is.null(primiss)) {
     message("The following objects were created using defaults in 'priors': ", paste(primiss, collapse = " "))

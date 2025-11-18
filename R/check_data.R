@@ -1,7 +1,7 @@
 #' Check data
 #'
 #' @noRd
-check_data <- function(data) {
+check_data <- function(data, model) {
   message("Checking data...")
   Y <- data$Y
   n <- data$n
@@ -10,7 +10,6 @@ check_data <- function(data) {
   if (sum(miss)) {
     stop("One or more objects missing from list 'data': ", paste(chk[miss], collapse = ", "))
   }
-
   # Check for warnings
   warnout <- NULL
   warnct <- 0
@@ -24,18 +23,11 @@ check_data <- function(data) {
   if (warnct) {
     warning(paste(warnct, "warning(s) found in list 'data':\n", paste(warnout, collapse = "\n ")))
   }
-
   # Check for errors
   errout <- NULL
   errct <- 0
   # Dimensions of Y and n are not the same
-  dimtest <- NULL
-  if (is.null(dim(Y))) {
-    dimtest <- length(Y) != length(n)
-  } else {
-    dimtest <- any(dim(Y) != dim(n))
-  }
-  if (dimtest) {
+  if (any(dim(Y) != dim(n))) {
     errct <- errct + 1
     errtxt <- paste(errct, ": Data not same dimensions. Ensure dim(Y) == dim(n)")
     errout <- c(errout, errtxt)
@@ -47,12 +39,29 @@ check_data <- function(data) {
     errtxt <- paste(errct, ": Invalid Y values. Check that all Y's are at least 0 and finite")
     errout <- c(errout, errtxt)
   }
-  # Sum of Ys is zero
-  if (sum(Y) == 0) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": No events in Y. Ensure that Y has at least one event")
-    errout <- c(errout, errtxt)
+  if (model == "ucar") {
+    # Any sum of Y across regions is zero
+    if (any(apply(Y, 2:3, sum) == 0)) {
+      errct <- errct + 1
+      errtxt <- paste(errct, ": At least one set of regions has no events. Ensure that Y has at least one event for each set of regions")
+      errout <- c(errout, errtxt)
+    }
+  } else if (model == "mcar") {
+    # Any sum of Y across region-times is zero
+    if (any(apply(Y, 3, sum) == 0)) {
+      errct <- errct + 1
+      errtxt <- paste(errct, ": No events in Y for at least one time period. Ensure that Y has at least one event for each time period")
+      errout <- c(errout, errtxt)
+    }
+  } else if (model == "mstcar") {
+    # Sum of all Ys is zero
+    if (sum(Y) == 0) {
+      errct <- errct + 1
+      errtxt <- paste(errct, ": No events in Y. Ensure that Y has at least one event")
+      errout <- c(errout, errtxt)
+    }
   }
+  
   # Values of n are either negative or infinite
   if (any((n < 0) | is.infinite(n))) {
     errct <- errct + 1
