@@ -54,8 +54,8 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
   }
   output_mar <- list(
-    "ucar" = c("theta" = 4, "beta" = 3, "sig2" = 2, "tau2" = 2, "Z" = 3),
-    "mcar" = c("theta" = 3, "beta" = 3, "G" = 3, "tau2" = 2, "Z" = 3),
+    "ucar" = c("theta" = 4, "beta" = 4, "sig2" = 3, "tau2" = 3, "Z" = 4),
+    "mcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 3, "Z" = 4),
     "mstcar" = c("theta" = 4, "beta" = 4, "G" = 4, "tau2" = 2, "Ag" = 3, "Z" = 4, "rho" = 2)
   )[[model]]
 
@@ -94,11 +94,12 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
         }
 
       } else if (model == "mcar") {
-        inits$beta <- update_beta_m(inits, spatial_data)
-        inits$Z <- update_Z_m(inits, spatial_data)
-        inits$G <- update_G_m(inits, priors, spatial_data)
-        inits$tau2 <- update_tau2_m(inits, priors, spatial_data)
-        inits$theta <- update_theta_m(inits, data, priors, spatial_data, params, t_accept)
+        inits$G <- update_G_mcar(inits, priors, spatial_data)
+        inits$Z <- update_Z_mcar(inits, spatial_data)
+        inits$beta <- update_beta_mcar(inits, spatial_data)
+        inits$tau2 <- update_tau2_mcar(inits, priors, spatial_data)
+        inits$theta <- update_theta_mcar(inits, data, priors, spatial_data, params, t_accept)
+        
       } else if (model == "mstcar") {
         inits$beta <- update_beta_mst(inits, spatial_data)
         inits$Z <- update_Z_mst(inits, spatial_data)

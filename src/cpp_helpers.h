@@ -20,6 +20,9 @@ arma::vec get_subregs(const arma::cube& arr, const arma::uvec& ind, const arma::
 arma::vec get_grp(const arma::cube& arr, const arma::uword& reg, const arma::uword& time);
 
 //[[Rcpp::export]]
+arma::mat get_subgrp(const arma::cube& arr, const arma::uvec& ind, const arma::uword& time);
+
+//[[Rcpp::export]]
 arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword& time);
 
 //[[Rcpp::export]]

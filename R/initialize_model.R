@@ -27,6 +27,11 @@ initialize_model <- function(
       data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
     }
   }
+  if (model == "mcar") {
+    if (length(dim(data$Y)) == 2) {
+      data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
+    }
+  }
   miss <- which(!is.finite(data$Y))
   if (!ignore_checks) {
     check_data(data)

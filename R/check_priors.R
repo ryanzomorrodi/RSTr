@@ -1,7 +1,7 @@
-#' Check priors MSTCAR
+#' Check priors UCAR
 #'
 #' @noRd
-check_priors_u <- function(priors, num_region) {
+check_priors_u <- function(priors, data) {
   message("Checking priors...")
   tau_a <- priors$tau_a
   tau_b <- priors$tau_b
@@ -66,7 +66,7 @@ check_priors_u <- function(priors, num_region) {
 
   # theta_sd
   # dim not num_time num_region num_group
-  if (length(theta_sd) != num_region) {
+  if (dim(theta_sd) != dim(data$Y)) {
     errct <- errct + 1
     errtxt <- paste(errct, ": theta_sd has different length than data. Ensure length(theta_sd) == length(Y) or use default value")
     errout <- c(errout, errtxt)
@@ -87,13 +87,14 @@ check_priors_u <- function(priors, num_region) {
 #' Check priors MCAR
 #'
 #' @noRd
-check_priors_m <- function(priors, num_region, num_group, num_time) {
+check_priors_m <- function(priors, data) {
   message("Checking priors...")
   G_scale <- priors$G_scale
   G_df <- priors$G_df
   tau_a <- priors$tau_a
   tau_b <- priors$tau_b
   theta_sd <- priors$theta_sd
+  num_group <- dim(data$Y)[2]
   chk <- c("G_scale", "G_df", "tau_a", "tau_b", "theta_sd")
   miss <- sapply(1:length(chk), \(x) !any(names(priors) == chk[x]))
   if (sum(miss)) {
@@ -174,8 +175,8 @@ check_priors_m <- function(priors, num_region, num_group, num_time) {
   }
 
   # theta_sd
-  # dim not num_region num_group
-  if (!all(dim(theta_sd) == c(num_region, num_group))) {
+  # dim not num_region num_group num_time
+  if (!all(dim(theta_sd) == dim(data$Y))) {
     errct <- errct + 1
     errtxt <- paste(errct, ": theta_sd has different dimensions than data. Ensure dim(theta_sd) == dim(Y) or use default value")
     errout <- c(errout, errtxt)
@@ -195,7 +196,7 @@ check_priors_m <- function(priors, num_region, num_group, num_time) {
 #' Check priors MSTCAR
 #'
 #' @noRd
-check_priors_mst <- function(priors, num_region, num_group, num_time) {
+check_priors_mst <- function(priors, data) {
   message("Checking priors...")
   Ag_scale <- priors$Ag_scale
   Ag_df <- priors$Ag_df
@@ -206,6 +207,7 @@ check_priors_mst <- function(priors, num_region, num_group, num_time) {
   rho_b <- priors$rho_b
   theta_sd <- priors$theta_sd
   rho_sd <- priors$rho_sd
+  num_group <- dim(data$Y)[2]
   chk <- c("Ag_scale", "G_df", "Ag_df", "tau_a", "tau_b", "rho_a", "rho_b", "theta_sd", "rho_sd")
   miss <- sapply(1:length(chk), \(x) !any(names(priors) == chk[x]))
   if (sum(miss)) {
@@ -317,7 +319,7 @@ check_priors_mst <- function(priors, num_region, num_group, num_time) {
 
   # theta_sd
   # dim not num_time num_region num_group
-  if (!all(dim(theta_sd) == c(num_region, num_group, num_time))) {
+  if (!all(dim(theta_sd) == dim(data$Y))) {
     errct <- errct + 1
     errtxt <- paste(errct, ": theta_sd has different dimensions than data. Ensure dim(theta_sd) == dim(Y) or use default value")
     errout <- c(errout, errtxt)

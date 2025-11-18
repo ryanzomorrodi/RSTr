@@ -22,9 +22,9 @@ arma::cube update_Z_ucar(List inits, List spatial_data) {
     for (uword grp = 0; grp < num_group; grp++) {
       for (uword time = 0; time < num_time; time++) {
         double sum_adj = sum(get_subregs(Z, adjacency(reg), grp, time));
-        double tmb = (theta(reg, grp, time) - beta(island_id(reg), grp, time));
+        double rate_diff = (theta(reg, grp, time) - beta(island_id(reg), grp, time));
         double var_Z  = 1 / (1 / tau2(grp, time) + num_adj(reg) / sig2(grp, time));
-        double mean_Z = var_Z * (tmb / tau2(grp, time) + sum_adj / sig2(grp, time));
+        double mean_Z = var_Z * (rate_diff / tau2(grp, time) + sum_adj / sig2(grp, time));
         Z(reg, grp, time) = R::rnorm(mean_Z, sqrt(var_Z));
       }
     }

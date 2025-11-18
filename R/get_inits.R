@@ -66,47 +66,50 @@ get_inits_m <- function(inits, data, island_id, method, ignore_checks) {
   n <- data$n
   num_region <- dim(Y)[1]
   num_group <- dim(Y)[2]
+  num_time <- dim(Y)[[3]]
   num_island <- length(unique(island_id))
   # Prepare initial values
   initmiss <- NULL
   # beta
   if (is.null(inits$beta)) {
-    beta <- apply(Y, 2, sum, na.rm = TRUE) / apply(n, 2, sum)
+    beta <- apply(Y, 2:3, sum, na.rm = TRUE) / apply(n, 2:3, sum)
     if (method == "poisson") {
-      beta <- t(array(log(beta), dim = c(num_group, num_island)))
+      beta <- array(log(beta), dim = c(num_group, num_time, num_island))
       beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
     }
     if (method == "binomial") {
-      beta <- t(array(logit(beta), dim = c(num_group, num_island)))
+      beta <- array(logit(beta), dim = c(num_group, num_time, num_island))
       beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
     }
+    beta <- aperm(beta, c(3, 1, 2))
     inits$beta <- beta
     initmiss <- c(initmiss, "beta")
   }
+  # theta
   if (is.null(inits$theta)) {
     if (method == "poisson") theta <- log(Y / n)
     if (method == "binomial") theta <- logit(Y / n)
-    theta[!is.finite(theta)] <- beta[island_id + 1, ][which(!is.finite(theta))]
+    theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
     inits$theta <- theta
     initmiss <- c(initmiss, "theta")
   }
   # Z
   if (is.null(inits$Z)) {
-    inits$Z <- inits$theta - inits$beta[island_id + 1, , drop = FALSE]
+    inits$Z <- inits$theta - inits$beta[island_id + 1, , , drop = FALSE]
     initmiss <- c(initmiss, "Z")
   }
   # G
   if (is.null(inits$G)) {
-    inits$G <- diag(num_group) / 7
+    inits$G <- array(diag(num_group) / 7, dim = c(num_group, num_group, num_time))
     initmiss <- c(initmiss, "G")
   }
   # tau2
   if (is.null(inits$tau2)) {
-    inits$tau2 <- matrix(1 / 100, 1, num_group)
+    inits$tau2 <- matrix(1 / 100, num_group, num_time)
     initmiss <- c(initmiss, "tau2")
   }
   if (!ignore_checks) {
-    check_inits_m(inits, num_region, num_group, num_island)
+    check_inits_m(inits, data, num_island)
   }
   if (!is.null(initmiss)) {
     message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "))
@@ -174,7 +177,7 @@ get_inits_mst <- function(inits, data, island_id, method, ignore_checks) {
     initmiss <- c(initmiss, "Ag")
   }
   if (!ignore_checks) {
-    check_inits_mst(inits, num_region, num_group, num_time, num_island)
+    check_inits_mst(inits, data, num_island)
   }
   if (!is.null(initmiss)) {
     message("The following objects were created using defaults in 'inits': ", paste(initmiss, collapse = " "))

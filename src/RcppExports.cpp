@@ -50,6 +50,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_subgrp
+arma::mat get_subgrp(const arma::cube& arr, const arma::uvec& ind, const arma::uword& time);
+RcppExport SEXP _RSTr_get_subgrp(SEXP arrSEXP, SEXP indSEXP, SEXP timeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type arr(arrSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< const arma::uword& >::type time(timeSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_subgrp(arr, ind, time));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_row
 arma::vec get_row(const arma::cube& arr, const arma::uword& grp, const arma::uword& time);
 RcppExport SEXP _RSTr_get_row(SEXP arrSEXP, SEXP grpSEXP, SEXP timeSEXP) {
@@ -109,15 +122,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// update_beta_m
-arma::mat update_beta_m(List inits, List spatial_data);
-RcppExport SEXP _RSTr_update_beta_m(SEXP initsSEXP, SEXP spatial_dataSEXP) {
+// update_beta_mcar
+arma::cube update_beta_mcar(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_beta_mcar(SEXP initsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_m(inits, spatial_data));
+    rcpp_result_gen = Rcpp::wrap(update_beta_mcar(inits, spatial_data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_Z_mcar
+arma::cube update_Z_mcar(List inits, List spatial_data);
+RcppExport SEXP _RSTr_update_Z_mcar(SEXP initsSEXP, SEXP spatial_dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
+    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Z_mcar(inits, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -133,35 +158,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// update_G_m
-arma::mat update_G_m(List inits, List priors, List spatial_data);
-RcppExport SEXP _RSTr_update_G_m(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
+// update_G_mcar
+arma::cube update_G_mcar(List inits, List priors, List spatial_data);
+RcppExport SEXP _RSTr_update_G_mcar(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
     Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_G_m(inits, priors, spatial_data));
+    rcpp_result_gen = Rcpp::wrap(update_G_mcar(inits, priors, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
-// update_tau2_m
-arma::rowvec update_tau2_m(List inits, List priors, List spatial_data);
-RcppExport SEXP _RSTr_update_tau2_m(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
+// update_tau2_mcar
+arma::mat update_tau2_mcar(List inits, List priors, List spatial_data);
+RcppExport SEXP _RSTr_update_tau2_mcar(SEXP initsSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type inits(initsSEXP);
     Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_m(inits, priors, spatial_data));
+    rcpp_result_gen = Rcpp::wrap(update_tau2_mcar(inits, priors, spatial_data));
     return rcpp_result_gen;
 END_RCPP
 }
-// update_theta_m
-arma::mat update_theta_m(List inits, List data, List priors, List spatial_data, List params, arma::mat& t_accept);
-RcppExport SEXP _RSTr_update_theta_m(SEXP initsSEXP, SEXP dataSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP t_acceptSEXP) {
+// update_theta_mcar
+arma::cube update_theta_mcar(List inits, List data, List priors, List spatial_data, List params, arma::cube& t_accept);
+RcppExport SEXP _RSTr_update_theta_mcar(SEXP initsSEXP, SEXP dataSEXP, SEXP priorsSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP, SEXP t_acceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -170,8 +195,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
     Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
     Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type t_accept(t_acceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_theta_m(inits, data, priors, spatial_data, params, t_accept));
+    Rcpp::traits::input_parameter< arma::cube& >::type t_accept(t_acceptSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_theta_mcar(inits, data, priors, spatial_data, params, t_accept));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -379,16 +404,18 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_get_regs", (DL_FUNC) &_RSTr_get_regs, 2},
     {"_RSTr_get_subregs", (DL_FUNC) &_RSTr_get_subregs, 4},
     {"_RSTr_get_grp", (DL_FUNC) &_RSTr_get_grp, 3},
+    {"_RSTr_get_subgrp", (DL_FUNC) &_RSTr_get_subgrp, 3},
     {"_RSTr_get_row", (DL_FUNC) &_RSTr_get_row, 3},
     {"_RSTr_Sig_eta_i", (DL_FUNC) &_RSTr_Sig_eta_i, 2},
     {"_RSTr_Sig_eta", (DL_FUNC) &_RSTr_Sig_eta, 1},
     {"_RSTr_cpp_rmvnorm", (DL_FUNC) &_RSTr_cpp_rmvnorm, 2},
     {"_RSTr_geteig", (DL_FUNC) &_RSTr_geteig, 1},
-    {"_RSTr_update_beta_m", (DL_FUNC) &_RSTr_update_beta_m, 2},
+    {"_RSTr_update_beta_mcar", (DL_FUNC) &_RSTr_update_beta_mcar, 2},
+    {"_RSTr_update_Z_mcar", (DL_FUNC) &_RSTr_update_Z_mcar, 2},
     {"_RSTr_update_Z_m", (DL_FUNC) &_RSTr_update_Z_m, 2},
-    {"_RSTr_update_G_m", (DL_FUNC) &_RSTr_update_G_m, 3},
-    {"_RSTr_update_tau2_m", (DL_FUNC) &_RSTr_update_tau2_m, 3},
-    {"_RSTr_update_theta_m", (DL_FUNC) &_RSTr_update_theta_m, 6},
+    {"_RSTr_update_G_mcar", (DL_FUNC) &_RSTr_update_G_mcar, 3},
+    {"_RSTr_update_tau2_mcar", (DL_FUNC) &_RSTr_update_tau2_mcar, 3},
+    {"_RSTr_update_theta_mcar", (DL_FUNC) &_RSTr_update_theta_mcar, 6},
     {"_RSTr_update_beta_mst", (DL_FUNC) &_RSTr_update_beta_mst, 2},
     {"_RSTr_update_Z_mst", (DL_FUNC) &_RSTr_update_Z_mst, 2},
     {"_RSTr_update_G_mst", (DL_FUNC) &_RSTr_update_G_mst, 3},

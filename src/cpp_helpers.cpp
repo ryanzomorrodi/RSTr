@@ -10,6 +10,16 @@ arma::cube get_regs(const arma::cube& arr, const arma::uvec& ind) {
   return arr_sub;
 }
 
+arma::mat get_subgrp(const arma::cube& arr, const arma::uvec& ind, const arma::uword& time) {
+  arma::mat arr_sub(ind.n_elem, arr.n_cols);
+  for (uword reg = 0; reg < ind.n_elem; reg++) {
+    for (uword grp = 0; grp < arr.n_cols; grp++) {
+      arr_sub(reg, grp) = arr(ind[reg], grp, time);
+    }
+  }
+  return arr_sub;
+}
+
 arma::vec get_subregs(const arma::cube& arr, const arma::uvec& ind, const arma::uword& grp, const arma::uword& time) {
   arma::vec arr_sub(arr.n_rows);
   for (uword reg = 0; reg < ind.n_elem; reg++) {

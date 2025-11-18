@@ -13,6 +13,10 @@ get_grp <- function(arr, reg, time) {
     .Call(`_RSTr_get_grp`, arr, reg, time)
 }
 
+get_subgrp <- function(arr, ind, time) {
+    .Call(`_RSTr_get_subgrp`, arr, ind, time)
+}
+
 get_row <- function(arr, grp, time) {
     .Call(`_RSTr_get_row`, arr, grp, time)
 }
@@ -33,24 +37,28 @@ geteig <- function(covar) {
     .Call(`_RSTr_geteig`, covar)
 }
 
-update_beta_m <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_beta_m`, inits, spatial_data)
+update_beta_mcar <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_beta_mcar`, inits, spatial_data)
+}
+
+update_Z_mcar <- function(inits, spatial_data) {
+    .Call(`_RSTr_update_Z_mcar`, inits, spatial_data)
 }
 
 update_Z_m <- function(inits, spatial_data) {
     .Call(`_RSTr_update_Z_m`, inits, spatial_data)
 }
 
-update_G_m <- function(inits, priors, spatial_data) {
-    .Call(`_RSTr_update_G_m`, inits, priors, spatial_data)
+update_G_mcar <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_G_mcar`, inits, priors, spatial_data)
 }
 
-update_tau2_m <- function(inits, priors, spatial_data) {
-    .Call(`_RSTr_update_tau2_m`, inits, priors, spatial_data)
+update_tau2_mcar <- function(inits, priors, spatial_data) {
+    .Call(`_RSTr_update_tau2_mcar`, inits, priors, spatial_data)
 }
 
-update_theta_m <- function(inits, data, priors, spatial_data, params, t_accept) {
-    .Call(`_RSTr_update_theta_m`, inits, data, priors, spatial_data, params, t_accept)
+update_theta_mcar <- function(inits, data, priors, spatial_data, params, t_accept) {
+    .Call(`_RSTr_update_theta_mcar`, inits, data, priors, spatial_data, params, t_accept)
 }
 
 update_beta_mst <- function(inits, spatial_data) {

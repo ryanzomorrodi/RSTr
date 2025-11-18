@@ -18,7 +18,6 @@ get_priors <- function(priors, data, model, ignore_checks) {
   }
   if (model == "ucar") {
     num_region <- length(data$Y) # this will be phased out
-
     if (is.null(priors$sig_a)) {
       priors$sig_a <- 0.001
       primiss <- c(primiss, "sig_a")
@@ -28,7 +27,7 @@ get_priors <- function(priors, data, model, ignore_checks) {
       primiss <- c(primiss, "sig_b")
     }
     if (!ignore_checks) {
-      check_priors_u(priors, num_region)
+      check_priors_u(priors, data)
     }
   } else if (model == "mcar") {
     num_region <- dim(data$Y)[1]
@@ -43,7 +42,7 @@ get_priors <- function(priors, data, model, ignore_checks) {
       primiss <- c(primiss, "G_df")
     }
     if (!ignore_checks) {
-      check_priors_m(priors, num_region, num_group)
+      check_priors_m(priors, data)
     }
   } else if (model == "mstcar") {
     num_region <- dim(data$Y)[1]
@@ -75,7 +74,7 @@ get_priors <- function(priors, data, model, ignore_checks) {
       primiss <- c(primiss, "rho_sd")
     }
     if (!ignore_checks) {
-      check_priors_mst(priors, num_region, num_group, num_time)
+      check_priors_mst(priors, data)
     }
   }
   if (!is.null(primiss)) {

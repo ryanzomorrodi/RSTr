@@ -59,7 +59,7 @@ load_samples_u <- function(name, dir, param, burn) {
 #'
 #' @noRd
 load_samples_m <- function(name, dir, param, burn) {
-  mar <- c("theta" = 3, "beta" = 3, "Z" = 3, "G" = 3, "tau2" = 2)
+  mar <- c("theta" = 4, "beta" = 4, "Z" = 4, "G" = 4, "tau2" = 3)
   params <- readRDS(paste0(dir, name, "/params.Rds"))
   batch <- which(1:params$batch * 100 > burn)
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
@@ -82,10 +82,10 @@ load_samples_m <- function(name, dir, param, burn) {
       dimnames(output) <- c(dims, list(its = its))
     }
     if (param %in% c("tau2")) {
-      dimnames(output) <- list(group = dims[[2]], its = its)
+      dimnames(output) <- list(group = dims[[2]], time = dims[[3]], its = its)
     }
     if (param == "G") {
-      dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], its = its)
+      dimnames(output) <- list(group1 = dims[[2]], group2 = dims[[2]], time = dims[[3]], its = its)
     }
   }
   output
