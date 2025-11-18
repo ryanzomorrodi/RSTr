@@ -66,7 +66,7 @@ check_priors_u <- function(priors, data) {
 
   # theta_sd
   # dim not num_time num_region num_group
-  if (dim(theta_sd) != dim(data$Y)) {
+  if (!all(dim(theta_sd) == dim(data$Y))) {
     errct <- errct + 1
     errtxt <- paste(errct, ": theta_sd has different length than data. Ensure length(theta_sd) == length(Y) or use default value")
     errout <- c(errout, errtxt)
