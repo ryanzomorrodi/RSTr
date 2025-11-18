@@ -20,7 +20,7 @@ After initializing the model with `initialize_*()`, you can gather and load samp
 
 ## The `run_sampler()` function
 
-`run_sampler()` takes in four arguments: `name`, `dir`, `show_plots`, and `discard_burnin`. `name` and `dir` are associated with the name of the folder that contains the model content and the directory where that folder lives, respectively. `show_plots` allows you to hide the traceplots generated while the model runs and `discard_burnin` prevents samples from being saved before the 2000-iteration burn-in period in case the dataset is particularly large. The information needed to generate the model is already saved in `name`, and so `run_sampler()` pulls this information in to generate parameter samples. When running `run_sampler()`, the R console will generate outputs describing the batch number, the total iteration number, and the time when the last batch started. By default, `run_sampler()` will generate 6000 samples, but other values can be specified as desired, rounded down to the nearest 100. For example, we can begin a simple model and generate samples:
+`run_sampler()` takes in four arguments: `name`, `dir`, `show_plots`, and `discard_burnin`. `name` and `dir` are associated with the name of the folder that contains the model content and the directory where that folder lives, respectively. `show_plots` allows you to hide the traceplots generated while the model runs and `discard_burnin` prevents samples from being saved before the 2000-iteration burn-in period in case the dataset is particularly large. The information needed to load the model is already saved in `name`, and so `run_sampler()` pulls this information in to generate parameter samples. When running `run_sampler()`, the R console will generate outputs describing the batch number, the total iteration number, and the time when the last batch started. By default, `run_sampler()` will generate 6000 samples, but other values can be specified as desired, rounded down to the nearest 100. For example, we can begin a simple model and generate samples:
 
 ```{r}
 library(RSTr)
@@ -37,11 +37,11 @@ Once `run_sampler()` tells you that the model is finished running, you can impor
 
 -   `name`: Name of the model;
 
--   `dir`: Directory of the model. Saves to R's temporary directory by default;
+-   `dir`: Directory of the model;
 
 -   `param`: The parameter to import samples for. By default, imports `theta`. Values for `theta` and `beta` are expit- or exp-transformed, depending on the `method` chosen in `initialize_*()`; and
 
--   `burn`: Specifies a burn-in period for samples. This allows the model time to stabilize before using samples to generate estimates. By default, has a burn-in period of 2000 samples. Because of the way that `load_samples()` utilizes `burn`, it is safest to choose a burn-in period that is a multiple of 500.
+-   `burn`: Specifies a burn-in period for samples. This allows the model time to stabilize before using samples to generate estimates. By default, has a burn-in period of 2000 samples.
 
 Any `dimnames` that were saved to `data` will be applied to the samples as appropriate. Here, we pull in the `theta` samples for our test Michigan dataset with a 2000-sample burn-in period (as specified by the default arguments). We also multiply by 100,000 as it is common to display mortality rates per 100,000 individuals:
 
@@ -65,7 +65,7 @@ pop <- load_pop("my_test_model")
 theta_7988 <- aggregate_groups(theta, pop, margin_time)
 ```
 
-Now, we have a standalone sample array for our 1979-1988 samples. But what if we are interested in both the individual year data and the prevalence data? We can alternatively bind these new samples to our main `theta` array by adding in values for the `bind_new` and `new_name` arguments:
+Now, we have a standalone sample array for our 1979-1988 samples. But what if we are interested in both the individual year data *and* the prevalence data? We can alternatively bind these new samples to our main `theta` array by adding in values for the `bind_new` and `new_name` arguments:
 
 ```{r}
 theta <- aggregate_groups(theta, pop, margin_time, bind_new = TRUE, new_name = "1979-1988")
@@ -87,24 +87,29 @@ With `std_pop` generated, we need to then check which margin contains our age gr
 dim(theta)
 ```
 
-Our age groups lay along the second margin. Let's set a variable `margin_age` to represent our age group margin and standardize our `theta` estimates across ages 35-64 using the `age_standardize()` function:
+Our age groups lay along the second margin. Let's set a variable `margin_age` and standardize our `theta` estimates across ages 35-64 using the `age_standardize()` function:
 
 ```{r}
 margin_age <- 2
 theta_3564 <- age_standardize(theta, std_pop, margin_age, groups = c("35-44", "45-54", "55-64"))
 ```
 
-We subset `theta` to only the columns containing our age groups of interest: `35-44`, `45-54`, and `55-64` (i,e,. columns 1-3). Note that there may be times where you have groups stratified by both age and other sociodemographic groups. In these cases, you'll have to refactor your sample array so that the age groups are separated from your other groups before doing age-standardization, such as using `as.data.frame.table()` in conjunction with `xtabs()`.
+Note that there may be times where you have groups stratified by both age and other sociodemographic groups. In these cases, you'll have to refactor your sample array so that the age groups are separated from your other groups before doing age-standardization, such as using `as.data.frame.table()` in conjunction with `xtabs()`.
 
 Now, we have a standalone array for our age-standardized 35-64 age group. Similarly to `aggregate_groups()`, we can alternatively consolidate this into our main `theta` array by adding in values for the `bind_new` and `new_name` arguments:
 
 ```{r}
-theta <- age_standardize(theta, std_pop, margin_age, groups = c("35-44", "45-54", "55-64"), bind_new = TRUE, new_name = "35-64")
+theta <- age_standardize(
+    theta,
+    std_pop,
+    margin_age,
+    groups = c("35-44", "45-54", "55-64"),
+    bind_new = TRUE,
+    new_name = "35-64"
+)
 ```
 
 Now, our samples for `theta` are aggregated by year and age-standardized, and we have matching array values for `pop`. Note that if you plan on doing a mix of non-age aggregation and age-standardization, do age-standardization *after* aggregation, as doing age-standardization first will alter the results of any aggregation done afterward.
-
-Note that the process of age- and group-standardization is identical for both MSTCAR and MCAR models, and that age/group-standardization is not possible for UCAR models.
 
 ### Traceplots
 
