@@ -18,7 +18,7 @@ initialize_ucar(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 )
 
@@ -35,7 +35,7 @@ initialize_ucar_restricted(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 )
 
@@ -50,7 +50,7 @@ initialize_mcar(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 )
 
@@ -65,7 +65,7 @@ initialize_mstcar(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL,
   rho_up = FALSE
 )
@@ -92,7 +92,7 @@ correct and you are encountering bugs during setup}
 
 \item{seed}{Set of random seeds to use for data replication}
 
-\item{inits}{Optional list of initial conditions for each parameter}
+\item{initial_values}{Optional list of initial conditions for each parameter}
 
 \item{priors}{Optional list of priors for updates}
 

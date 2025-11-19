@@ -33,12 +33,12 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
 
   sampler_start <- Sys.time()
   data <- readRDS(paste0(dir, name, "/data.Rds"))
-  inits <- readRDS(paste0(dir, name, "/inits.Rds"))
+  initial_values <- readRDS(paste0(dir, name, "/initial_values.Rds"))
   spatial_data <- readRDS(paste0(dir, name, "/spatial_data.Rds"))
   priors <- readRDS(paste0(dir, name, "/priors.Rds"))
   params <- readRDS(paste0(dir, name, "/params.Rds"))
 
-  par_up <- names(inits)
+  par_up <- names(initial_values)
   model <- params$model
   miss <- which(!is.finite(data$Y))
   total <- params$total
@@ -67,20 +67,20 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     t_accept[] <- 0
 
     for (it in 1:T_inc) {
-      if (length(miss)) data$Y <- impute_missing_events(data, inits, params, miss)
-      inits$theta <- update_theta(inits, spatial_data, priors, params, data, t_accept)
-      inits$Z <- update_Z(inits, spatial_data, params)
-      inits$tau2 <- update_tau2(inits, spatial_data, priors, params)
-      inits$beta <- update_beta(inits, spatial_data, params)
-      if (model == "ucar") inits$sig2 <- update_sig2(inits, spatial_data, priors, params)
-      if (model %in% c("mcar", "mstcar")) inits$G <- update_G(inits, spatial_data, priors, params)
+      if (length(miss)) data$Y <- impute_missing_events(data, initial_values, params, miss)
+      initial_values$theta <- update_theta(initial_values, spatial_data, priors, params, data, t_accept)
+      initial_values$Z <- update_Z(initial_values, spatial_data, params)
+      initial_values$tau2 <- update_tau2(initial_values, spatial_data, priors, params)
+      initial_values$beta <- update_beta(initial_values, spatial_data, params)
+      if (model == "ucar") initial_values$sig2 <- update_sig2(initial_values, spatial_data, priors, params)
+      if (model %in% c("mcar", "mstcar")) initial_values$G <- update_G(initial_values, spatial_data, priors, params)
       if (model == "mstcar") {
-        inits$Ag <- update_Ag(inits, priors)
-        if (rho_up) inits$rho <- update_rho(inits, spatial_data, priors, r_accept)
+        initial_values$Ag <- update_Ag(initial_values, priors)
+        if (rho_up) initial_values$rho <- update_rho(initial_values, spatial_data, priors, r_accept)
       }
       if (it %% 10 == 0) {
-        output <- append_to_output(output, inits)
-        if (show_plots) plots <- append_to_plots(plots, inits)
+        output <- append_to_output(output, initial_values)
+        if (show_plots) plots <- append_to_plots(plots, initial_values)
       }
       if (show_progress) display_progress(batch, max(batches), total, it, T_inc, sampler_start)
     }
@@ -91,7 +91,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     params$batch <- batch
     saveRDS(params, paste0(dir, name, "/params.Rds"))
     saveRDS(priors, paste0(dir, name, "/priors.Rds"))
-    saveRDS(inits, paste0(dir, name, "/inits.Rds"))
+    saveRDS(initial_values, paste0(dir, name, "/initial_values.Rds"))
     save_output(output, batch, dir, name, discard_burnin)
 
     if (show_plots) {
@@ -116,9 +116,9 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
 
 #' Impute event values
 #' @noRd
-impute_missing_events <- function(data, inits, params, miss) {
+impute_missing_events <- function(data, initial_values, params, miss) {
   if (params$method == "binomial") {
-    rate <- expit(inits$theta[miss])
+    rate <- expit(initial_values$theta[miss])
     rp <- stats::runif(
       length(miss),
       stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
@@ -127,7 +127,7 @@ impute_missing_events <- function(data, inits, params, miss) {
     data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
   }
   if (params$method == "poisson") {
-    rate <- data$n[miss] * exp(inits$theta[miss])
+    rate <- data$n[miss] * exp(initial_values$theta[miss])
     rp <- stats::runif(
       length(miss),
       stats::ppois(params$impute_lb - 0.1, rate),
@@ -149,12 +149,12 @@ tune_metropolis_sd <- function(sd, accept) {
 
 #' Append new values to output
 #' @noRd
-append_to_output <- function(output, inits) {
+append_to_output <- function(output, initial_values) {
   onames <- names(output)
-  output_mar <- sapply(inits, \(par) length(dim(par)) + 1) 
+  output_mar <- sapply(initial_values, \(par) length(dim(par)) + 1) 
   output <- lapply(
     names(output),
-    \(par) abind::abind(output[[par]], inits[[par]], along = output_mar[par])
+    \(par) abind::abind(output[[par]], initial_values[[par]], along = output_mar[par])
   )
   names(output) <- onames
   output
@@ -162,9 +162,9 @@ append_to_output <- function(output, inits) {
 
 #' Append new values to plots
 #' @noRd
-append_to_plots <- function(plots, inits) {
+append_to_plots <- function(plots, initial_values) {
   pnames <- names(plots)
-  plots <- lapply(names(plots), \(par) c(plots[[par]], inits[[par]][1]))
+  plots <- lapply(names(plots), \(par) c(plots[[par]], initial_values[[par]][1]))
   names(plots) <- pnames
   plots
 }

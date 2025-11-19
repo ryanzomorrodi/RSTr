@@ -11,7 +11,7 @@ initialize_model <- function(
   impute_lb,
   impute_ub,
   seed,
-  inits,
+  initial_values,
   priors,
   model = c("mstcar", "ucar", "mcar"),
   restricted = NULL,
@@ -71,14 +71,14 @@ initialize_model <- function(
   }
 
   spatial_data <- get_spatial_data(adjacency, ignore_checks)
-  inits <- get_inits(inits, data, spatial_data, model, method, ignore_checks)
+  initial_values <- get_initial_values(initial_values, data, spatial_data, model, method, ignore_checks)
   priors <- get_priors(priors, data, params, ignore_checks)
 
   saveRDS(data, file = paste0(dir, name, "/data.Rds"))
   saveRDS(params, file = paste0(dir, name, "/params.Rds"))
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
   saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(inits, file = paste0(dir, name, "/inits.Rds"))
+  saveRDS(initial_values, file = paste0(dir, name, "/initial_values.Rds"))
   message("Model ready!")
 }
 
@@ -97,7 +97,7 @@ initialize_model <- function(
 #' @param impute_lb If counts are suppressed for privacy reasons, \code{impute_lb} is lower bound of suppression, typically 0 or 1
 #' @param impute_ub If counts are suppressed for privacy reasons, \code{impute_ub} is upper bound of suppression, typically 10
 #' @param seed Set of random seeds to use for data replication
-#' @param inits Optional list of initial conditions for each parameter
+#' @param initial_values Optional list of initial conditions for each parameter
 #' @param priors Optional list of priors for updates
 #' @param m0 For restricted UCAR models, baseline neighbor count by region
 #' @param A For restricted UCAR models, describes intensity of smoothing between regions
@@ -129,7 +129,7 @@ initialize_ucar <- function(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 ) {
   method <- match.arg(method)
@@ -144,7 +144,7 @@ initialize_ucar <- function(
     impute_lb = impute_lb,
     impute_ub = impute_ub,
     seed = seed,
-    inits = inits,
+    initial_values = initial_values,
     priors = priors,
     model = "ucar",
     restricted = FALSE,
@@ -167,7 +167,7 @@ initialize_ucar_restricted <- function(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 ) {
   method <- match.arg(method)
@@ -184,7 +184,7 @@ initialize_ucar_restricted <- function(
     impute_lb = impute_lb,
     impute_ub = impute_ub,
     seed = seed,
-    inits = inits,
+    initial_values = initial_values,
     priors = priors,
     model = "ucar",
     restricted = TRUE,
@@ -207,7 +207,7 @@ initialize_mcar <- function(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL
 ) {
   method <- match.arg(method)
@@ -222,7 +222,7 @@ initialize_mcar <- function(
     impute_lb = impute_lb,
     impute_ub = impute_ub,
     seed = seed,
-    inits = inits,
+    initial_values = initial_values,
     priors = priors,
     model = "mcar"
   )
@@ -242,7 +242,7 @@ initialize_mstcar <- function(
   impute_lb = 1,
   impute_ub = 9,
   seed = 1234,
-  inits = NULL,
+  initial_values = NULL,
   priors = NULL,
   rho_up = FALSE
 ) {
@@ -258,7 +258,7 @@ initialize_mstcar <- function(
     impute_lb = impute_lb,
     impute_ub = impute_ub,
     seed = seed,
-    inits = inits,
+    initial_values = initial_values,
     priors = priors,
     model = "mstcar",
     rho_up = rho_up

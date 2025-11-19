@@ -37,67 +37,67 @@ geteig <- function(covar) {
     .Call(`_RSTr_geteig`, covar)
 }
 
-update_Ag <- function(inits, priors) {
-    .Call(`_RSTr_update_Ag`, inits, priors)
+update_Ag <- function(initial_values, priors) {
+    .Call(`_RSTr_update_Ag`, initial_values, priors)
 }
 
-update_beta_ucar <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_beta_ucar`, inits, spatial_data)
+update_beta_ucar <- function(initial_values, spatial_data) {
+    .Call(`_RSTr_update_beta_ucar`, initial_values, spatial_data)
 }
 
-update_beta_mstcar <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_beta_mstcar`, inits, spatial_data)
+update_beta_ucar_restricted <- function(initial_values, spatial_data, params) {
+    .Call(`_RSTr_update_beta_ucar_restricted`, initial_values, spatial_data, params)
 }
 
-update_beta_ucar_restricted <- function(inits, spatial_data, params) {
-    .Call(`_RSTr_update_beta_ucar_restricted`, inits, spatial_data, params)
+update_beta_mstcar <- function(initial_values, spatial_data) {
+    .Call(`_RSTr_update_beta_mstcar`, initial_values, spatial_data)
 }
 
-update_G_mcar <- function(inits, spatial_data, priors) {
-    .Call(`_RSTr_update_G_mcar`, inits, spatial_data, priors)
+update_G_mcar <- function(initial_values, spatial_data, priors) {
+    .Call(`_RSTr_update_G_mcar`, initial_values, spatial_data, priors)
 }
 
-update_G_mstcar <- function(inits, spatial_data, priors) {
-    .Call(`_RSTr_update_G_mstcar`, inits, spatial_data, priors)
+update_G_mstcar <- function(initial_values, spatial_data, priors) {
+    .Call(`_RSTr_update_G_mstcar`, initial_values, spatial_data, priors)
 }
 
-update_rho <- function(inits, spatial_data, priors, r_accept) {
-    .Call(`_RSTr_update_rho`, inits, spatial_data, priors, r_accept)
+update_rho <- function(initial_values, spatial_data, priors, r_accept) {
+    .Call(`_RSTr_update_rho`, initial_values, spatial_data, priors, r_accept)
 }
 
-update_sig2_ucar <- function(inits, spatial_data, priors) {
-    .Call(`_RSTr_update_sig2_ucar`, inits, spatial_data, priors)
+update_sig2_ucar <- function(initial_values, spatial_data, priors) {
+    .Call(`_RSTr_update_sig2_ucar`, initial_values, spatial_data, priors)
 }
 
-update_sig2_ucar_restricted <- function(inits, spatial_data, priors, params) {
-    .Call(`_RSTr_update_sig2_ucar_restricted`, inits, spatial_data, priors, params)
+update_sig2_ucar_restricted <- function(initial_values, spatial_data, priors, params) {
+    .Call(`_RSTr_update_sig2_ucar_restricted`, initial_values, spatial_data, priors, params)
 }
 
-update_tau2_ucar <- function(inits, spatial_data, priors) {
-    .Call(`_RSTr_update_tau2_ucar`, inits, spatial_data, priors)
+update_tau2_ucar <- function(initial_values, spatial_data, priors) {
+    .Call(`_RSTr_update_tau2_ucar`, initial_values, spatial_data, priors)
 }
 
-update_tau2_ucar_restricted <- function(inits, spatial_data, priors, params) {
-    .Call(`_RSTr_update_tau2_ucar_restricted`, inits, spatial_data, priors, params)
+update_tau2_ucar_restricted <- function(initial_values, spatial_data, priors, params) {
+    .Call(`_RSTr_update_tau2_ucar_restricted`, initial_values, spatial_data, priors, params)
 }
 
-update_tau2_mstcar <- function(inits, spatial_data, priors) {
-    .Call(`_RSTr_update_tau2_mstcar`, inits, spatial_data, priors)
+update_tau2_mstcar <- function(initial_values, spatial_data, priors) {
+    .Call(`_RSTr_update_tau2_mstcar`, initial_values, spatial_data, priors)
 }
 
-update_theta <- function(inits, spatial_data, priors, params, data, t_accept) {
-    .Call(`_RSTr_update_theta`, inits, spatial_data, priors, params, data, t_accept)
+update_theta <- function(initial_values, spatial_data, priors, params, data, t_accept) {
+    .Call(`_RSTr_update_theta`, initial_values, spatial_data, priors, params, data, t_accept)
 }
 
-update_Z_ucar <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_Z_ucar`, inits, spatial_data)
+update_Z_ucar <- function(initial_values, spatial_data) {
+    .Call(`_RSTr_update_Z_ucar`, initial_values, spatial_data)
 }
 
-update_Z_mcar <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_Z_mcar`, inits, spatial_data)
+update_Z_mcar <- function(initial_values, spatial_data) {
+    .Call(`_RSTr_update_Z_mcar`, initial_values, spatial_data)
 }
 
-update_Z_mstcar <- function(inits, spatial_data) {
-    .Call(`_RSTr_update_Z_mstcar`, inits, spatial_data)
+update_Z_mstcar <- function(initial_values, spatial_data) {
+    .Call(`_RSTr_update_Z_mstcar`, initial_values, spatial_data)
 }
 

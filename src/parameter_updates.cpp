@@ -5,9 +5,9 @@ using namespace Rcpp;
 using namespace arma;
 
 //[[Rcpp::export]]
-arma::mat update_Ag(List inits, List priors) {
-  mat Ag = inits["Ag"];
-  cube G = inits["G"];
+arma::mat update_Ag(List initial_values, List priors) {
+  mat Ag = initial_values["Ag"];
+  cube G = initial_values["G"];
   mat Ag_scale = priors["Ag_scale"];
   double G_df = priors["G_df"];
   double Ag_df = priors["Ag_df"];
@@ -23,11 +23,11 @@ arma::mat update_Ag(List inits, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_beta_ucar(List inits, List spatial_data) {
-  cube beta = inits["beta"];
-  cube theta = inits["theta"];
-  cube Z = inits["Z"];
-  mat tau2 = inits["tau2"];
+arma::cube update_beta_ucar(List initial_values, List spatial_data) {
+  cube beta = initial_values["beta"];
+  cube theta = initial_values["theta"];
+  cube Z = initial_values["Z"];
+  mat tau2 = initial_values["tau2"];
   field<uvec> island_region = spatial_data["island_region"];
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
@@ -42,12 +42,12 @@ arma::cube update_beta_ucar(List inits, List spatial_data) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_beta_ucar_restricted(List inits, List spatial_data, List params) {
-  cube beta = inits["beta"];
-  cube theta = inits["theta"];
-  cube Z = inits["Z"];
-  mat tau2 = inits["tau2"];
-  mat sig2 = inits["sig2"];
+arma::cube update_beta_ucar_restricted(List initial_values, List spatial_data, List params) {
+  cube beta = initial_values["beta"];
+  cube theta = initial_values["theta"];
+  cube Z = initial_values["Z"];
+  mat tau2 = initial_values["tau2"];
+  mat sig2 = initial_values["sig2"];
   field<uvec> island_region = spatial_data["island_region"];
   mat A = params["A"];
   double m0 = params["m0"];
@@ -84,11 +84,11 @@ arma::cube update_beta_ucar_restricted(List inits, List spatial_data, List param
 }
 
 //[[Rcpp::export]]
-arma::cube update_beta_mstcar(List inits, List spatial_data) {
-  cube beta = inits["beta"];
-  cube theta = inits["theta"];
-  cube Z = inits["Z"];
-  vec tau2 = inits["tau2"];
+arma::cube update_beta_mstcar(List initial_values, List spatial_data) {
+  cube beta = initial_values["beta"];
+  cube theta = initial_values["theta"];
+  cube Z = initial_values["Z"];
+  vec tau2 = initial_values["tau2"];
   field<uvec> island_region = spatial_data["island_region"];
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
@@ -103,9 +103,9 @@ arma::cube update_beta_mstcar(List inits, List spatial_data) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_G_mcar(List inits, List spatial_data, List priors) {
-  cube G = inits["G"];
-  cube Z = inits["Z"];
+arma::cube update_G_mcar(List initial_values, List spatial_data, List priors) {
+  cube G = initial_values["G"];
+  cube Z = initial_values["Z"];
   double G_df = priors["G_df"];
   mat G_scale = priors["G_scale"];
   field<uvec> adjacency = spatial_data["adjacency"];
@@ -126,11 +126,11 @@ arma::cube update_G_mcar(List inits, List spatial_data, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_G_mstcar(List inits, List spatial_data, List priors) {
-  cube G = inits["G"];
-  cube Z = inits["Z"];
-  mat Ag = inits["Ag"];
-  vec rho = inits["rho"];
+arma::cube update_G_mstcar(List initial_values, List spatial_data, List priors) {
+  cube G = initial_values["G"];
+  cube Z = initial_values["Z"];
+  mat Ag = initial_values["Ag"];
+  vec rho = initial_values["rho"];
   double G_df = priors["G_df"];
   field<uvec> adjacency = spatial_data["adjacency"];
   uword num_island = spatial_data["num_island"];
@@ -161,10 +161,10 @@ arma::cube update_G_mstcar(List inits, List spatial_data, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::rowvec update_rho(List inits, List spatial_data, List priors, arma::vec& r_accept) {
-  vec rho = inits["rho"];
-  cube G = inits["G"];
-  cube Z = inits["Z"];
+arma::rowvec update_rho(List initial_values, List spatial_data, List priors, arma::vec& r_accept) {
+  vec rho = initial_values["rho"];
+  cube G = initial_values["G"];
+  cube Z = initial_values["Z"];
   double rho_a = priors["rho_a"];
   double rho_b = priors["rho_b"];
   vec rho_sd = priors["rho_sd"];
@@ -220,9 +220,9 @@ arma::rowvec update_rho(List inits, List spatial_data, List priors, arma::vec& r
 }
 
 //[[Rcpp::export]]
-arma::mat update_sig2_ucar(List inits, List spatial_data, List priors) {
-  mat sig2 = inits["sig2"];
-  cube Z = inits["Z"];
+arma::mat update_sig2_ucar(List initial_values, List spatial_data, List priors) {
+  mat sig2 = initial_values["sig2"];
+  cube Z = initial_values["Z"];
   field<uvec> adjacency = spatial_data["adjacency"];
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -247,11 +247,11 @@ arma::mat update_sig2_ucar(List inits, List spatial_data, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::mat update_sig2_ucar_restricted(List inits, List spatial_data, List priors, List params) {
-  mat sig2 = inits["sig2"];
-  cube Z = inits["Z"];
-  cube beta = inits["beta"];
-  mat tau2 = inits["tau2"];
+arma::mat update_sig2_ucar_restricted(List initial_values, List spatial_data, List priors, List params) {
+  mat sig2 = initial_values["sig2"];
+  cube Z = initial_values["Z"];
+  cube beta = initial_values["beta"];
+  mat tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -290,11 +290,11 @@ arma::mat update_sig2_ucar_restricted(List inits, List spatial_data, List priors
 }
 
 //[[Rcpp::export]]
-arma::mat update_tau2_ucar(List inits, List spatial_data, List priors) {
-  mat tau2 = inits["tau2"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  cube Z = inits["Z"];
+arma::mat update_tau2_ucar(List initial_values, List spatial_data, List priors) {
+  mat tau2 = initial_values["tau2"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  cube Z = initial_values["Z"];
   uvec island_id = spatial_data["island_id"];
   double tau_a = priors["tau_a"];
   double tau_b = priors["tau_b"];
@@ -313,12 +313,12 @@ arma::mat update_tau2_ucar(List inits, List spatial_data, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::mat update_tau2_ucar_restricted(List inits, List spatial_data, List priors, List params) {
-  mat tau2 = inits["tau2"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  cube Z = inits["Z"];
-  mat sig2 = inits["sig2"];
+arma::mat update_tau2_ucar_restricted(List initial_values, List spatial_data, List priors, List params) {
+  mat tau2 = initial_values["tau2"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  cube Z = initial_values["Z"];
+  mat sig2 = initial_values["sig2"];
   uvec num_island_region = spatial_data["num_island_region"];
   uvec island_id = spatial_data["island_id"];
   mat A = params["A"];
@@ -351,11 +351,11 @@ arma::mat update_tau2_ucar_restricted(List inits, List spatial_data, List priors
 }
 
 //[[Rcpp::export]]
-arma::mat update_tau2_mstcar(List inits, List spatial_data, List priors) {
-  mat tau2 = inits["tau2"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  cube Z = inits["Z"];
+arma::mat update_tau2_mstcar(List initial_values, List spatial_data, List priors) {
+  mat tau2 = initial_values["tau2"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  cube Z = initial_values["Z"];
   double tau_a = priors["tau_a"];
   double tau_b = priors["tau_b"];
   uvec island_id = spatial_data["island_id"];
@@ -372,11 +372,11 @@ arma::mat update_tau2_mstcar(List inits, List spatial_data, List priors) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_theta(List inits, List spatial_data, List priors, List params, List data, arma::cube& t_accept) {
-  cube theta = inits["theta"];
-  cube Z = inits["Z"];
-  cube beta = inits["beta"];
-  mat tau2 = inits["tau2"];
+arma::cube update_theta(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept) {
+  cube theta = initial_values["theta"];
+  cube Z = initial_values["Z"];
+  cube beta = initial_values["beta"];
+  mat tau2 = initial_values["tau2"];
   cube Y = data["Y"];
   cube n = data["n"];
   cube theta_sd = priors["theta_sd"];
@@ -411,12 +411,12 @@ arma::cube update_theta(List inits, List spatial_data, List priors, List params,
 }
 
 //[[Rcpp::export]]
-arma::cube update_Z_ucar(List inits, List spatial_data) {
-  cube Z = inits["Z"];
-  mat sig2 = inits["sig2"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  mat tau2 = inits["tau2"];
+arma::cube update_Z_ucar(List initial_values, List spatial_data) {
+  cube Z = initial_values["Z"];
+  mat sig2 = initial_values["sig2"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  mat tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -445,12 +445,12 @@ arma::cube update_Z_ucar(List inits, List spatial_data) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_Z_mcar(List inits, List spatial_data) {
-  cube Z = inits["Z"];
-  cube G = inits["G"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  mat tau2 = inits["tau2"];
+arma::cube update_Z_mcar(List initial_values, List spatial_data) {
+  cube Z = initial_values["Z"];
+  cube G = initial_values["G"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  mat tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -488,13 +488,13 @@ arma::cube update_Z_mcar(List inits, List spatial_data) {
 }
 
 //[[Rcpp::export]]
-arma::cube update_Z_mstcar(List inits, List spatial_data) {
-  cube Z = inits["Z"];
-  cube G = inits["G"];
-  cube theta = inits["theta"];
-  cube beta = inits["beta"];
-  vec rho = inits["rho"];
-  vec tau2 = inits["tau2"];
+arma::cube update_Z_mstcar(List initial_values, List spatial_data) {
+  cube Z = initial_values["Z"];
+  cube G = initial_values["G"];
+  cube theta = initial_values["theta"];
+  cube beta = initial_values["beta"];
+  vec rho = initial_values["rho"];
+  vec tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
   vec num_adj = spatial_data["num_adj"];
   field<uvec> island_region = spatial_data["island_region"];
