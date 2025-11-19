@@ -26,7 +26,8 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{i} &\sim \text{Binomial}(n_{i}, \theta_{i}) \\ 
+Y_{i} &\sim \text{Binomial}(n_{i}, \pi_{i}) \\
+\theta_{i} = \text{Logit}(\pi_{i}) \\
 \theta_{i} &\sim \text{LogitNormal}(\beta_{j} + Z_{i}, \tau^2), \\ 
 i &=\{1,...,N_s\}, j =\{1,...,N_{is}\}
 \end{split}
@@ -36,7 +37,8 @@ For models using `method = "poisson"`,
 
 $$  
 \begin{split}
-Y_{i} &\sim \text{Poisson}(n_{i} \theta_{i}) \\
+Y_{i} &\sim \text{Poisson}(n_{i} \lambda_{i}) \\
+\theta_{i} = \text{Log}(\lambda_{i}) \\
 \theta_{i} &\sim \text{LogNormal}(\beta_{j} + Z_{i}, \tau^2), \\ 
 i &=\{1,...,N_{s}\},\ j =\{1,...,N_{is}\}
 \end{split}
@@ -61,7 +63,8 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{ik} &\sim \text{Binomial}(n_{ik}, \theta_{ik}) \\
+Y_{ik} &\sim \text{Binomial}(n_{ik}, \pi_{ik}) \\
+\theta_{ik} = \text{Logit}(\pi_{ik}) \\
 \theta_{ik} &\sim \text{LogitNormal}(\beta_{jk} + Z_{ik}, \tau_k^2), \\ 
 i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\}
 \end{split}
@@ -71,7 +74,8 @@ For models using `method = "poisson"`,
 
 $$
 \begin{split}
-Y_{ik} &\sim \text{Poisson}(n_{ik}, \theta_{ik}) \\
+Y_{ik} &\sim \text{Poisson}(n_{ik}, \lambda_{ik}) \\
+\theta_{ik} = \text{Log}(\lambda_{ik}) \\
 \theta_{ik} &\sim \text{LogNormal}(\beta_{jk} + Z_{ik}, \tau_k^2), \\ 
 i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\}
 \end{split}
@@ -96,7 +100,8 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{ikt} &\sim \text{Binomial}(n_{ikt}, \theta_{ikt}) \\
+Y_{ikt} &\sim \text{Binomial}(n_{ikt}, \pi_{ikt}) \\
+\theta_{ikt} = \text{Logit}(\pi_{ikt}) \\
 \theta_{ikt} &\sim \text{LogitNormal}(\beta_{jkt} + Z_{ikt}, \tau_k^2), \\ 
 i &=\{1,...,N_s\},\ k =\{1,...,N_g\},\ t=\{1,...,N_t\},\ j=\{1,...,N_{is}\}
 \end{split}
@@ -106,7 +111,8 @@ For models using `method = "poisson"`,
 
 $$
 \begin{split}
-Y_{ikt} &\sim \text{Poisson}(n_{ikt} \theta_{ikt}) \\
+Y_{ikt} &\sim \text{Poisson}(n_{ikt} \lambda_{ikt}) \\
+\theta_{ikt} = \text{Log}(\lambda_{ikt}) \\
 \theta_{ikt} &\sim \text{LogNormal}(\beta_{jkt} + Z_{ikt}, \tau_k^2), \\ 
 t &=\{1,...,N_t\},\ i =\{1,...,N_s\},\ k=\{1,...,N_g\},\ j=\{1,...,N_{is}\}
 \end{split}
