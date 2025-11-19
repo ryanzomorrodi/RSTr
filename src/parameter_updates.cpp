@@ -53,19 +53,14 @@ arma::cube update_beta_mstcar(List inits, List spatial_data) {
   cube Z = inits["Z"];
   vec tau2 = inits["tau2"];
   field<uvec> island_region = spatial_data["island_region"];
-  uword num_group = Z.n_cols;
-  uword num_time = Z.n_slices;
+  uword num_group  = Z.n_cols;
+  uword num_time   = Z.n_slices;
   uword num_island = island_region.n_elem;
-  cube tmZ = theta - Z;
   for (uword isl = 0; isl < num_island; isl++) {
-    uword num_island_region = island_region(isl).n_elem;
-    for (uword grp = 0; grp < num_group; grp++) {
-      for (uword time = 0; time < num_time; time++) {
-        double sd_beta = sqrt(tau2(grp) / num_island_region);
-        double mean_beta = mean(get_subregs(tmZ, island_region(isl), grp, time));
-        beta(isl, grp, time) = R::rnorm(mean_beta, sd_beta);
-      }
-    }
+    uword num_island_region = island_region[isl].n_elem;
+    mat var_beta  = repmat(sqrt(tau2 / num_island_region), 1, num_time);
+    mat mean_beta = mean(get_regs(theta, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
+    beta.row(isl) = mat(num_group, num_time, fill::randn) % var_beta + mean_beta;
   }
   return beta;
 }
