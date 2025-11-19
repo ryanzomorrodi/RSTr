@@ -46,7 +46,7 @@ Once `run_sampler()` tells you that the model is finished running, you can impor
 Any `dimnames` that were saved to `data` will be applied to the samples as appropriate. Here, we pull in the `theta` samples for our test Michigan dataset with a 2000-sample burn-in period (as specified by the default arguments). We also multiply by 100,000 as it is common to display mortality rates per 100,000 individuals:
 
 ```{r}
-theta <- load_samples("my_test_model") * 1e5
+samples <- load_samples("my_test_model") * 1e5
 ```
 
 ### Group aggregation
