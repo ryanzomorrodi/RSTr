@@ -33,12 +33,12 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
 
   sampler_start <- Sys.time()
   data <- readRDS(paste0(dir, name, "/data.Rds"))
-  initial_values <- readRDS(paste0(dir, name, "/initial_values.Rds"))
+  current_sample <- readRDS(paste0(dir, name, "/current_sample.Rds"))
   spatial_data <- readRDS(paste0(dir, name, "/spatial_data.Rds"))
   priors <- readRDS(paste0(dir, name, "/priors.Rds"))
   params <- readRDS(paste0(dir, name, "/params.Rds"))
 
-  par_up <- names(initial_values)
+  par_up <- names(current_sample)
   model <- params$model
   miss <- which(!is.finite(data$Y))
   total <- params$total
@@ -67,20 +67,20 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     t_accept[] <- 0
 
     for (it in 1:T_inc) {
-      if (length(miss)) data$Y <- impute_missing_events(data, initial_values, params, miss)
-      initial_values$theta <- update_theta(initial_values, spatial_data, priors, params, data, t_accept)
-      initial_values$Z <- update_Z(initial_values, spatial_data, params)
-      initial_values$tau2 <- update_tau2(initial_values, spatial_data, priors, params)
-      initial_values$beta <- update_beta(initial_values, spatial_data, params)
-      if (model == "ucar") initial_values$sig2 <- update_sig2(initial_values, spatial_data, priors, params)
-      if (model %in% c("mcar", "mstcar")) initial_values$G <- update_G(initial_values, spatial_data, priors, params)
+      if (length(miss)) data$Y <- impute_missing_events(data, current_sample, params, miss)
+      current_sample$theta <- update_theta(current_sample, spatial_data, priors, params, data, t_accept)
+      current_sample$Z <- update_Z(current_sample, spatial_data, params)
+      current_sample$tau2 <- update_tau2(current_sample, spatial_data, priors, params)
+      current_sample$beta <- update_beta(current_sample, spatial_data, params)
+      if (model == "ucar") current_sample$sig2 <- update_sig2(current_sample, spatial_data, priors, params)
+      if (model %in% c("mcar", "mstcar")) current_sample$G <- update_G(current_sample, spatial_data, priors, params)
       if (model == "mstcar") {
-        initial_values$Ag <- update_Ag(initial_values, priors)
-        if (rho_up) initial_values$rho <- update_rho(initial_values, spatial_data, priors, r_accept)
+        current_sample$Ag <- update_Ag(current_sample, priors)
+        if (rho_up) current_sample$rho <- update_rho(current_sample, spatial_data, priors, r_accept)
       }
       if (it %% 10 == 0) {
-        output <- append_to_output(output, initial_values)
-        if (show_plots) plots <- append_to_plots(plots, initial_values)
+        output <- append_to_output(output, current_sample)
+        if (show_plots) plots <- append_to_plots(plots, current_sample)
       }
       if (show_progress) display_progress(batch, max(batches), total, it, T_inc, sampler_start)
     }
@@ -91,7 +91,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     params$batch <- batch
     saveRDS(params, paste0(dir, name, "/params.Rds"))
     saveRDS(priors, paste0(dir, name, "/priors.Rds"))
-    saveRDS(initial_values, paste0(dir, name, "/initial_values.Rds"))
+    saveRDS(current_sample, paste0(dir, name, "/current_sample.Rds"))
     save_output(output, batch, dir, name, discard_burnin)
 
     if (show_plots) {
@@ -116,9 +116,9 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
 
 #' Impute event values
 #' @noRd
-impute_missing_events <- function(data, initial_values, params, miss) {
+impute_missing_events <- function(data, current_sample, params, miss) {
   if (params$method == "binomial") {
-    rate <- expit(initial_values$theta[miss])
+    rate <- expit(current_sample$theta[miss])
     rp <- stats::runif(
       length(miss),
       stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
@@ -127,7 +127,7 @@ impute_missing_events <- function(data, initial_values, params, miss) {
     data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
   }
   if (params$method == "poisson") {
-    rate <- data$n[miss] * exp(initial_values$theta[miss])
+    rate <- data$n[miss] * exp(current_sample$theta[miss])
     rp <- stats::runif(
       length(miss),
       stats::ppois(params$impute_lb - 0.1, rate),
@@ -149,12 +149,12 @@ tune_metropolis_sd <- function(sd, accept) {
 
 #' Append new values to output
 #' @noRd
-append_to_output <- function(output, initial_values) {
+append_to_output <- function(output, current_sample) {
   onames <- names(output)
-  output_mar <- sapply(initial_values, \(par) length(dim(par)) + 1) 
+  output_mar <- sapply(current_sample, \(par) length(dim(par)) + 1) 
   output <- lapply(
     names(output),
-    \(par) abind::abind(output[[par]], initial_values[[par]], along = output_mar[par])
+    \(par) abind::abind(output[[par]], current_sample[[par]], along = output_mar[par])
   )
   names(output) <- onames
   output
@@ -162,9 +162,9 @@ append_to_output <- function(output, initial_values) {
 
 #' Append new values to plots
 #' @noRd
-append_to_plots <- function(plots, initial_values) {
+append_to_plots <- function(plots, current_sample) {
   pnames <- names(plots)
-  plots <- lapply(names(plots), \(par) c(plots[[par]], initial_values[[par]][1]))
+  plots <- lapply(names(plots), \(par) c(plots[[par]], current_sample[[par]][1]))
   names(plots) <- pnames
   plots
 }

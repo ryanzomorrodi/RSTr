@@ -79,6 +79,7 @@ initialize_model <- function(
   saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
   saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
   saveRDS(initial_values, file = paste0(dir, name, "/initial_values.Rds"))
+  saveRDS(initial_values, file = paste0(dir, name, "/current_sample.Rds"))
   message("Model ready!")
 }
 
