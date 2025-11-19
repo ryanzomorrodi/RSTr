@@ -32,33 +32,9 @@ arma::cube update_beta_ucar(List inits, List spatial_data) {
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
   uword num_island = island_region.n_elem;
-  cube tmZ = theta - Z;
-  for (uword isl = 0; isl < num_island; isl++) {
-    uword num_island_region = island_region(isl).n_elem;
-    for (uword grp = 0; grp < num_group; grp++) {
-      for (uword time = 0; time < num_time; time++) {
-        double sd_beta = sqrt(tau2(grp, time) / num_island_region);
-        double mean_beta = mean(get_subregs(tmZ, island_region(isl), grp, time));
-        beta(isl, grp, time) = R::rnorm(mean_beta, sd_beta);
-      }
-    }
-  }
-  return beta;
-}
-
-//[[Rcpp::export]]
-arma::cube update_beta_mstcar(List inits, List spatial_data) {
-  cube beta = inits["beta"];
-  cube theta = inits["theta"];
-  cube Z = inits["Z"];
-  vec tau2 = inits["tau2"];
-  field<uvec> island_region = spatial_data["island_region"];
-  uword num_group  = Z.n_cols;
-  uword num_time   = Z.n_slices;
-  uword num_island = island_region.n_elem;
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region[isl].n_elem;
-    mat var_beta  = repmat(sqrt(tau2 / num_island_region), 1, num_time);
+    mat var_beta = sqrt(tau2 / num_island_region);
     mat mean_beta = mean(get_regs(theta, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
     beta.row(isl) = mat(num_group, num_time, fill::randn) % var_beta + mean_beta;
   }
@@ -108,6 +84,25 @@ arma::cube update_beta_ucar_restricted(List inits, List spatial_data, List param
 }
 
 //[[Rcpp::export]]
+arma::cube update_beta_mstcar(List inits, List spatial_data) {
+  cube beta = inits["beta"];
+  cube theta = inits["theta"];
+  cube Z = inits["Z"];
+  vec tau2 = inits["tau2"];
+  field<uvec> island_region = spatial_data["island_region"];
+  uword num_group = Z.n_cols;
+  uword num_time = Z.n_slices;
+  uword num_island = island_region.n_elem;
+  for (uword isl = 0; isl < num_island; isl++) {
+    uword num_island_region = island_region[isl].n_elem;
+    mat var_beta = repmat(sqrt(tau2 / num_island_region), 1, num_time);
+    mat mean_beta = mean(get_regs(theta, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
+    beta.row(isl) = mat(num_group, num_time, fill::randn) % var_beta + mean_beta;
+  }
+  return beta;
+}
+
+//[[Rcpp::export]]
 arma::cube update_G_mcar(List inits, List spatial_data, List priors) {
   cube G = inits["G"];
   cube Z = inits["Z"];
@@ -140,8 +135,8 @@ arma::cube update_G_mstcar(List inits, List spatial_data, List priors) {
   field<uvec> adjacency = spatial_data["adjacency"];
   uword num_island = spatial_data["num_island"];
   uword num_region = Z.n_rows;
-  uword num_group  = Z.n_cols;
-  uword num_time   = Z.n_slices;
+  uword num_group = Z.n_cols;
+  uword num_time = Z.n_slices;
   cube Ags(num_group, num_group, num_time, fill::zeros);
   Ags.each_slice() += Ag;
   vec r  = rho;
@@ -176,12 +171,12 @@ arma::rowvec update_rho(List inits, List spatial_data, List priors, arma::vec& r
   field<uvec> adjacency = spatial_data["adjacency"];
   uword num_island = spatial_data["num_island"];
   uword num_region = Z.n_rows;
-  uword num_group  = Z.n_cols;
-  uword num_time   = Z.n_slices;
-  vec logit_rho    = log(rho / (1 - rho));
-  vec rand         = Rcpp::rnorm(num_group, 0, 1);
-  vec expit_rho    = rand % rho_sd + logit_rho;
-  vec rho_star_0   = 1 / (1 + exp(-expit_rho));
+  uword num_group = Z.n_cols;
+  uword num_time = Z.n_slices;
+  vec logit_rho = log(rho / (1 - rho));
+  vec rand = Rcpp::rnorm(num_group, 0, 1);
+  vec expit_rho = rand % rho_sd + logit_rho;
+  vec rho_star_0 = 1 / (1 + exp(-expit_rho));
   vec r(num_group, fill::zeros);
   vec ra(num_group, fill::zeros);
   vec rb(num_group, fill::zeros);
