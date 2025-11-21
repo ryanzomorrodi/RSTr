@@ -43,7 +43,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
   miss <- which(!is.finite(data$Y))
   total <- params$total
   start_batch <- params$batch
-  t_accept <- priors$theta_sd
+  t_accept <- priors$lambda_sd
   t_accept[] <- 0
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
@@ -65,10 +65,10 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     output <- vector("list", length(par_up))
     names(output) <- par_up
     t_accept[] <- 0
-
+    current_sample$lambda <- log_logit(current_sample$lambda, params$method)
     for (it in 1:T_inc) {
       if (length(miss)) data$Y <- impute_missing_events(data, current_sample, params, miss)
-      current_sample$theta <- update_theta(current_sample, spatial_data, priors, params, data, t_accept)
+      current_sample$lambda <- update_lambda(current_sample, spatial_data, priors, params, data, t_accept)
       current_sample$Z <- update_Z(current_sample, spatial_data, params)
       current_sample$tau2 <- update_tau2(current_sample, spatial_data, priors, params)
       current_sample$beta <- update_beta(current_sample, spatial_data, params)
@@ -84,8 +84,10 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
       }
       if (show_progress) display_progress(batch, max(batches), total, it, T_inc, sampler_start)
     }
+    current_sample$lambda <- exp_expit(current_sample$lambda, params$method)
+    output$lambda <- exp_expit(output$lambda, params$method)
     if (model == "mstcar") if (rho_up) priors$rho_sd <- tune_metropolis_sd(priors$rho_sd, r_accept / T_inc)
-    priors$theta_sd <- tune_metropolis_sd(priors$theta_sd, t_accept / T_inc)
+    priors$lambda_sd <- tune_metropolis_sd(priors$lambda_sd, t_accept / T_inc)
     total <- total + T_inc
     params$total <- total
     params$batch <- batch
@@ -95,6 +97,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     save_output(output, batch, dir, name, discard_burnin)
 
     if (show_plots) {
+      plots$lambda <- exp_expit(plots$lambda, params$method)
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)
       plot_its <- c(plot_its, output_its)
       grid <- c(2, 3)
@@ -118,7 +121,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
 #' @noRd
 impute_missing_events <- function(data, current_sample, params, miss) {
   if (params$method == "binomial") {
-    rate <- expit(current_sample$theta[miss])
+    rate <- expit(current_sample$lambda[miss])
     rp <- stats::runif(
       length(miss),
       stats::pbinom(params$impute_lb - 0.1, round(data$n[miss]), rate),
@@ -127,7 +130,7 @@ impute_missing_events <- function(data, current_sample, params, miss) {
     data$Y[miss] <- stats::qbinom(rp, round(data$n[miss]), rate)
   }
   if (params$method == "poisson") {
-    rate <- data$n[miss] * exp(current_sample$theta[miss])
+    rate <- data$n[miss] * exp(current_sample$lambda[miss])
     rp <- stats::runif(
       length(miss),
       stats::ppois(params$impute_lb - 0.1, rate),

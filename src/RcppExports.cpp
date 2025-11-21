@@ -278,9 +278,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// update_theta
-arma::cube update_theta(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept);
-RcppExport SEXP _RSTr_update_theta(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP paramsSEXP, SEXP dataSEXP, SEXP t_acceptSEXP) {
+// update_lambda
+arma::cube update_lambda(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept);
+RcppExport SEXP _RSTr_update_lambda(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP paramsSEXP, SEXP dataSEXP, SEXP t_acceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -290,7 +290,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< arma::cube& >::type t_accept(t_acceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_theta(initial_values, spatial_data, priors, params, data, t_accept));
+    rcpp_result_gen = Rcpp::wrap(update_lambda(initial_values, spatial_data, priors, params, data, t_accept));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -353,7 +353,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_update_tau2_ucar", (DL_FUNC) &_RSTr_update_tau2_ucar, 3},
     {"_RSTr_update_tau2_ucar_restricted", (DL_FUNC) &_RSTr_update_tau2_ucar_restricted, 4},
     {"_RSTr_update_tau2_mstcar", (DL_FUNC) &_RSTr_update_tau2_mstcar, 3},
-    {"_RSTr_update_theta", (DL_FUNC) &_RSTr_update_theta, 6},
+    {"_RSTr_update_lambda", (DL_FUNC) &_RSTr_update_lambda, 6},
     {"_RSTr_update_Z_ucar", (DL_FUNC) &_RSTr_update_Z_ucar, 2},
     {"_RSTr_update_Z_mcar", (DL_FUNC) &_RSTr_update_Z_mcar, 2},
     {"_RSTr_update_Z_mstcar", (DL_FUNC) &_RSTr_update_Z_mstcar, 2},

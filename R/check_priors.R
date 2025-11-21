@@ -6,12 +6,12 @@ check_priors <- function(priors, data, params) {
   model <- params$model
   tau_a <- priors$tau_a
   tau_b <- priors$tau_b
-  theta_sd <- priors$theta_sd
+  lambda_sd <- priors$lambda_sd
   num_group <- dim(data$Y)[2]
   chk <- list(
-    "ucar" = c("tau_a", "tau_b", "theta_sd", "sig_a", "sig_b"),
-    "mcar" = c("tau_a", "tau_b", "theta_sd", "G_scale", "G_df"),
-    "mstcar" = c("tau_a", "tau_b", "theta_sd", "G_scale", "G_df", "Ag_scale", "Ag_df", "rho_a", "rho_b", "rho_sd")
+    "ucar" = c("tau_a", "tau_b", "lambda_sd", "sig_a", "sig_b"),
+    "mcar" = c("tau_a", "tau_b", "lambda_sd", "G_scale", "G_df"),
+    "mstcar" = c("tau_a", "tau_b", "lambda_sd", "G_scale", "G_df", "Ag_scale", "Ag_df", "rho_a", "rho_b", "rho_sd")
   )[[model]]
   miss <- sapply(1:length(chk), \(x) !any(names(priors) == chk[x]))
   if (sum(miss)) {
@@ -47,17 +47,17 @@ check_priors <- function(priors, data, params) {
     errtxt <- paste(errct, ": tau_b is not positive. Ensure tau_b > 0 and not infinite or use default value")
     errout <- c(errout, errtxt)
   }
-  # theta_sd
+  # lambda_sd
   # dim not num_time num_region num_group
-  if (!all(dim(theta_sd) == dim(data$Y))) {
+  if (!all(dim(lambda_sd) == dim(data$Y))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": theta_sd has different length than data. Ensure length(theta_sd) == length(Y) or use default value")
+    errtxt <- paste(errct, ": lambda_sd has different length than data. Ensure length(lambda_sd) == length(Y) or use default value")
     errout <- c(errout, errtxt)
   }
   # is non-positive or infinite
-  if (any((theta_sd <= 0) | !is.finite(theta_sd))) {
+  if (any((lambda_sd <= 0) | !is.finite(lambda_sd))) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": theta_sd contains non-positive values. Ensure all(theta_sd > 0) and not infinite or use default value")
+    errtxt <- paste(errct, ": lambda_sd contains non-positive values. Ensure all(lambda_sd > 0) and not infinite or use default value")
     errout <- c(errout, errtxt)
   }
   if (model == "ucar") {

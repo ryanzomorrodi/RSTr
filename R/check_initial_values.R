@@ -2,7 +2,7 @@
 #'
 #' @noRd
 #'
-check_initial_values <- function(initial_values, data, num_island, model) {
+check_initial_values <- function(initial_values, data, num_island, model, method) {
   message("Checking initial_values...")
   Y <- data$Y
   num_region <- dim(Y)[[1]]
@@ -10,12 +10,12 @@ check_initial_values <- function(initial_values, data, num_island, model) {
   num_time <- dim(Y)[[3]]
   beta <- initial_values$beta
   tau2 <- initial_values$tau2
-  theta <- initial_values$theta
+  lambda <- initial_values$lambda
   Z <- initial_values$Z
   chk <- list(
-    "ucar" = c("beta", "tau2", "theta", "Z", "sig2"),
-    "mcar" = c("beta", "tau2", "theta", "Z", "G"),
-    "mstcar" = c("beta", "tau2", "theta", "Z", "G", "Ag", "rho")
+    "ucar" = c("beta", "tau2", "lambda", "Z", "sig2"),
+    "mcar" = c("beta", "tau2", "lambda", "Z", "G"),
+    "mstcar" = c("beta", "tau2", "lambda", "Z", "G", "Ag", "rho")
   )[[model]]
   miss <- sapply(1:length(chk), \(x) !any(names(initial_values) == chk[x]))
   if (sum(miss)) {
@@ -51,6 +51,21 @@ check_initial_values <- function(initial_values, data, num_island, model) {
     errtxt <- paste(errct, ": beta contains infinite values. Ensure all(is.finite(beta)) or use default value")
     errout <- c(errout, errtxt)
   }
+  # lambda
+  # dimensions don't match num_region num_group num_time
+  if (!all(dim(lambda) == dim(Y))) {
+    errct <- errct + 1
+    errtxt <- paste(errct, ": lambda is not a num_region x num_group x num_time array. Ensure dim(lambda) == dim(Y) or use default value")
+    errout <- c(errout, errtxt)
+  }
+  # values are unsupported
+  lower_lim <- 0
+  upper_lim <- ifelse(method == "binomial", 1, Inf)
+  if (any((lambda <= lower_lim) | (lambda >= upper_lim))) {
+    errct <- errct + 1
+    errtxt <- paste(errct, ": lambda contains unsupported values. Ensure lambdas are within range (0, 1) for `method = binomial` or (0, Inf) for `method = poisson` or use default value")
+    errout <- c(errout, errtxt)
+  }
   # sig2/G
   if (model == "ucar") {
     sig2 <- initial_values$sig2
@@ -82,19 +97,6 @@ check_initial_values <- function(initial_values, data, num_island, model) {
   if (any(tau2 <= 0) | any(!is.finite(tau2))) {
     errct <- errct + 1
     errtxt <- paste(errct, ": Some or all tau2 are non-positive or infinite. Ensure all tau2 > 0 and not infinite or use default value")
-    errout <- c(errout, errtxt)
-  }
-  # theta
-  # dimensions don't match num_region num_group num_time
-  if (!all(dim(theta) == dim(Y))) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": theta is not a num_region x num_group x num_time array. Ensure dim(theta) == dim(Y) or use default value")
-    errout <- c(errout, errtxt)
-  }
-  # values are infinite
-  if (any(!is.finite(theta))) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": theta contains infinite values. Ensure all(is.finite(theta)) or use default value")
     errout <- c(errout, errtxt)
   }
   # Z

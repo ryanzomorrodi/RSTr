@@ -94,16 +94,16 @@ Once we have our model object set up, we can start getting samples. This is the 
 run_sampler(name = "my_test_model")
 ```
 
-`run_sampler()` takes information saved in `my_test_model` and uses it to run the `RSTr` Gibbs sampler. The `RSTr` package works by generating samples in batches, then saving these batches locally inside of `my_test_model` to be retrieved once the model is finished running. Generating samples in batches helps facilitate the tuning of the underlying MCMC algorithm and helps avoid computational burden by only holding a fraction of the total samples in memory at any given time. `RSTr` runs 6,000 iterations split into 60 batches of size 100 each. All batches are thinned for every 10 iterations by default, as the `thetas` (a.k.a., the rate estimates) tend to exhibit autocorrelation. Moreover, thinning saves space when writing samples to the hard drive, as batches from larger models can balloon to gigabytes of size before thinning. Console outputs will show the current batch number, the progress within that batch, and the elapsed time. The `run_sampler()` function also updates the `.Rds` files containing different information regarding the model in case you need to reload your model at a later date. If the model crashes for any reason or R closes while the model is being run, the metadata `Rds` files will keep track of the current batch and pick back up where it left off when re-run.
+`run_sampler()` takes information saved in `my_test_model` and uses it to run the `RSTr` Gibbs sampler. The `RSTr` package works by generating samples in batches, then saving these batches locally inside of `my_test_model` to be retrieved once the model is finished running. Generating samples in batches helps facilitate the tuning of the underlying MCMC algorithm and helps avoid computational burden by only holding a fraction of the total samples in memory at any given time. `RSTr` runs 6,000 iterations split into 60 batches of size 100 each. All batches are thinned for every 10 iterations by default, as the `lambdas` (a.k.a., the rate estimates) tend to exhibit autocorrelation. Moreover, thinning saves space when writing samples to the hard drive, as batches from larger models can balloon to gigabytes of size before thinning. Console outputs will show the current batch number, the progress within that batch, and the elapsed time. The `run_sampler()` function also updates the `.Rds` files containing different information regarding the model in case you need to reload your model at a later date. If the model crashes for any reason or R closes while the model is being run, the metadata `Rds` files will keep track of the current batch and pick back up where it left off when re-run.
 
 If you want to learn more about the `run_sampler()` function, read `vignette("RSTr-samples")`.
 
 ### `load_samples()` {#sec-loadsamples}
 
-After `run_sampler()` is done running (i.e., generates 6000 iterations) and your samples have been saved to `mod_test`, you can bring the samples into R using the `load_samples()` function. We can pull in samples from any of our available parameters, but let's pull in the outputs for `theta`, our rate estimates:
+After `run_sampler()` is done running (i.e., generates 6000 iterations) and your samples have been saved to `mod_test`, you can bring the samples into R using the `load_samples()` function. We can pull in samples from any of our available parameters, but let's pull in the outputs for `lambda`, our rate estimates:
 
 ```{r}
-samples <- load_samples(name = "my_test_model", param = "theta", burn = 2000)
+samples <- load_samples(name = "my_test_model", param = "lambda", burn = 2000)
 ```
 
 Here, the `load_samples()` function brings in samples from the model `my_test_model` in R's temporary directory, only loading in iterations after `burn`. The `burn` argument specifies a burn-in period that allows the model to stabilize before gathering samples. In total, we have pulled in `(6000 - 2000) / 10 = 400` samples, as the sampler only saves every 10 iterations. To learn more about post-Gibbs sampler diagnostics or about `load_samples()`, read `vignette("RSTr-samples")`.
@@ -116,7 +116,7 @@ With our output loaded into R, we can finally get our estimates by putting our `
 medians <- get_medians(samples)
 ```
 
-This creates an `array` object with median estimates for `theta` along each region, group, and year:
+This creates an `array` object with median estimates for `lambda` along each region, group, and year:
 
 ```{r, results = "hide"}
 head(medians)

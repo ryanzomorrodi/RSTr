@@ -39,11 +39,11 @@ Once `run_sampler()` tells you that the model is finished running, you can impor
 
 -   `dir`: Directory of the model;
 
--   `param`: The parameter to import samples for. By default, imports `theta`. Values for `theta` and `beta` are expit- or exp-transformed, depending on the `method` chosen in `initialize_*()`; and
+-   `param`: The parameter to import samples for; and
 
 -   `burn`: Specifies a burn-in period for samples. This allows the model time to stabilize before using samples to generate estimates. By default, has a burn-in period of 2000 samples.
 
-Any `dimnames` that were saved to `data` will be applied to the samples as appropriate. Here, we pull in the `theta` samples for our test Michigan dataset with a 2000-sample burn-in period (as specified by the default arguments). We also multiply by 100,000 as it is common to display mortality rates per 100,000 individuals:
+Any `dimnames` that were saved to `data` will be applied to the samples as appropriate. Here, we pull in the `lambda` samples for our test Michigan dataset with a 2000-sample burn-in period (as specified by the default arguments). We also multiply by 100,000 as it is common to display mortality rates per 100,000 individuals:
 
 ```{r}
 samples <- load_samples("my_test_model") * 1e5
@@ -62,7 +62,7 @@ Our `samples` array has four margins with dimensions `83`, `6`, `10`, and `400`,
 ```{r}
 margin_time <- 3
 pop <- load_pop("my_test_model")
-theta_7988 <- aggregate_groups(samples, pop, margin_time)
+samples_7988 <- aggregate_groups(samples, pop, margin_time)
 ```
 
 Now, we have a standalone sample array for our 1979-1988 samples. But what if we are interested in both the individual year data *and* the prevalence data? We can alternatively bind these new samples to our main `samples` array by adding in values for the `bind_new` and `new_name` arguments:
@@ -91,7 +91,7 @@ Our age groups lay along the second margin. Let's set a variable `margin_age` an
 
 ```{r}
 margin_age <- 2
-theta_3564 <- age_standardize(samples, std_pop, margin_age, groups = c("35-44", "45-54", "55-64"))
+samples_3564 <- age_standardize(samples, std_pop, margin_age, groups = c("35-44", "45-54", "55-64"))
 ```
 
 Note that there may be times where you have groups stratified by both age and other sociodemographic groups. In these cases, you'll have to refactor your sample array so that the age groups are separated from your other groups before doing age-standardization, such as using `as.data.frame.table()` in conjunction with `xtabs()`.

@@ -7,10 +7,10 @@ get_priors <- function(priors, data, params, ignore_checks) {
   num_time <- dim(data$Y)[3]
   # Prepare Hyperparameters
   primiss <- NULL
-  if (is.null(priors$theta_sd)) {
-    priors$theta_sd <- data$Y
-    priors$theta_sd[] <- 0.025
-    primiss <- c(primiss, "theta_sd")
+  if (is.null(priors$lambda_sd)) {
+    priors$lambda_sd <- data$Y
+    priors$lambda_sd[] <- 0.025
+    primiss <- c(primiss, "lambda_sd")
   }
   if (is.null(priors$tau_a)) {
     priors$tau_a <- 0.001

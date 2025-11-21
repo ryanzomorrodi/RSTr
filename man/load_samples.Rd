@@ -4,7 +4,7 @@
 \alias{load_samples}
 \title{Load MCMC samples}
 \usage{
-load_samples(name, dir = tempdir(), param = "theta", burn = 2000)
+load_samples(name, dir = tempdir(), param, burn = 2000)
 }
 \arguments{
 \item{name}{Name of model}
@@ -19,7 +19,7 @@ load_samples(name, dir = tempdir(), param = "theta", burn = 2000)
 An \code{array} of samples from model \code{name}
 }
 \description{
-\code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{theta}, but any model parameters can be loaded. Users can also specify a burn-in period.
+\code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{lambda}, but any model parameters can be loaded. Users can also specify a burn-in period.
 }
 \examples{
 # prepare truncated dataset

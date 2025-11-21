@@ -26,21 +26,16 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{i} &\sim \text{Binomial}(n_{i}, \pi_{i}) \\
-\theta_{i} &= \text{Logit}(\pi_{i}) \\
-\theta_{i} &\sim \text{LogitNormal}(\beta_{j} + Z_{i}, \tau^2), \\ 
-i &=\{1,...,N_s\}, j =\{1,...,N_{is}\}
+Y_{i} &\sim \text{Binomial}(n_{i}, \lambda_{i}) \\
+\theta_{i} &= \text{Logit}(\lambda_{i}) \\
 \end{split}
 $$
 
 For models using `method = "poisson"`,
-
 $$  
 \begin{split}
 Y_{i} &\sim \text{Poisson}(n_{i} \lambda_{i}) \\
 \theta_{i} &= \text{Log}(\lambda_{i}) \\
-\theta_{i} &\sim \text{LogNormal}(\beta_{j} + Z_{i}, \tau^2), \\ 
-i &=\{1,...,N_{s}\},\ j =\{1,...,N_{is}\}
 \end{split}
 $$
 
@@ -48,7 +43,9 @@ For both models,
 
 $$
 \begin{split}
-\beta_{j} &\sim \text{Normal}(0,\sigma_{\beta}^2),\ \sigma_{\beta}^2 \to \infty \\
+\theta_{i} &\sim \text{Normal}(\beta_{j} + Z_{i}, \tau^2), \\ 
+i &=\{1,...,N_{s}\},\ j =\{1,...,N_{is}\} \\
+p(\beta_{j}) &\propto 1 \\
 Z &\sim \text{CAR}(\sigma^2) \\
 \sigma^2 &\sim \text{InvGamma}(a_\sigma,b_\sigma) \\
 \tau^2 &\sim \text{InvGamma}(a_\tau,b_\tau)
@@ -63,10 +60,8 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{ik} &\sim \text{Binomial}(n_{ik}, \pi_{ik}) \\
-\theta_{ik} &= \text{Logit}(\pi_{ik}) \\
-\theta_{ik} &\sim \text{LogitNormal}(\beta_{jk} + Z_{ik}, \tau_k^2), \\ 
-i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\}
+Y_{ik} &\sim \text{Binomial}(n_{ik}, \lambda_{ik}) \\
+\theta_{ik} &= \text{Logit}(\lambda_{ik}) \\
 \end{split}
 $$
 
@@ -76,8 +71,6 @@ $$
 \begin{split}
 Y_{ik} &\sim \text{Poisson}(n_{ik}, \lambda_{ik}) \\
 \theta_{ik} &= \text{Log}(\lambda_{ik}) \\
-\theta_{ik} &\sim \text{LogNormal}(\beta_{jk} + Z_{ik}, \tau_k^2), \\ 
-i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\}
 \end{split}
 $$
 
@@ -85,7 +78,9 @@ For both models,
 
 $$
 \begin{split}
-\beta_{jk} &\sim \text{Normal}(0,\sigma_{\beta}^2),\ \sigma_{\beta}^2 \to \infty \\
+\theta_{ik} &\sim \text{Normal}(\beta_{jk} + Z_{ik}, \tau_k^2), \\ 
+i &=\{1,...,N_s\}, k =\{1,...,N_{g}\}, j=\{1,...,N_{is}\} \\
+p(\beta_{jk}) &\propto 1 \\
 Z &\sim \text{CAR}(G) \\
 G &\sim \text{InvWishart}(\nu,G_0) \\
 \tau^2 &\sim \text{InvGamma}(a_\tau,b_\tau)
@@ -100,10 +95,8 @@ For models using `method = "binomial"`,
 
 $$
 \begin{split}
-Y_{ikt} &\sim \text{Binomial}(n_{ikt}, \pi_{ikt}) \\
-\theta_{ikt} &= \text{Logit}(\pi_{ikt}) \\
-\theta_{ikt} &\sim \text{LogitNormal}(\beta_{jkt} + Z_{ikt}, \tau_k^2), \\ 
-i &=\{1,...,N_s\},\ k =\{1,...,N_g\},\ t=\{1,...,N_t\},\ j=\{1,...,N_{is}\}
+Y_{ikt} &\sim \text{Binomial}(n_{ikt}, \lambda_{ikt}) \\
+\theta_{ikt} &= \text{Logit}(\lambda_{ikt}) \\
 \end{split}
 $$
 
@@ -113,8 +106,6 @@ $$
 \begin{split}
 Y_{ikt} &\sim \text{Poisson}(n_{ikt} \lambda_{ikt}) \\
 \theta_{ikt} &= \text{Log}(\lambda_{ikt}) \\
-\theta_{ikt} &\sim \text{LogNormal}(\beta_{jkt} + Z_{ikt}, \tau_k^2), \\ 
-t &=\{1,...,N_t\},\ i =\{1,...,N_s\},\ k=\{1,...,N_g\},\ j=\{1,...,N_{is}\}
 \end{split}
 $$
 
@@ -122,7 +113,9 @@ For both models,
 
 $$
 \begin{split}
-\beta_{jkt} &\sim \text{Normal}(0,\sigma_{\beta}^2),\ \sigma_{\beta}^2 \to \infty \\
+\theta_{ikt} &\sim \text{Normal}(\beta_{jkt} + Z_{ikt}, \tau_k^2), \\ 
+i &=\{1,...,N_s\},\ k =\{1,...,N_g\},\ t=\{1,...,N_t\},\ j=\{1,...,N_{is}\} \\
+p(\beta_{j}) &\propto 1 \\
 Z &\sim \text{MSTCAR}(\mathcal{G}, \mathcal{R}), \ \mathcal{G}=\{G_1,...,G_{N_t}\}, \ \mathcal{R}=\{R_1,...,R_{N_g}\} \\
 G_t &\sim \text{InvWishart}(A_G, \nu) \\
 A_G &\sim \text{Wishart}(A_{G_0}, \nu_0) \\

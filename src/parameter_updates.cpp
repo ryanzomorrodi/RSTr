@@ -25,7 +25,7 @@ arma::mat update_Ag(List initial_values, List priors) {
 //[[Rcpp::export]]
 arma::cube update_beta_ucar(List initial_values, List spatial_data) {
   cube beta = initial_values["beta"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube Z = initial_values["Z"];
   mat tau2 = initial_values["tau2"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -35,7 +35,7 @@ arma::cube update_beta_ucar(List initial_values, List spatial_data) {
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region[isl].n_elem;
     mat var_beta = sqrt(tau2 / num_island_region);
-    mat mean_beta = mean(get_regs(theta, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
+    mat mean_beta = mean(get_regs(lambda, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
     beta.row(isl) = mat(num_group, num_time, fill::randn) % var_beta + mean_beta;
   }
   return beta;
@@ -44,7 +44,7 @@ arma::cube update_beta_ucar(List initial_values, List spatial_data) {
 //[[Rcpp::export]]
 arma::cube update_beta_ucar_restricted(List initial_values, List spatial_data, List params) {
   cube beta = initial_values["beta"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube Z = initial_values["Z"];
   mat tau2 = initial_values["tau2"];
   mat sig2 = initial_values["sig2"];
@@ -55,7 +55,7 @@ arma::cube update_beta_ucar_restricted(List initial_values, List spatial_data, L
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
   uword num_island = island_region.n_elem;
-  cube tmZ = theta - Z;
+  cube tmZ = lambda - Z;
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region(isl).n_elem;
     mat var_t = tau2 + (tau2 + sig2) / m0;
@@ -86,7 +86,7 @@ arma::cube update_beta_ucar_restricted(List initial_values, List spatial_data, L
 //[[Rcpp::export]]
 arma::cube update_beta_mstcar(List initial_values, List spatial_data) {
   cube beta = initial_values["beta"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube Z = initial_values["Z"];
   vec tau2 = initial_values["tau2"];
   field<uvec> island_region = spatial_data["island_region"];
@@ -96,7 +96,7 @@ arma::cube update_beta_mstcar(List initial_values, List spatial_data) {
   for (uword isl = 0; isl < num_island; isl++) {
     uword num_island_region = island_region[isl].n_elem;
     mat var_beta = repmat(sqrt(tau2 / num_island_region), 1, num_time);
-    mat mean_beta = mean(get_regs(theta, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
+    mat mean_beta = mean(get_regs(lambda, island_region[isl]) - get_regs(Z, island_region[isl]), 0);
     beta.row(isl) = mat(num_group, num_time, fill::randn) % var_beta + mean_beta;
   }
   return beta;
@@ -292,7 +292,7 @@ arma::mat update_sig2_ucar_restricted(List initial_values, List spatial_data, Li
 //[[Rcpp::export]]
 arma::mat update_tau2_ucar(List initial_values, List spatial_data, List priors) {
   mat tau2 = initial_values["tau2"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   cube Z = initial_values["Z"];
   uvec island_id = spatial_data["island_id"];
@@ -302,7 +302,7 @@ arma::mat update_tau2_ucar(List initial_values, List spatial_data, List priors) 
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
   double tau_shape = num_region / 2 + tau_a;
-  cube square_resid = pow(theta - get_regs(beta, island_id) - Z, 2);
+  cube square_resid = pow(lambda - get_regs(beta, island_id) - Z, 2);
   for (uword grp = 0; grp < num_group; grp++) {
     for (uword time = 0; time < num_time; time++) {
       double tau_scale = 1 / (sum(get_row(square_resid, grp, time)) / 2 + tau_b);
@@ -315,7 +315,7 @@ arma::mat update_tau2_ucar(List initial_values, List spatial_data, List priors) 
 //[[Rcpp::export]]
 arma::mat update_tau2_ucar_restricted(List initial_values, List spatial_data, List priors, List params) {
   mat tau2 = initial_values["tau2"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   cube Z = initial_values["Z"];
   mat sig2 = initial_values["sig2"];
@@ -330,7 +330,7 @@ arma::mat update_tau2_ucar_restricted(List initial_values, List spatial_data, Li
   uword num_group = Z.n_cols;
   uword num_time = Z.n_slices;
   double tau_shape = num_region / 2 + tau_a;
-  cube square_resid = pow(theta - get_regs(beta, island_id) - Z, 2);
+  cube square_resid = pow(lambda - get_regs(beta, island_id) - Z, 2);
   for (uword grp = 0; grp < num_group; grp++) {
     for (uword time = 0; time < num_time; time++) {
       double tau_scale = 1 / (sum(get_row(square_resid, grp, time)) / 2 + tau_b);
@@ -353,7 +353,7 @@ arma::mat update_tau2_ucar_restricted(List initial_values, List spatial_data, Li
 //[[Rcpp::export]]
 arma::mat update_tau2_mstcar(List initial_values, List spatial_data, List priors) {
   mat tau2 = initial_values["tau2"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   cube Z = initial_values["Z"];
   double tau_a = priors["tau_a"];
@@ -363,7 +363,7 @@ arma::mat update_tau2_mstcar(List initial_values, List spatial_data, List priors
   uword num_group  = Z.n_cols;
   uword num_time   = Z.n_slices;
   double tau_shape = num_region * num_time / 2 + tau_a;
-  cube square_resid = pow(theta - get_regs(beta, island_id) - Z, 2) / 2;
+  cube square_resid = pow(lambda - get_regs(beta, island_id) - Z, 2) / 2;
   for (uword grp = 0; grp < num_group; grp++) {
     double tau_scale = 1 / (accu(square_resid.col(grp)) + tau_b);
     tau2[grp] = 1 / R::rgamma(tau_shape, tau_scale);
@@ -372,14 +372,14 @@ arma::mat update_tau2_mstcar(List initial_values, List spatial_data, List priors
 }
 
 //[[Rcpp::export]]
-arma::cube update_theta(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept) {
-  cube theta = initial_values["theta"];
+arma::cube update_lambda(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept) {
+  cube lambda = initial_values["lambda"];
   cube Z = initial_values["Z"];
   cube beta = initial_values["beta"];
   mat tau2 = initial_values["tau2"];
   cube Y = data["Y"];
   cube n = data["n"];
-  cube theta_sd = priors["theta_sd"];
+  cube lambda_sd = priors["lambda_sd"];
   uvec island_id = spatial_data["island_id"];
   String method = params["method"];
   uword num_region = Z.n_rows;
@@ -388,33 +388,33 @@ arma::cube update_theta(List initial_values, List spatial_data, List priors, Lis
   for (uword time = 0; time < num_time; time++) {
     for (uword reg = 0; reg < num_region; reg++) {
       for (uword grp = 0; grp < num_group; grp++) {
-        double theta_star = R::rnorm(theta(reg, grp, time), theta_sd(reg, grp, time));
-        double rk1 = Y(reg, grp, time) * (theta_star - theta(reg, grp, time));
+        double lambda_star = R::rnorm(lambda(reg, grp, time), lambda_sd(reg, grp, time));
+        double rk1 = Y(reg, grp, time) * (lambda_star - lambda(reg, grp, time));
         double rk2 = 0;
         if (method == "binomial") {
-          rk2 = n(reg, grp, time) * (log(1 + exp(theta_star)) - log(1 + exp(theta(reg, grp, time))));
+          rk2 = n(reg, grp, time) * (log(1 + exp(lambda_star)) - log(1 + exp(lambda(reg, grp, time))));
         } 
         if (method == "poisson") {
-          rk2 = n(reg, grp, time) * (exp(theta_star) - exp(theta(reg, grp, time)));
+          rk2 = n(reg, grp, time) * (exp(lambda_star) - exp(lambda(reg, grp, time)));
         }
-        double rk3a = pow(theta_star            - beta(island_id(reg), grp, time) - Z(reg, grp, time), 2);
-        double rk3b = pow(theta(reg, grp, time) - beta(island_id(reg), grp, time) - Z(reg, grp, time), 2);
+        double rk3a = pow(lambda_star            - beta(island_id(reg), grp, time) - Z(reg, grp, time), 2);
+        double rk3b = pow(lambda(reg, grp, time) - beta(island_id(reg), grp, time) - Z(reg, grp, time), 2);
         double rk   = exp(rk1 - rk2 - 1 / (2 * tau2[grp]) * (rk3a - rk3b));
         if (rk >= R::runif(0, 1)) {
           t_accept(reg, grp, time)++;
-          theta(reg, grp, time) = theta_star;
+          lambda(reg, grp, time) = lambda_star;
         }
       }
     }
   }
-  return theta;
+  return lambda;
 }
 
 //[[Rcpp::export]]
 arma::cube update_Z_ucar(List initial_values, List spatial_data) {
   cube Z = initial_values["Z"];
   mat sig2 = initial_values["sig2"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   mat tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
@@ -429,7 +429,7 @@ arma::cube update_Z_ucar(List initial_values, List spatial_data) {
     for (uword grp = 0; grp < num_group; grp++) {
       for (uword time = 0; time < num_time; time++) {
         double sum_adj = sum(get_subregs(Z, adjacency(reg), grp, time));
-        double rate_diff = (theta(reg, grp, time) - beta(island_id(reg), grp, time));
+        double rate_diff = (lambda(reg, grp, time) - beta(island_id(reg), grp, time));
         double var_Z  = 1 / (1 / tau2(grp, time) + num_adj(reg) / sig2(grp, time));
         double mean_Z = var_Z * (rate_diff / tau2(grp, time) + sum_adj / sig2(grp, time));
         Z(reg, grp, time) = R::rnorm(mean_Z, sqrt(var_Z));
@@ -448,7 +448,7 @@ arma::cube update_Z_ucar(List initial_values, List spatial_data) {
 arma::cube update_Z_mcar(List initial_values, List spatial_data) {
   cube Z = initial_values["Z"];
   cube G = initial_values["G"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   mat tau2 = initial_values["tau2"];
   field<uvec> adjacency = spatial_data["adjacency"];
@@ -461,7 +461,7 @@ arma::cube update_Z_mcar(List initial_values, List spatial_data) {
   uword num_island = island_region.n_elem;
   field<mat> Z_cov(max(num_adj) + 1, num_time);
   field<mat> Z_coveig(max(num_adj) + 1, num_time);
-  cube rate_diff = theta - get_regs(beta, island_id);
+  cube rate_diff = lambda - get_regs(beta, island_id);
   vec unique_num_adj = unique(num_adj);
   for (uword time = 0; time < num_time; time++) {
     vec taut = tau2.col(time);
@@ -491,7 +491,7 @@ arma::cube update_Z_mcar(List initial_values, List spatial_data) {
 arma::cube update_Z_mstcar(List initial_values, List spatial_data) {
   cube Z = initial_values["Z"];
   cube G = initial_values["G"];
-  cube theta = initial_values["theta"];
+  cube lambda = initial_values["lambda"];
   cube beta = initial_values["beta"];
   vec rho = initial_values["rho"];
   vec tau2 = initial_values["tau2"];
@@ -514,7 +514,7 @@ arma::cube update_Z_mstcar(List initial_values, List spatial_data) {
       Z_coveig(time, count) = geteig(Z_cov(time, count));
     }
   }
-  cube rate_diff = theta - get_regs(beta, island_id);
+  cube rate_diff = lambda - get_regs(beta, island_id);
   for (uword reg = 0; reg < num_region; reg++) {
     mat nZm = mean(get_regs(Z, adjacency[reg]), 0);
     for (uword time = 0; time < num_time; time++) {

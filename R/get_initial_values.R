@@ -14,29 +14,27 @@ get_initial_values <- function(initial_values, data, spatial_data, model, method
   # beta
   if (is.null(initial_values$beta)) {
     beta <- apply(Y, 2:3, sum, na.rm = TRUE) / apply(n, 2:3, sum)
-    if (method == "poisson") {
-      beta <- array(log(beta), dim = c(num_group, num_time, num_island))
-      beta[!is.finite(beta)] <- log(sum(Y, na.rm = TRUE) / sum(n))
-    }
-    if (method == "binomial") {
-      beta <- array(logit(beta), dim = c(num_group, num_time, num_island))
-      beta[!is.finite(beta)] <- logit(sum(Y, na.rm = TRUE) / sum(n))
-    }
+    beta <- array(log_logit(beta, method), dim = c(num_group, num_time, num_island))
+    beta[!is.finite(beta)] <- log_logit(sum(Y, na.rm = TRUE) / sum(n), method)
     beta <- aperm(beta, c(3, 1, 2))
     initial_values$beta <- beta
     initmiss <- c(initmiss, "beta")
   }
-  # theta
-  if (is.null(initial_values$theta)) {
-    if (method == "poisson") theta <- log(Y / n)
-    if (method == "binomial") theta <- logit(Y / n)
-    theta[!is.finite(theta)] <- beta[island_id + 1, , ][which(!is.finite(theta))]
-    initial_values$theta <- theta
-    initmiss <- c(initmiss, "theta")
+  # lambda
+  if (is.null(initial_values$lambda)) {
+    lower_limit <- 0
+    upper_limit <- ifelse(method == "binomial", 1, Inf)
+    lambda <- Y / n
+    lambda_unsupported <- (lambda <= lower_limit) | (lambda >= upper_limit)
+    if (any(lambda_unsupported)) {
+      lambda[lambda_unsupported] <- exp_expit(beta, method)[island_id + 1, , ][lambda_unsupported]
+    }
+    initial_values$lambda <- lambda
+    initmiss <- c(initmiss, "lambda")
   }
   # Z
   if (is.null(initial_values$Z)) {
-    initial_values$Z <- initial_values$theta - initial_values$beta[island_id + 1, , , drop = FALSE]
+    initial_values$Z <- log_logit(initial_values$lambda, method) - initial_values$beta[island_id + 1, , , drop = FALSE]
     initmiss <- c(initmiss, "Z")
   }
   # tau2
@@ -70,7 +68,7 @@ get_initial_values <- function(initial_values, data, spatial_data, model, method
     }
   }
   if (!ignore_checks) {
-    check_initial_values(initial_values, data, num_island, model)
+    check_initial_values(initial_values, data, num_island, model, method)
   }
   if (!is.null(initmiss)) {
     message("The following objects were created using defaults in 'initial_values': ", paste(initmiss, collapse = " "))

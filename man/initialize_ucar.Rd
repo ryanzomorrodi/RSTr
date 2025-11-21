@@ -17,7 +17,7 @@ initialize_ucar(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 )
@@ -34,7 +34,7 @@ initialize_ucar_restricted(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 )
@@ -49,7 +49,7 @@ initialize_mcar(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 )
@@ -64,7 +64,7 @@ initialize_mstcar(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL,
   rho_up = FALSE

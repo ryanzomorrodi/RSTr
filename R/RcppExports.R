@@ -85,8 +85,8 @@ update_tau2_mstcar <- function(initial_values, spatial_data, priors) {
     .Call(`_RSTr_update_tau2_mstcar`, initial_values, spatial_data, priors)
 }
 
-update_theta <- function(initial_values, spatial_data, priors, params, data, t_accept) {
-    .Call(`_RSTr_update_theta`, initial_values, spatial_data, priors, params, data, t_accept)
+update_lambda <- function(initial_values, spatial_data, priors, params, data, t_accept) {
+    .Call(`_RSTr_update_lambda`, initial_values, spatial_data, priors, params, data, t_accept)
 }
 
 update_Z_ucar <- function(initial_values, spatial_data) {

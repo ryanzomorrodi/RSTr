@@ -37,9 +37,9 @@ initialize_model <- function(
   if (substr(dir, nchar(dir), nchar(dir)) != "/") dir <- paste0(dir, "/")
   if (!dir.exists(paste0(dir, name))) dir.create(paste0(dir, name))
   pars <- list(
-    "ucar" = c("theta", "beta", "Z", "sig2", "tau2"),
-    "mcar" = c("theta", "beta", "Z", "G", "tau2"),
-    "mstcar" = c("theta", "beta", "Z", "G", "Ag", "tau2")
+    "ucar" = c("lambda", "beta", "Z", "sig2", "tau2"),
+    "mcar" = c("lambda", "beta", "Z", "G", "tau2"),
+    "mstcar" = c("lambda", "beta", "Z", "G", "Ag", "tau2")
   )[[model]]
   if (model == "mstcar") if (rho_up) pars <- c(pars, "rho")
   for (par in pars) {
@@ -47,7 +47,11 @@ initialize_model <- function(
       dir.create(paste0(dir, name, "/", par))
     }
   }
-  set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  } else {
+    warning("Seed is not set using `seed` arg in `initialize_*()`; samples may not be replicable.")
+  }
   params <- list(
     seed = .Random.seed,
     batch = 0,
@@ -129,7 +133,7 @@ initialize_ucar <- function(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 ) {
@@ -167,7 +171,7 @@ initialize_ucar_restricted <- function(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 ) {
@@ -207,7 +211,7 @@ initialize_mcar <- function(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL
 ) {
@@ -242,7 +246,7 @@ initialize_mstcar <- function(
   method = c("binomial", "poisson"),
   impute_lb = 1,
   impute_ub = 9,
-  seed = 1234,
+  seed = NULL,
   initial_values = NULL,
   priors = NULL,
   rho_up = FALSE

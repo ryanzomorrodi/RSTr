@@ -26,7 +26,7 @@ initialize_mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
 run_sampler("my_test_model")
 ```
 
-In `RSTr-samples`, we generated age-standardized estimates for `theta` based on our example Michigan dataset. To get the medians, we simply put our samples into `get_medians()`:
+In `RSTr-samples`, we generated age-standardized estimates for `lambda` based on our example Michigan dataset. To get the medians, we simply put our samples into `get_medians()`:
 
 ```{r}
 std_pop <- c(113154, 100640, 95799)
