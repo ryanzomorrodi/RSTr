@@ -17,7 +17,7 @@ initialize_model <- function(
   restricted = NULL,
   m0 = NULL,
   A = NULL,
-  rho_up = NULL
+  update_rho = NULL
 ) {
   model <- match.arg(model)
   if (is.null(dim(data$Y))) {
@@ -41,7 +41,7 @@ initialize_model <- function(
     "mcar" = c("lambda", "beta", "Z", "G", "tau2"),
     "mstcar" = c("lambda", "beta", "Z", "G", "Ag", "tau2")
   )[[model]]
-  if (model == "mstcar") if (rho_up) pars <- c(pars, "rho")
+  if (model == "mstcar") if (update_rho) pars <- c(pars, "rho")
   for (par in pars) {
     if (!dir.exists(paste0(dir, name, "/", par))) {
       dir.create(paste0(dir, name, "/", par))
@@ -67,7 +67,7 @@ initialize_model <- function(
       params$m0 <- m0
     }
   } else if (model == "mstcar") {
-    params$rho_up <- rho_up
+    params$update_rho <- update_rho
   }
   if (length(miss)) {
     params$impute_lb <- impute_lb
@@ -106,7 +106,7 @@ initialize_model <- function(
 #' @param priors Optional list of priors for updates
 #' @param m0 For restricted UCAR models, baseline neighbor count by region
 #' @param A For restricted UCAR models, describes intensity of smoothing between regions
-#' @param rho_up For MSTCAR models, controls whether rho update is performed for MSTCAR models
+#' @param update_rho For MSTCAR models, controls whether rho update is performed for MSTCAR models
 #' @returns No output, only sets up model and saves files to directory
 #' @examples
 #' # Initialize an MSTCAR model
@@ -131,8 +131,8 @@ initialize_ucar <- function(
   show_plots = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
-  impute_lb = 1,
-  impute_ub = 9,
+  impute_lb = NULL,
+  impute_ub = NULL,
   seed = NULL,
   initial_values = NULL,
   priors = NULL
@@ -169,8 +169,8 @@ initialize_ucar_restricted <- function(
   show_plots = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
-  impute_lb = 1,
-  impute_ub = 9,
+  impute_lb = NULL,
+  impute_ub = NULL,
   seed = NULL,
   initial_values = NULL,
   priors = NULL
@@ -209,8 +209,8 @@ initialize_mcar <- function(
   show_plots = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
-  impute_lb = 1,
-  impute_ub = 9,
+  impute_lb = NULL,
+  impute_ub = NULL,
   seed = NULL,
   initial_values = NULL,
   priors = NULL
@@ -244,12 +244,12 @@ initialize_mstcar <- function(
   show_plots = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
-  impute_lb = 1,
-  impute_ub = 9,
+  impute_lb = NULL,
+  impute_ub = NULL,
   seed = NULL,
   initial_values = NULL,
   priors = NULL,
-  rho_up = FALSE
+  update_rho = FALSE
 ) {
   method <- match.arg(method)
   initialize_model(
@@ -266,6 +266,6 @@ initialize_mstcar <- function(
     initial_values = initial_values,
     priors = priors,
     model = "mstcar",
-    rho_up = rho_up
+    update_rho = update_rho
   )
 }

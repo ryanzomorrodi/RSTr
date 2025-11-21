@@ -67,7 +67,7 @@ initialize_mstcar(
   seed = NULL,
   initial_values = NULL,
   priors = NULL,
-  rho_up = FALSE
+  update_rho = FALSE
 )
 }
 \arguments{
@@ -100,7 +100,7 @@ correct and you are encountering bugs during setup}
 
 \item{m0}{For restricted UCAR models, baseline neighbor count by region}
 
-\item{rho_up}{For MSTCAR models, controls whether rho update is performed for MSTCAR models}
+\item{update_rho}{For MSTCAR models, controls whether rho update is performed for MSTCAR models}
 }
 \value{
 No output, only sets up model and saves files to directory

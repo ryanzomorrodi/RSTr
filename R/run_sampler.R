@@ -48,10 +48,10 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
   batches <- seq(start_batch + 1, start_batch + iterations / 100)
 
   if (model == "mstcar") {
-    rho_up <- params$rho_up
+    update_rho <- params$update_rho
     r_accept <- priors$rho_sd
-    if (rho_up) r_accept[] <- 0
-    if (!rho_up) par_up <- par_up[-which(par_up == "rho")]
+    if (update_rho) r_accept[] <- 0
+    if (!update_rho) par_up <- par_up[-which(par_up == "rho")]
   }
   if (show_plots) {
     plots <- vector("list", length(par_up))
@@ -76,7 +76,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
       if (model %in% c("mcar", "mstcar")) current_sample$G <- update_G(current_sample, spatial_data, priors, params)
       if (model == "mstcar") {
         current_sample$Ag <- update_Ag(current_sample, priors)
-        if (rho_up) current_sample$rho <- update_rho(current_sample, spatial_data, priors, r_accept)
+        if (update_rho) current_sample$rho <- update_rho(current_sample, spatial_data, priors, r_accept)
       }
       if (it %% 10 == 0) {
         output <- append_to_output(output, current_sample)
@@ -86,7 +86,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     }
     current_sample$lambda <- exp_expit(current_sample$lambda, params$method)
     output$lambda <- exp_expit(output$lambda, params$method)
-    if (model == "mstcar") if (rho_up) priors$rho_sd <- tune_metropolis_sd(priors$rho_sd, r_accept / T_inc)
+    if (model == "mstcar") if (update_rho) priors$rho_sd <- tune_metropolis_sd(priors$rho_sd, r_accept / T_inc)
     priors$lambda_sd <- tune_metropolis_sd(priors$lambda_sd, t_accept / T_inc)
     total <- total + T_inc
     params$total <- total
@@ -100,7 +100,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)
       plot_its <- c(plot_its, output_its)
       grid <- c(2, 3)
-      if (model == "mstcar") if (rho_up) grid <- c(2, 4)
+      if (model == "mstcar") if (update_rho) grid <- c(2, 4)
       graphics::par(mfrow = grid)
       # Gradually remove values in burn-in, then plot
       if (plot_its[1] < 2000) {

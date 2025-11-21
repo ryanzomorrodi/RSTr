@@ -50,7 +50,7 @@ Most of these arguments are not needed, as the model has defaults for most argum
 
 -   `m0`: In the restricted UCAR model, specifies the baseline neighbor count; and
 
--   `rho_up`: In the MSTCAR model, allows for updates of the temporal correlation parameter `rho`. By default, `RSTr` does not update `rho`.
+-   `update_rho`: In the MSTCAR model, allows for updates of the temporal correlation parameter `rho`. By default, `RSTr` does not update `rho`.
 
 If you run into errors when trying to initialize your model, read `vignette("RSTr-troubleshoot")`. Below, we will go into detail regarding what each argument does specifically and what to keep in mind when setting these values.
 
@@ -88,7 +88,7 @@ Note that you don't have to specify `initial_values` for *all* parameters if you
 
 -   `lambda_sd`: An array of positive real numbers describing the candidate standard deviation in the Metropolis update for the estimated rates `lambda`. These values will be adaptively updated at the start of each batch; and
 
--   `rho_sd`: A vector of positive real numbers describing the candidate standard deviation in the Metropolis update for the temporal correlation `rho`. These values will be adaptively updated at the start of each batch. Note that this is only used if `rho_up = TRUE`.
+-   `rho_sd`: A vector of positive real numbers describing the candidate standard deviation in the Metropolis update for the temporal correlation `rho`. These values will be adaptively updated at the start of each batch. Note that this is only used if `update_rho = TRUE`.
 
 By default, most of these priors are relatively non-informative. Similar to `initial_values`, you don't have to specify priors for *all* parameters if you only want to specify some of them - any undefined priors will be defined by the default values. Any values included in `priors` that aren't aligned with the above names will be ignored.
 
@@ -100,9 +100,9 @@ By default, most of these priors are relatively non-informative. Similar to `ini
 
 `m0` and `A` are two components that determine the intensity of the smoothing of restricted CAR models. `m0` should be a positive scalar, and the size of `A` is dependent on the group/time structure of your data: `A` will be a positive scalar for region-only models, a `vector` of size `num_group` for region-group models, and a matrix of size `num_group` x `num_time` for region-group-time models. Note, however, that these informativeness restriction measures are currently only developed for the UCAR model, and restrictions for more complex models will be added to the `RSTr` package as their respective methods are developed.
 
-### The `rho_up` argument
+### The `update_rho` argument
 
-In the MSTCAR model, `rho_up` is a `logical` that specifies whether to calculate estimates for the temporal correlation `rho`. By default, it is set to `FALSE`. In empirical testing, this estimate was found to not be very sensitive to changes when specified prudently and also increases runtime by an order of magnitude due to its complexity.
+In the MSTCAR model, `update_rho` is a `logical` that specifies whether to calculate estimates for the temporal correlation `rho`. By default, it is set to `FALSE`. In empirical testing, this estimate was found to not be very sensitive to changes when specified prudently and also increases runtime by an order of magnitude due to its complexity.
 
 ### The `seed` argument
 
