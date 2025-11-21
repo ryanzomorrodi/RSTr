@@ -18,7 +18,7 @@
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-load_samples <- function(name, dir = tempdir(), param = lambda, burn = 2000) {
+load_samples <- function(name, dir = tempdir(), param = "lambda", burn = 2000) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }

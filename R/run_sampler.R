@@ -80,7 +80,7 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
       }
       if (it %% 10 == 0) {
         output <- append_to_output(output, current_sample)
-        if (show_plots) plots <- append_to_plots(plots, current_sample)
+        if (show_plots) plots <- append_to_plots(plots, current_sample, params$method)
       }
       if (show_progress) display_progress(batch, max(batches), total, it, T_inc, sampler_start)
     }
@@ -97,7 +97,6 @@ run_sampler <- function(name, dir = tempdir(), iterations = 6000, show_plots = T
     save_output(output, batch, dir, name, discard_burnin)
 
     if (show_plots) {
-      plots$lambda <- exp_expit(plots$lambda, params$method)
       output_its <- seq((batch - 1) * 100 + 10, batch * 100, 10)
       plot_its <- c(plot_its, output_its)
       grid <- c(2, 3)
@@ -165,7 +164,8 @@ append_to_output <- function(output, current_sample) {
 
 #' Append new values to plots
 #' @noRd
-append_to_plots <- function(plots, current_sample) {
+append_to_plots <- function(plots, current_sample, method) {
+  current_sample$lambda <- exp_expit(current_sample$lambda, method)
   pnames <- names(plots)
   plots <- lapply(names(plots), \(par) c(plots[[par]], current_sample[[par]][1]))
   names(plots) <- pnames
