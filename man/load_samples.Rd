@@ -4,7 +4,7 @@
 \alias{load_samples}
 \title{Load MCMC samples}
 \usage{
-load_samples(name, dir = tempdir(), param, burn = 2000)
+load_samples(name, dir = tempdir(), param = lambda, burn = 2000)
 }
 \arguments{
 \item{name}{Name of model}
