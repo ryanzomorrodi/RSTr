@@ -9,7 +9,7 @@ check_spatial_data <- function(adjacency) {
   # Regions have no neighbors
   if (any(sapply(adjacency, length) == 0)) {
     errct <- errct + 1
-    errtxt <- paste(errct, ": Some regions have no neighbors. Ensure all regions have at least 1 neighbor. Check vignette('RSTr-adj') for more information")
+    errtxt <- paste(errct, ": Some regions have no neighbors. Ensure all regions have at least 1 neighbor. Check vignette('RSTr-adjacency') for more information")
     errout <- c(errout, errtxt)
   }
   if (errct) {

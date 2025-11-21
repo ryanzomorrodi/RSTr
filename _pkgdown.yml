@@ -7,8 +7,8 @@ articles:
   navbar: ~
   contents:
   - RSTr-event
-  - RSTr-adj
-  - RSTr-init
+  - RSTr-adjacency
+  - RSTr-initialization
   - RSTr-samples
   - RSTr-medians
   - RSTr-models

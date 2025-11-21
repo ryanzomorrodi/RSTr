@@ -26,7 +26,7 @@ All `initialize_*()` functions provide several arguments:
 
 -   `data`: The `list` object containing the event `Y` and population `n` data. For more information on `data` setup, read `vignette("RSTr-event")`;
 
--   `adjacency`: The adjacency structure for your event and population data. For more information on adjacency structure setup, read `vignette("RSTr-adj")`;
+-   `adjacency`: The adjacency structure for your event and population data. For more information on adjacency structure setup, read `vignette("RSTr-adjacency")`;
 
 -   `dir`: The directory where the model folder lives. By default, this saves into your temporary directory, so the model information will be lost after the R session ends. Should you want to save your model to be analyzed at a later date or ensure that your samples are intact if R crashes during runtime, specify a different directory;
 

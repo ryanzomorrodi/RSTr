@@ -34,7 +34,7 @@ All checks that are run on the data check for general information, such as extra
 
 -   `Adjacency different length than data. Ensure length(adjacency) == dim(Y)[1]`: Adjacency information must be present for all regions. Look at the length of your adjacency information: it should line up with the number of rows in your `Y` and `n` arrays.
 
--   `Some regions have no neighbors. Ensure all regions have at least one neighbor`: If a region does not have a neighbor, the model will not run. If working with `list` adjacency information, you can first check which regions have no neighbors by running `which(lapply(adjacency, \(x) all(x == 0)))` and then fixing the regions accordingly. For assistance with fixing the adjacency information, read `vignette("RSTr-adj")`.
+-   `Some regions have no neighbors. Ensure all regions have at least one neighbor`: If a region does not have a neighbor, the model will not run. If working with `list` adjacency information, you can first check which regions have no neighbors by running `which(lapply(adjacency, \(x) all(x == 0)))` and then fixing the regions accordingly. For assistance with fixing the adjacency information, read `vignette("RSTr-adjacency")`.
 
 ## Errors and warnings with list `priors`
 
