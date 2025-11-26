@@ -1,96 +1,38 @@
-#' Initialize model
-#' @noRd
 initialize_model <- function(
   name,
   data,
   adjacency,
-  dir,
-  show_plots,
-  ignore_checks,
-  method,
-  impute_lb,
-  impute_ub,
-  seed,
-  initial_values,
-  priors,
+  dir = tempdir(),
+  show_plots = TRUE,
+  ignore_checks = FALSE,
+  method = "binomial",
+  impute_lb = 0,
+  impute_ub = 10,
+  seed = 1234,
+  initial_values = NULL,
+  priors = NULL,
   model = c("mstcar", "ucar", "mcar"),
+  pars,
   restricted = NULL,
-  m0 = NULL,
   A = NULL,
+  m0 = NULL,
   update_rho = NULL
 ) {
-  model <- match.arg(model)
-  if (is.null(dim(data$Y))) {
-    data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
-  } else if (length(dim(data$Y)) == 2) {
-    data <- lapply(data, \(x) array(x, dim = c(dim(x), 1), dimnames = dimnames(x)))
-  }
-  miss <- which(!is.finite(data$Y))
-  if (!ignore_checks) check_data(data, model)
-  if (show_plots & (dim(data$Y)[3] > 1)) {
-    oldpar <- graphics::par(no.readonly = TRUE)
-    on.exit(graphics::par(oldpar))
-    par(mfrow = c(1, 2))
-    plot(dimnames(data$Y)[[3]], apply(data$Y, 3, sum, na.rm = TRUE), xlab = "Year", ylab = "Events")
-    plot(dimnames(data$Y)[[3]], apply(data$n, 3, sum), xlab = "Year", ylab = "Population")
-  }
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") dir <- paste0(dir, "/")
-  if (!dir.exists(paste0(dir, name))) dir.create(paste0(dir, name))
-  pars <- list(
-    "ucar" = c("lambda", "beta", "Z", "sig2", "tau2"),
-    "mcar" = c("lambda", "beta", "Z", "G", "tau2"),
-    "mstcar" = c("lambda", "beta", "Z", "G", "Ag", "tau2")
-  )[[model]]
-  if (model == "mstcar") if (update_rho) pars <- c(pars, "rho")
-  for (par in pars) {
-    if (!dir.exists(paste0(dir, name, "/", par))) {
-      dir.create(paste0(dir, name, "/", par))
-    }
-  }
-  if (!is.null(seed)) {
-    set.seed(seed)
-  } else {
-    warning("Seed is not set using `seed` arg in `initialize_*()`; samples may not be replicable.")
-  }
-  params <- list(
-    seed = .Random.seed,
-    batch = 0,
-    total = 0,
-    model = model,
-    method = method,
-    dimnames = dimnames(data$Y)
-  )
-  if (model == "ucar") {
-    params$restricted <- restricted
-    if (restricted) {
-      params$A <- A
-      params$m0 <- m0
-    }
-  } else if (model == "mstcar") {
-    params$update_rho <- update_rho
-  }
-  if (length(miss)) {
-    params$impute_lb <- impute_lb
-    params$impute_ub <- impute_ub
-  }
-
-  spatial_data <- get_spatial_data(adjacency, ignore_checks)
-  initial_values <- get_initial_values(initial_values, data, spatial_data, model, method, ignore_checks)
-  priors <- get_priors(priors, data, params, ignore_checks)
-
-  saveRDS(data, file = paste0(dir, name, "/data.Rds"))
-  saveRDS(params, file = paste0(dir, name, "/params.Rds"))
-  saveRDS(spatial_data, file = paste0(dir, name, "/spatial_data.Rds"))
-  saveRDS(priors, file = paste0(dir, name, "/priors.Rds"))
-  saveRDS(initial_values, file = paste0(dir, name, "/initial_values.Rds"))
-  saveRDS(initial_values, file = paste0(dir, name, "/current_sample.Rds"))
-  message("Model ready!")
+  RSTr_obj <- create_new_model(model, data, restricted, update_rho)
+  if (show_plots & (dim(RSTr_obj$data$Y)[3] > 1)) make_data_plots(RSTr_obj$data)
+  RSTr_obj$params <- get_params(RSTr_obj$data, seed, method, model, name, dir, restricted, A, m0, update_rho, impute_lb, impute_ub)
+  RSTr_obj$spatial_data <- get_spatial_data(adjacency)
+  RSTr_obj <- get_priors(RSTr_obj, priors)
+  RSTr_obj$initial_values <- get_initial_values(RSTr_obj, initial_values, method)
+  RSTr_obj$current_sample <- RSTr_obj$initial_values
+  if (!ignore_checks) validate_model(RSTr_obj)
+  create_model_directory(name, dir, pars)
+  save_model(RSTr_obj)
+  RSTr_obj
 }
 
 #' Initialize CAR model
-#'
 #' This function performs checks and prepares data for use with either an MSTCAR, MCAR, or UCAR model. This function additionally specifies all of the model parameters, such as model type, event data type, intensity of smoothing in the UCAR model, and more.
-#'
 #' @param name Name of model and corresponding folder
 #' @param data Dataset including mortality (Y) and population (n) information
 #' @param adjacency Dataset including adjacency information
@@ -110,25 +52,27 @@ initialize_model <- function(
 #' @returns No output, only sets up model and saves files to directory
 #' @examples
 #' # Initialize an MSTCAR model
-#' initialize_mstcar(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
+#' mstcar(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
 #' # Initialize an MCAR model
 #' data_m <- lapply(miheart, \(x) x[, , "1979"])
-#' initialize_mcar("test", data_m, miadj, tempdir())
+#' mcar("test", data_m, miadj, tempdir())
 #' # Initialize an MCAR model with Poisson-distributed event data
-#' initialize_mcar("test", data_m, miadj, tempdir(), method = "poisson")
+#' mcar("test", data_m, miadj, tempdir(), method = "poisson")
 #' # Initialize a restricted UCAR model
 #' data_u <- lapply(miheart, \(x) x[, "65-74", "1979"])
-#' initialize_ucar_restricted("test", data_u, miadj, tempdir(), A = 6)
+#' rucar("test", data_u, miadj, tempdir(), A = 6)
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-initialize_ucar <- function(
+ucar <- function(
   name,
   data,
   adjacency,
   dir = tempdir(),
+  iterations = 6000,
   show_plots = TRUE,
+  verbose = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
   impute_lb = NULL,
@@ -138,7 +82,8 @@ initialize_ucar <- function(
   priors = NULL
 ) {
   method <- match.arg(method)
-  initialize_model(
+  pars <- c("lambda", "beta", "Z", "sig2", "tau2")
+  RSTr_obj <- initialize_model(
     name = name,
     data = data,
     adjacency = adjacency,
@@ -152,21 +97,26 @@ initialize_ucar <- function(
     initial_values = initial_values,
     priors = priors,
     model = "ucar",
-    restricted = FALSE,
+    pars = pars,
+    restricted = FALSE
   )
+  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj
 }
 
 #' Initialize Restricted UCAR model
-#' @rdname initialize_ucar
+#' @rdname ucar
 #' @export
-initialize_ucar_restricted <- function(
+rucar <- function(
   name,
   data,
   adjacency,
   dir = tempdir(),
   A = NULL,
   m0 = NULL,
+  iterations = 6000,
   show_plots = TRUE,
+  verbose = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
   impute_lb = NULL,
@@ -176,9 +126,8 @@ initialize_ucar_restricted <- function(
   priors = NULL
 ) {
   method <- match.arg(method)
-  if (is.null(A)) A <- array(6 / dim(data$Y)[2], dim = dim(data$Y)[-1])
-  if (is.null(m0)) m0 <- 3
-  initialize_model(
+  pars <- c("lambda", "beta", "Z", "sig2", "tau2")
+  RSTr_obj <- initialize_model(
     name = name,
     data = data,
     adjacency = adjacency,
@@ -192,21 +141,28 @@ initialize_ucar_restricted <- function(
     initial_values = initial_values,
     priors = priors,
     model = "ucar",
+    pars = pars,
     restricted = TRUE,
     A = A,
     m0 = m0
   )
+  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj
 }
 
+
+
 #' Initialize MCAR model
-#' @rdname initialize_ucar
+#' @rdname ucar
 #' @export
-initialize_mcar <- function(
+mcar <- function(
   name,
   data,
   adjacency,
   dir = tempdir(),
+  iterations = 6000,
   show_plots = TRUE,
+  verbose = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
   impute_lb = NULL,
@@ -216,7 +172,8 @@ initialize_mcar <- function(
   priors = NULL
 ) {
   method <- match.arg(method)
-  initialize_model(
+  pars <- c("lambda", "beta", "Z", "G", "tau2")
+  RSTr_obj <- initialize_model(
     name = name,
     data = data,
     adjacency = adjacency,
@@ -229,19 +186,24 @@ initialize_mcar <- function(
     seed = seed,
     initial_values = initial_values,
     priors = priors,
-    model = "mcar"
+    model = "mcar",
+    pars = pars
   )
+  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj
 }
 
 #' Initialize MSTCAR model
-#' @rdname initialize_ucar
+#' @rdname ucar
 #' @export
-initialize_mstcar <- function(
+mstcar <- function(
   name,
   data,
   adjacency,
   dir = tempdir(),
+  iterations = 6000,
   show_plots = TRUE,
+  verbose = TRUE,
   ignore_checks = FALSE,
   method = c("binomial", "poisson"),
   impute_lb = NULL,
@@ -252,7 +214,9 @@ initialize_mstcar <- function(
   update_rho = FALSE
 ) {
   method <- match.arg(method)
-  initialize_model(
+  pars <- c("lambda", "beta", "Z", "G", "Ag", "tau2", "rho")
+  #if (update_rho) pars <- c(pars, "rho")
+  RSTr_obj <- initialize_model(
     name = name,
     data = data,
     adjacency = adjacency,
@@ -266,6 +230,9 @@ initialize_mstcar <- function(
     initial_values = initial_values,
     priors = priors,
     model = "mstcar",
+    pars = pars,
     update_rho = update_rho
   )
+  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj
 }

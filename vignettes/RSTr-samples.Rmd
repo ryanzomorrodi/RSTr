@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-After initializing the model with `initialize_*()`, you can gather and load samples using the `run_sampler()` and `load_samples()` functions. Finally, using some basic plotting, we can look at our results and make sure they make sense.
+After initializing the model with `*car()`, you can gather and load samples using the `run_sampler()` and `load_samples()` functions. Finally, using some basic plotting, we can look at our results and make sure they make sense.
 
 ## The `run_sampler()` function
 
@@ -24,7 +24,7 @@ After initializing the model with `initialize_*()`, you can gather and load samp
 
 ```{r}
 library(RSTr)
-initialize_mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
+mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
 ```
 
 ```{r, results = "hide", fig.keep = "last"}

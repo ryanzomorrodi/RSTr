@@ -37,67 +37,67 @@ geteig <- function(covar) {
     .Call(`_RSTr_geteig`, covar)
 }
 
-update_Ag <- function(initial_values, priors) {
-    .Call(`_RSTr_update_Ag`, initial_values, priors)
+update_Ag <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_Ag`, RSTr_obj))
 }
 
-update_beta_ucar <- function(initial_values, spatial_data) {
-    .Call(`_RSTr_update_beta_ucar`, initial_values, spatial_data)
+update_G_default <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_G_default`, RSTr_obj))
 }
 
-update_beta_ucar_restricted <- function(initial_values, spatial_data, params) {
-    .Call(`_RSTr_update_beta_ucar_restricted`, initial_values, spatial_data, params)
+update_G_mstcar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_G_mstcar`, RSTr_obj))
 }
 
-update_beta_mstcar <- function(initial_values, spatial_data) {
-    .Call(`_RSTr_update_beta_mstcar`, initial_values, spatial_data)
+update_Z_ucar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_Z_ucar`, RSTr_obj))
 }
 
-update_G_mcar <- function(initial_values, spatial_data, priors) {
-    .Call(`_RSTr_update_G_mcar`, initial_values, spatial_data, priors)
+update_Z_mcar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_Z_mcar`, RSTr_obj))
 }
 
-update_G_mstcar <- function(initial_values, spatial_data, priors) {
-    .Call(`_RSTr_update_G_mstcar`, initial_values, spatial_data, priors)
+update_Z_mstcar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_Z_mstcar`, RSTr_obj))
 }
 
-update_rho <- function(initial_values, spatial_data, priors, r_accept) {
-    .Call(`_RSTr_update_rho`, initial_values, spatial_data, priors, r_accept)
+update_beta_default <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_beta_default`, RSTr_obj))
 }
 
-update_sig2_ucar <- function(initial_values, spatial_data, priors) {
-    .Call(`_RSTr_update_sig2_ucar`, initial_values, spatial_data, priors)
+update_beta_ucar_restricted <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_beta_ucar_restricted`, RSTr_obj))
 }
 
-update_sig2_ucar_restricted <- function(initial_values, spatial_data, priors, params) {
-    .Call(`_RSTr_update_sig2_ucar_restricted`, initial_values, spatial_data, priors, params)
+update_beta_mstcar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_beta_mstcar`, RSTr_obj))
 }
 
-update_tau2_ucar <- function(initial_values, spatial_data, priors) {
-    .Call(`_RSTr_update_tau2_ucar`, initial_values, spatial_data, priors)
+update_lambda <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_lambda`, RSTr_obj))
 }
 
-update_tau2_ucar_restricted <- function(initial_values, spatial_data, priors, params) {
-    .Call(`_RSTr_update_tau2_ucar_restricted`, initial_values, spatial_data, priors, params)
+update_rho <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_rho`, RSTr_obj))
 }
 
-update_tau2_mstcar <- function(initial_values, spatial_data, priors) {
-    .Call(`_RSTr_update_tau2_mstcar`, initial_values, spatial_data, priors)
+update_sig2_default <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_sig2_default`, RSTr_obj))
 }
 
-update_lambda <- function(initial_values, spatial_data, priors, params, data, t_accept) {
-    .Call(`_RSTr_update_lambda`, initial_values, spatial_data, priors, params, data, t_accept)
+update_sig2_ucar_restricted <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_sig2_ucar_restricted`, RSTr_obj))
 }
 
-update_Z_ucar <- function(initial_values, spatial_data) {
-    .Call(`_RSTr_update_Z_ucar`, initial_values, spatial_data)
+update_tau2_default <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_tau2_default`, RSTr_obj))
 }
 
-update_Z_mcar <- function(initial_values, spatial_data) {
-    .Call(`_RSTr_update_Z_mcar`, initial_values, spatial_data)
+update_tau2_ucar_restricted <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_tau2_ucar_restricted`, RSTr_obj))
 }
 
-update_Z_mstcar <- function(initial_values, spatial_data) {
-    .Call(`_RSTr_update_Z_mstcar`, initial_values, spatial_data)
+update_tau2_mstcar <- function(RSTr_obj) {
+    invisible(.Call(`_RSTr_update_tau2_mstcar`, RSTr_obj))
 }
 

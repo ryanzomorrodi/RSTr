@@ -18,7 +18,7 @@ The population array for the specified model.
 Imports the population array from the model directory.
 }
 \examples{
-initialize_mstcar("test", miheart, miadj, tempdir(), show_plots = FALSE)
+mstcar("test", miheart, miadj, tempdir(), show_plots = FALSE)
 pop <- load_pop("test", tempdir())
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)

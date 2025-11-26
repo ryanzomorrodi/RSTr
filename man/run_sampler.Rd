@@ -4,39 +4,30 @@
 \alias{run_sampler}
 \title{Run Gibbs sampler}
 \usage{
-run_sampler(
-  name,
-  dir = tempdir(),
-  iterations = 6000,
-  show_plots = TRUE,
-  show_progress = TRUE,
-  discard_burnin = FALSE
-)
+run_sampler(RSTr_obj, iterations, show_plots, verbose)
 }
 \arguments{
-\item{name}{Name of model and corresponding folder}
-
-\item{dir}{Directory where model lives}
-
 \item{iterations}{Specifies number of iterations to run}
 
 \item{show_plots}{If set to \code{FALSE}, hides traceplots}
 
-\item{show_progress}{If set to \code{FALSE}, hides progress bar}
+\item{verbose}{If set to \code{FALSE}, hides progress bar}
 
-\item{discard_burnin}{If set to \code{TRUE}, won't save burn-in samples}
+\item{name}{Name of model and corresponding folder}
+
+\item{dir}{Directory where model lives}
 }
 \value{
 No output, saves sampler output to \code{dir}
 }
 \description{
-\code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{initialize_*()}.
+\code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{*car()}.
 }
 \examples{
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
-initialize_mstcar("test", data_min, adj_min, tempdir())
-run_sampler("test", show_plots = FALSE, show_progress = FALSE)
+mstcar("test", data_min, adj_min, tempdir())
+run_sampler("test", show_plots = FALSE, verbose = FALSE)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }

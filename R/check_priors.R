@@ -1,214 +1,266 @@
-#' Check priors
-#'
 #' @noRd
-check_priors <- function(priors, data, params) {
-  message("Checking priors...")
-  model <- params$model
-  tau_a <- priors$tau_a
-  tau_b <- priors$tau_b
-  lambda_sd <- priors$lambda_sd
-  num_group <- dim(data$Y)[2]
-  chk <- list(
-    "ucar" = c("tau_a", "tau_b", "lambda_sd", "sig_a", "sig_b"),
-    "mcar" = c("tau_a", "tau_b", "lambda_sd", "G_scale", "G_df"),
-    "mstcar" = c("tau_a", "tau_b", "lambda_sd", "G_scale", "G_df", "Ag_scale", "Ag_df", "rho_a", "rho_b", "rho_sd")
-  )[[model]]
-  miss <- sapply(1:length(chk), \(x) !any(names(priors) == chk[x]))
-  if (sum(miss)) {
+check_priors <- function(RSTr_obj, errout) {
+  UseMethod("check_priors")
+}
+
+#' @noRd
+check_priors.ucar <- function(RSTr_obj, errout) {
+  priors <- RSTr_obj$priors
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "sig_a", "sig_b")
+  check_missing_priors(priors, chk)
+  # Check for warnings
+  check_unused_priors(priors, chk)
+  # Check for errors
+  errout <- check_tau_a(priors$tau_a, errout)
+  errout <- check_tau_b(priors$tau_b, errout)
+  errout <- check_lambda_sd(priors$lambda_sd, RSTr_obj$data$Y, errout)
+  errout <- check_sig_a(priors$sig_a, errout)
+  errout <- check_sig_b(priors$sig_b, errout)
+  errout
+}
+
+#' @noRd
+check_priors.mcar <- function(RSTr_obj, errout) {
+  priors <- RSTr_obj$priors
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "G_scale", "G_df")
+  check_missing_priors(priors, chk)
+  # Check for warnings
+  check_unused_priors(priors, chk)
+  # Check for errors
+  errout <- check_tau_a(priors$tau_a, errout)
+  errout <- check_tau_b(priors$tau_b, errout)
+  errout <- check_lambda_sd(priors$lambda_sd, RSTr_obj$data$Y, errout)
+  errout <- check_G_scale(priors$G_scale, num_group, errout)
+  errout <- check_G_df(priors$G_df, num_group, errout)
+  errout
+}
+
+#' @noRd
+check_priors.mstcar <- function(RSTr_obj, errout) {
+  priors <- RSTr_obj$priors
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "G_scale", "G_df", "Ag_scale", "Ag_df")
+  check_missing_priors(priors, chk)
+  # Check for warnings
+  check_unused_priors(priors, chk)
+  # Check for errors
+  errout <- check_tau_a(priors$tau_a, errout)
+  errout <- check_tau_b(priors$tau_b, errout)
+  errout <- check_lambda_sd(priors$lambda_sd, RSTr_obj$data$Y, errout)
+  errout <- check_G_scale(priors$G_scale, num_group, errout)
+  errout <- check_G_df(priors$G_df, num_group, errout)
+  errout <- check_Ag_scale(priors$Ag_scale, num_group, errout)
+  errout <- check_Ag_df(priors$Ag_df, num_group, errout)
+  errout
+}
+
+#' @noRd
+check_priors.mstcar_update_rho <- function(RSTr_obj, errout) {
+  priors <- RSTr_obj$priors
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "G_scale", "G_df", "Ag_scale", "Ag_df", "rho_a", "rho_b", "rho_sd", "rho_accept")
+  check_missing_priors(priors, chk)
+  # Check for warnings
+  check_unused_priors(priors, chk)
+  # Check for errors
+  errout <- check_tau_a(priors$tau_a, errout)
+  errout <- check_tau_b(priors$tau_b, errout)
+  errout <- check_lambda_sd(priors$lambda_sd, RSTr_obj$data$Y, errout)
+  errout <- check_G_scale(priors$G_scale, num_group, errout)
+  errout <- check_G_df(priors$G_df, num_group, errout)
+  errout <- check_Ag_scale(priors$Ag_scale, num_group, errout)
+  errout <- check_Ag_df(priors$Ag_df, num_group, errout)
+  errout <- check_rho_a(priors$rho_a, errout)
+  errout <- check_rho_b(priors$rho_b, errout)
+  errout <- check_rho_sd(priors$rho_sd, num_group, errout)
+  errout
+}
+
+#' @noRd
+check_missing_priors <- function(priors, chk) {
+  miss <- sapply(chk, \(x) !any(names(priors) == x))
+  if (any(miss)) {
     stop("One or more objects missing from list 'priors': ", paste(chk[miss], collapse = ", "))
   }
-  # Check for warnings
-  warnout <- NULL
-  warnct <- 0
-  # Check for unused elements in 'priors'
-  chk_elem <- which(!(names(priors) %in% chk))
-  if (length(chk_elem)) {
-    warnct <- warnct + 1
-    warntxt <- paste(warnct, ": Unused elements of list 'priors':", paste(names(priors)[chk_elem], collapse = ", "))
-    warnout <- c(warnout, warntxt)
+}
+
+#' @noRd
+check_unused_priors <- function(priors, chk) {
+  chk_elem <- !(names(priors) %in% chk)
+  if (any(chk_elem)) {
+    warning("Unused elements of list 'priors':", paste(names(priors)[chk_elem], collapse = ", "))
   }
-  if (warnct) {
-    warning(paste(warnct, "warning(s) found in list 'priors':\n", paste(warnout, collapse = "\n ")))
-  }
-  # Check for errors
-  errout <- NULL
-  errct <- 0
-  # tau_a
+}
+
+#' @noRd
+check_tau_a <- function(tau_a, errout) {
   # is non-positive or infinite
   if ((tau_a <= 0) | !is.finite(tau_a)) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": tau_a is not positive. Ensure tau_a > 0 and not infinite or use default value")
+    errtxt <- "tau_a is not positive. Ensure tau_a > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
-  # tau_b
+  errout
+}
+
+#' @noRd
+check_tau_b <- function(tau_b, errout) {
   # is non-positive or infinite
   if ((tau_b <= 0) | !is.finite(tau_b)) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": tau_b is not positive. Ensure tau_b > 0 and not infinite or use default value")
+    errtxt <- "tau_b is not positive. Ensure tau_b > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
-  # lambda_sd
-  # dim not num_time num_region num_group
-  if (!all(dim(lambda_sd) == dim(data$Y))) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": lambda_sd has different length than data. Ensure length(lambda_sd) == length(Y) or use default value")
+  errout
+}
+
+#' @noRd
+check_lambda_sd <- function(lambda_sd, Y, errout) {
+  # dim not num_time num_region
+  if (!all(dim(lambda_sd) == dim(Y))) {
+    errtxt <- "lambda_sd has different length than data. Ensure length(lambda_sd) == length(Y) or use default value"
     errout <- c(errout, errtxt)
   }
   # is non-positive or infinite
   if (any((lambda_sd <= 0) | !is.finite(lambda_sd))) {
-    errct <- errct + 1
-    errtxt <- paste(errct, ": lambda_sd contains non-positive values. Ensure all(lambda_sd > 0) and not infinite or use default value")
+    errtxt <- "lambda_sd contains non-positive values. Ensure all(lambda_sd > 0) and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
-  if (model == "ucar") {
-    sig_a <- priors$sig_a
-    sig_b <- priors$sig_b 
-    # sig_a
-    # is non-positive or infinite
-    if ((sig_a <= 0) | !is.finite(sig_a)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": sig_a is not positive. Ensure sig_a > 0 and not infinite or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # sig_b
-    # is non-positive or infinite
-    if ((sig_b <= 0) | !is.finite(sig_b)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": sig_b is not positive. Ensure sig_b > 0 and not infinite or use default value")
-      errout <- c(errout, errtxt)
-    }
+  errout
+}
+
+#' @noRd
+check_sig_a <- function(sig_a, errout) {
+  # is non-positive or infinite
+  if ((sig_a <= 0) | !is.finite(sig_a)) {
+    errtxt <- "sig_a is not positive. Ensure sig_a > 0 and not infinite or use default value"
+    errout <- c(errout, errtxt)
   }
-  if (model == "mcar") {
-    # G_df
-    G_df <- priors$G_df
-    # is not a whole number
-    if (floor(G_df) != G_df) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_df is not a whole number. Ensure G_df is whole number or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # is less than df
-    if (G_df <= num_group - 1) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_df too small. Ensure G_df > num_group - 1 or use default value")
-      errout <- c(errout, errtxt)
-    }
+  errout
+}
+
+#' @noRd
+check_sig_b <- function(sig_b, errout) {
+  # is non-positive or infinite
+  if ((sig_b <= 0) | !is.finite(sig_b)) {
+    errtxt <- "sig_b is not positive. Ensure sig_b > 0 and not infinite or use default value"
+    errout <- c(errout, errtxt)
   }
-  if (model %in% c("mcar", "mstcar")) {
-    G_scale <- priors$G_scale
-    G_df <- priors$G_df
-    # G_scale
-    # dimensions don't match num_group num_group
-    if (!all(dim(G_scale) == c(num_group, num_group))) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_scale is not an num_group x num_group matrix. Ensure dim(G_scale) == num_group x num_group or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # matrix is not symmetric
-    if (!isSymmetric(G_scale)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_scale is not symmetric. Ensure G_scale is symmetric or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # values are infinite
-    if (any(!is.finite(G_scale))) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_scale contains infinite values. Ensure G_scale is finite or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # diagonals are not positive
-    if (any(diag(G_scale) <= 0)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": diag(G_scale) contains non-positive values. Ensure diag(G_scale) is all positive or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # G_df
-    # is not a whole number
-    if (floor(G_df) != G_df) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_df is not a whole number. Ensure G_df is whole number or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # is less than df
-    if (G_df <= num_group - 1) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": G_df too small. Ensure G_df > num_group - 1 or use default value")
-      errout <- c(errout, errtxt)
-    }
+  errout
+}
+
+#' @noRd
+check_G_scale <- function(G_scale, num_group, errout) {
+  # dimensions don't match num_group num_group
+  if (!all(dim(G_scale) == c(num_group, num_group))) {
+    errtxt <- "G_scale is not an num_group x num_group matrix. Ensure dim(G_scale) == num_group x num_group or use default value"
+    errout <- c(errout, errtxt)
   }
-  if (model == "mstcar") {
-    Ag_scale <- priors$Ag_scale
-    Ag_df <- priors$Ag_df
-    rho_a <- priors$rho_a
-    rho_b <- priors$rho_b
-    rho_sd <- priors$rho_sd
-    # Ag_scale
-    # dimensions don't match num_group num_group
-    if (!all(dim(Ag_scale) == c(num_group, num_group))) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": Ag_scale is not an num_group x num_group matrix. Ensure dim(Ag_scale) == num_group x num_group or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # matrix is not symmetric
-    if (!isSymmetric(Ag_scale)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": Ag_scale is not symmetric. Ensure Ag_scale is symmetric or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # values are infinite
-    if (any(!is.finite(Ag_scale))) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": Ag_scale contains infinite values. Ensure Ag_scale is finite or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # diagonals are not positive
-    if (any(diag(Ag_scale) <= 0)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": diag(Ag_scale) contains non-positive values. Ensure diag(Ag_scale) is positive or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # Ag_df
-    # is not a whole number
-    if (floor(Ag_df) != Ag_df) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": Ag_df is not a whole number. Ensure Ag_df is whole number or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # is less than df
-    if (Ag_df <= num_group - 1) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": Ag_df too small. Ensure Ag_df > num_group - 1 or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # rho_a
-    # is non-positive or infinite
-    if ((rho_a <= 0) | !is.finite(rho_a)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": rho_a is not positive. Ensure rho_a > 0 and not infinite or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # rho_b
-    # is non-positive or infinite
-    if ((rho_b <= 0) | !is.finite(rho_b)) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": rho_b is not positive. Ensure rho_b > 0 and not infinite or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # rho_sd
-    # length not num_group
-    if (length(rho_sd) != num_group) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": rho_sd is not length num_group. Ensure length(rho_sd) == num_group or use default value")
-      errout <- c(errout, errtxt)
-    }
-    # is non-positive or infinite
-    if (any((rho_sd <= 0) | !is.finite(rho_sd))) {
-      errct <- errct + 1
-      errtxt <- paste(errct, ": rho_sd contains non-positive values. Ensure all(rho_sd > 0) and not infinite or use default value")
-      errout <- c(errout, errtxt)
-    }
+  # matrix is not symmetric
+  if (!isSymmetric(G_scale)) {
+    errtxt <- "G_scale is not symmetric. Ensure G_scale is symmetric or use default value"
+    errout <- c(errout, errtxt)
   }
-  if (errct) {
-    stop(paste(errct, "error(s) found in list 'priors':\n", paste(errout, collapse = "\n ")))
+  # values are infinite
+  if (any(!is.finite(G_scale))) {
+    errtxt <- "G_scale contains infinite values. Ensure G_scale is finite or use default value"
+    errout <- c(errout, errtxt)
   }
+  # diagonals are not positive
+  if (any(diag(G_scale) <= 0)) {
+    errtxt <- "diag(G_scale) contains non-positive values. Ensure diag(G_scale) is all positive or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_G_df <- function(G_df, num_group, errout) {
+  # is not a whole number
+  if (floor(G_df) != G_df) {
+    errtxt <- "G_df is not a whole number. Ensure G_df is whole number or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # is less than df
+  if (G_df <= num_group - 1) {
+    errtxt <- "G_df too small. Ensure G_df > num_group - 1 or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_Ag_scale <- function(Ag_scale, num_group, errout) {
+  # Ag_scale
+  # dimensions don't match num_group num_group
+  if (!all(dim(Ag_scale) == c(num_group, num_group))) {
+    errtxt <- "Ag_scale is not an num_group x num_group matrix. Ensure dim(Ag_scale) == num_group x num_group or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # matrix is not symmetric
+  if (!isSymmetric(Ag_scale)) {
+    errtxt <- "Ag_scale is not symmetric. Ensure Ag_scale is symmetric or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # values are infinite
+  if (any(!is.finite(Ag_scale))) {
+    errtxt <- "Ag_scale contains infinite values. Ensure Ag_scale is finite or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # diagonals are not positive
+  if (any(diag(Ag_scale) <= 0)) {
+    errtxt <- "diag(Ag_scale) contains non-positive values. Ensure diag(Ag_scale) is positive or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_Ag_df <- function(Ag_df, num_group, errout) {
+  # is not a whole number
+  if (floor(Ag_df) != Ag_df) {
+    errtxt <- "Ag_df is not a whole number. Ensure Ag_df is whole number or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # is less than df
+  if (Ag_df <= num_group - 1) {
+    errtxt <- "Ag_df too small. Ensure Ag_df > num_group - 1 or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_rho_a <- function(rho_a, errout) {
+  # is non-positive or infinite
+  if ((rho_a <= 0) | !is.finite(rho_a)) {
+    errtxt <- "rho_a is not positive. Ensure rho_a > 0 and not infinite or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_rho_b <- function(rho_b, errout) {
+  # is non-positive or infinite
+  if ((rho_b <= 0) | !is.finite(rho_b)) {
+    errtxt <- "rho_b is not positive. Ensure rho_b > 0 and not infinite or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
+}
+
+#' @noRd
+check_rho_sd <- function(rho_sd, num_group, errout) {
+  # length not num_group
+  if (length(rho_sd) != num_group) {
+    errtxt <- "rho_sd is not length num_group. Ensure length(rho_sd) == num_group or use default value"
+    errout <- c(errout, errtxt)
+  }
+  # is non-positive or infinite
+  if (any((rho_sd <= 0) | !is.finite(rho_sd))) {
+    errtxt <- "rho_sd contains non-positive values. Ensure all(rho_sd > 0) and not infinite or use default value"
+    errout <- c(errout, errtxt)
+  }
+  errout
 }

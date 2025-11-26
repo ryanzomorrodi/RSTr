@@ -123,211 +123,163 @@ BEGIN_RCPP
 END_RCPP
 }
 // update_Ag
-arma::mat update_Ag(List initial_values, List priors);
-RcppExport SEXP _RSTr_update_Ag(SEXP initial_valuesSEXP, SEXP priorsSEXP) {
+void update_Ag(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_Ag(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Ag(initial_values, priors));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_Ag(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
-// update_beta_ucar
-arma::cube update_beta_ucar(List initial_values, List spatial_data);
-RcppExport SEXP _RSTr_update_beta_ucar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP) {
+// update_G_default
+void update_G_default(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_G_default(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_ucar(initial_values, spatial_data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_beta_ucar_restricted
-arma::cube update_beta_ucar_restricted(List initial_values, List spatial_data, List params);
-RcppExport SEXP _RSTr_update_beta_ucar_restricted(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP paramsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_ucar_restricted(initial_values, spatial_data, params));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_beta_mstcar
-arma::cube update_beta_mstcar(List initial_values, List spatial_data);
-RcppExport SEXP _RSTr_update_beta_mstcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_beta_mstcar(initial_values, spatial_data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_G_mcar
-arma::cube update_G_mcar(List initial_values, List spatial_data, List priors);
-RcppExport SEXP _RSTr_update_G_mcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_G_mcar(initial_values, spatial_data, priors));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_G_default(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
 // update_G_mstcar
-arma::cube update_G_mstcar(List initial_values, List spatial_data, List priors);
-RcppExport SEXP _RSTr_update_G_mstcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
+void update_G_mstcar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_G_mstcar(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_G_mstcar(initial_values, spatial_data, priors));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_rho
-arma::rowvec update_rho(List initial_values, List spatial_data, List priors, arma::vec& r_accept);
-RcppExport SEXP _RSTr_update_rho(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP r_acceptSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type r_accept(r_acceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_rho(initial_values, spatial_data, priors, r_accept));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_sig2_ucar
-arma::mat update_sig2_ucar(List initial_values, List spatial_data, List priors);
-RcppExport SEXP _RSTr_update_sig2_ucar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_sig2_ucar(initial_values, spatial_data, priors));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_sig2_ucar_restricted
-arma::mat update_sig2_ucar_restricted(List initial_values, List spatial_data, List priors, List params);
-RcppExport SEXP _RSTr_update_sig2_ucar_restricted(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP paramsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_sig2_ucar_restricted(initial_values, spatial_data, priors, params));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_tau2_ucar
-arma::mat update_tau2_ucar(List initial_values, List spatial_data, List priors);
-RcppExport SEXP _RSTr_update_tau2_ucar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_ucar(initial_values, spatial_data, priors));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_tau2_ucar_restricted
-arma::mat update_tau2_ucar_restricted(List initial_values, List spatial_data, List priors, List params);
-RcppExport SEXP _RSTr_update_tau2_ucar_restricted(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP paramsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_ucar_restricted(initial_values, spatial_data, priors, params));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_tau2_mstcar
-arma::mat update_tau2_mstcar(List initial_values, List spatial_data, List priors);
-RcppExport SEXP _RSTr_update_tau2_mstcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_tau2_mstcar(initial_values, spatial_data, priors));
-    return rcpp_result_gen;
-END_RCPP
-}
-// update_lambda
-arma::cube update_lambda(List initial_values, List spatial_data, List priors, List params, List data, arma::cube& t_accept);
-RcppExport SEXP _RSTr_update_lambda(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP, SEXP priorsSEXP, SEXP paramsSEXP, SEXP dataSEXP, SEXP t_acceptSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    Rcpp::traits::input_parameter< List >::type priors(priorsSEXP);
-    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
-    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< arma::cube& >::type t_accept(t_acceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_lambda(initial_values, spatial_data, priors, params, data, t_accept));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_G_mstcar(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
 // update_Z_ucar
-arma::cube update_Z_ucar(List initial_values, List spatial_data);
-RcppExport SEXP _RSTr_update_Z_ucar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP) {
+void update_Z_ucar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_Z_ucar(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Z_ucar(initial_values, spatial_data));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_Z_ucar(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
 // update_Z_mcar
-arma::cube update_Z_mcar(List initial_values, List spatial_data);
-RcppExport SEXP _RSTr_update_Z_mcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP) {
+void update_Z_mcar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_Z_mcar(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Z_mcar(initial_values, spatial_data));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_Z_mcar(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
 // update_Z_mstcar
-arma::cube update_Z_mstcar(List initial_values, List spatial_data);
-RcppExport SEXP _RSTr_update_Z_mstcar(SEXP initial_valuesSEXP, SEXP spatial_dataSEXP) {
+void update_Z_mstcar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_Z_mstcar(SEXP RSTr_objSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type initial_values(initial_valuesSEXP);
-    Rcpp::traits::input_parameter< List >::type spatial_data(spatial_dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Z_mstcar(initial_values, spatial_data));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_Z_mstcar(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_beta_default
+void update_beta_default(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_beta_default(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_beta_default(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_beta_ucar_restricted
+void update_beta_ucar_restricted(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_beta_ucar_restricted(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_beta_ucar_restricted(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_beta_mstcar
+void update_beta_mstcar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_beta_mstcar(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_beta_mstcar(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_lambda
+void update_lambda(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_lambda(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_lambda(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_rho
+void update_rho(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_rho(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_rho(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_sig2_default
+void update_sig2_default(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_sig2_default(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_sig2_default(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_sig2_ucar_restricted
+void update_sig2_ucar_restricted(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_sig2_ucar_restricted(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_sig2_ucar_restricted(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_tau2_default
+void update_tau2_default(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_tau2_default(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_tau2_default(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_tau2_ucar_restricted
+void update_tau2_ucar_restricted(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_tau2_ucar_restricted(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_tau2_ucar_restricted(RSTr_obj);
+    return R_NilValue;
+END_RCPP
+}
+// update_tau2_mstcar
+void update_tau2_mstcar(List& RSTr_obj);
+RcppExport SEXP _RSTr_update_tau2_mstcar(SEXP RSTr_objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List& >::type RSTr_obj(RSTr_objSEXP);
+    update_tau2_mstcar(RSTr_obj);
+    return R_NilValue;
 END_RCPP
 }
 
@@ -341,22 +293,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RSTr_Sig_eta", (DL_FUNC) &_RSTr_Sig_eta, 1},
     {"_RSTr_cpp_rmvnorm", (DL_FUNC) &_RSTr_cpp_rmvnorm, 2},
     {"_RSTr_geteig", (DL_FUNC) &_RSTr_geteig, 1},
-    {"_RSTr_update_Ag", (DL_FUNC) &_RSTr_update_Ag, 2},
-    {"_RSTr_update_beta_ucar", (DL_FUNC) &_RSTr_update_beta_ucar, 2},
-    {"_RSTr_update_beta_ucar_restricted", (DL_FUNC) &_RSTr_update_beta_ucar_restricted, 3},
-    {"_RSTr_update_beta_mstcar", (DL_FUNC) &_RSTr_update_beta_mstcar, 2},
-    {"_RSTr_update_G_mcar", (DL_FUNC) &_RSTr_update_G_mcar, 3},
-    {"_RSTr_update_G_mstcar", (DL_FUNC) &_RSTr_update_G_mstcar, 3},
-    {"_RSTr_update_rho", (DL_FUNC) &_RSTr_update_rho, 4},
-    {"_RSTr_update_sig2_ucar", (DL_FUNC) &_RSTr_update_sig2_ucar, 3},
-    {"_RSTr_update_sig2_ucar_restricted", (DL_FUNC) &_RSTr_update_sig2_ucar_restricted, 4},
-    {"_RSTr_update_tau2_ucar", (DL_FUNC) &_RSTr_update_tau2_ucar, 3},
-    {"_RSTr_update_tau2_ucar_restricted", (DL_FUNC) &_RSTr_update_tau2_ucar_restricted, 4},
-    {"_RSTr_update_tau2_mstcar", (DL_FUNC) &_RSTr_update_tau2_mstcar, 3},
-    {"_RSTr_update_lambda", (DL_FUNC) &_RSTr_update_lambda, 6},
-    {"_RSTr_update_Z_ucar", (DL_FUNC) &_RSTr_update_Z_ucar, 2},
-    {"_RSTr_update_Z_mcar", (DL_FUNC) &_RSTr_update_Z_mcar, 2},
-    {"_RSTr_update_Z_mstcar", (DL_FUNC) &_RSTr_update_Z_mstcar, 2},
+    {"_RSTr_update_Ag", (DL_FUNC) &_RSTr_update_Ag, 1},
+    {"_RSTr_update_G_default", (DL_FUNC) &_RSTr_update_G_default, 1},
+    {"_RSTr_update_G_mstcar", (DL_FUNC) &_RSTr_update_G_mstcar, 1},
+    {"_RSTr_update_Z_ucar", (DL_FUNC) &_RSTr_update_Z_ucar, 1},
+    {"_RSTr_update_Z_mcar", (DL_FUNC) &_RSTr_update_Z_mcar, 1},
+    {"_RSTr_update_Z_mstcar", (DL_FUNC) &_RSTr_update_Z_mstcar, 1},
+    {"_RSTr_update_beta_default", (DL_FUNC) &_RSTr_update_beta_default, 1},
+    {"_RSTr_update_beta_ucar_restricted", (DL_FUNC) &_RSTr_update_beta_ucar_restricted, 1},
+    {"_RSTr_update_beta_mstcar", (DL_FUNC) &_RSTr_update_beta_mstcar, 1},
+    {"_RSTr_update_lambda", (DL_FUNC) &_RSTr_update_lambda, 1},
+    {"_RSTr_update_rho", (DL_FUNC) &_RSTr_update_rho, 1},
+    {"_RSTr_update_sig2_default", (DL_FUNC) &_RSTr_update_sig2_default, 1},
+    {"_RSTr_update_sig2_ucar_restricted", (DL_FUNC) &_RSTr_update_sig2_ucar_restricted, 1},
+    {"_RSTr_update_tau2_default", (DL_FUNC) &_RSTr_update_tau2_default, 1},
+    {"_RSTr_update_tau2_ucar_restricted", (DL_FUNC) &_RSTr_update_tau2_ucar_restricted, 1},
+    {"_RSTr_update_tau2_mstcar", (DL_FUNC) &_RSTr_update_tau2_mstcar, 1},
     {NULL, NULL, 0}
 };
 

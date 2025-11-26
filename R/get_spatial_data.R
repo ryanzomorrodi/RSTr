@@ -1,10 +1,7 @@
 #' Get spatial data
-#'
 #' @noRd
-get_spatial_data <- function(adjacency, ignore_checks) {
-  if (!ignore_checks) {
-    check_spatial_data(adjacency)
-  }
+get_spatial_data <- function(adjacency) {
+  check_regions_unlinked(adjacency)
   num_adj <- sapply(adjacency, length)
   island_region <- lapply(get_islands(adjacency), \(x) x - 1)
   num_island_region <- sapply(island_region, length)
@@ -25,7 +22,6 @@ get_spatial_data <- function(adjacency, ignore_checks) {
 }
 
 #' Get islands
-#'
 #' @noRd
 get_islands <- function(adjacency) {
   f <- 1:length(adjacency)
@@ -47,4 +43,11 @@ get_islands <- function(adjacency) {
     f <- setdiff(f, inactive_list)
   }
   island_region
+}
+
+#' @noRd
+check_regions_unlinked <- function(adjacency) {
+  if (any(spdep::card(adjacency) == 0)) {
+    stop("Some regions in 'adjacency' have no neighbors. Ensure all regions have at least 1 neighbor. Check vignette('RSTr-adjacency') for more information")
+  }
 }

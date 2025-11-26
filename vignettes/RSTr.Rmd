@@ -49,21 +49,21 @@ Some quick notes about data setup:
 
 `RSTr` comes with a set of functions to generate small area estimates from your dataset. Here is a brief overview of the basic functions and their purpose:
 
--   `initialize_*()`: Inputs data and model specifics and creates a local folder with all associated files to prepare for sample generation;
+-   `*car()`: Inputs data and model specifics and creates a local folder with all associated files to prepare for sample generation;
 -   `run_sampler()`: The Gibbs sampler function which generates samples and saves them to a local folder;
 -   `load_samples()`: Imports samples generated with `run_sampler()` into your R session; and
 -   `get_medians()`: Calculates median estimates loaded in by `load_samples()`.
 
 ## Example Model {#sec-init}
 
-### `initialize_mstcar()`
+### `mstcar()`
 
 With an understanding of the example datasets and the functions, we can start running our first model. The example datasets are set up to run out-of-the-box:
 
 ```{r}
 library(RSTr)
 
-initialize_mstcar(
+mstcar(
   name = "my_test_model",
   data = miheart,
   adjacency = miadj,
@@ -72,7 +72,7 @@ initialize_mstcar(
 )
 ```
 
-Here, we use the `initialize_mstcar()` function to specify our model. `initialize_mstcar()` accepts a few different arguments in this case:
+Here, we use the `mstcar()` function to specify our model. `mstcar()` accepts a few different arguments in this case:
 
 -   The `name` argument specifies the folder where the model data lives;
 -   The `data` argument specifies event/population data;
@@ -80,15 +80,17 @@ Here, we use the `initialize_mstcar()` function to specify our model. `initializ
 -   The `dir` argument specifies the directory where to save the folder; and
 -   The `seed` argument specifies a random seed for replicability purposes.
 
-`initialize_mstcar()` creates a folder named `my_test_model` in R's temporary directory containing folders that will hold batches of outputs for each parameter update, along with a set of `.Rds` files associated with model configuration. Nothing here is saved in the R environment because, given a sufficiently large dataset, MSTCAR models can become so large that it's impossible to hold the entire sample in RAM. Therefore, all of the data related to running the model is saved locally. Should you want to save your model somewhere besides the temporary directory for future use, you can specify a folder with the `dir` argument.
+`mstcar()` creates a folder named `my_test_model` in R's temporary directory containing folders that will hold batches of outputs for each parameter update, along with a set of `.Rds` files associated with model configuration. Nothing here is saved in the R environment because, given a sufficiently large dataset, MSTCAR models can become so large that it's impossible to hold the entire sample in RAM. Therefore, all of the data related to running the model is saved locally. Should you want to save your model somewhere besides the temporary directory for future use, you can specify a folder with the `dir` argument.
 
-Note that `initialize_mstcar()` accepts more arguments than are used here, but these are the only ones needed to get started. Also note that when we run the model, we get a couple of messages telling us certain priors and initial values were automatically generated. Priors and initial values can be specified manually, but this is outside the scope of this vignette. There will also be checks performed on the input data: if something is wrong, the warnings and error messages will tell you what is wrong and how to fix it. For a list of diagnostic errors and what they mean, read `vignette("RSTr-troubleshooting")`.
+Note that `mstcar()` accepts more arguments than are used here, but these are the only ones needed to get started. Also note that when we run the model, we get a couple of messages telling us certain priors and initial values were automatically generated. Priors and initial values can be specified manually, but this is outside the scope of this vignette. There will also be checks performed on the input data: if something is wrong, the warnings and error messages will tell you what is wrong and how to fix it. For a list of diagnostic errors and what they mean, read `vignette("RSTr-troubleshooting")`.
 
 Finally, you may notice a plot was generated during model setup. This is one last double-check for the MSTCAR model to make sure the data are set up correctly before running the model, showing the total event and population count for each year of data. If the number of datapoints does not match up to the number of years in your dataset or if the changes in values over time don't entirely make sense, you may need to double-check your data input.
 
-If you want to learn more about `initialize_mstcar()` and the other initialization functions, read `vignette("RSTr-initialization")`.
+If you want to learn more about `mstcar()` and the other initialization functions, read `vignette("RSTr-initialization")`.
 
 ### `run_sampler()` {#sec-samples}
+
+THIS SECTION IS DEPRECATED. running the *car() functions automatically runs the sampler now. Will edit this later.
 
 Once we have our model object set up, we can start getting samples. This is the heart of the `RSTr` package and what allows us to gather our final rate estimates. To get your samples, simply specify the name of the model and the directory:
 
@@ -175,4 +177,4 @@ From here, we can get a better idea of how these maps contrast. For example, on 
 
 ## Closing Thoughts
 
-This vignette introduces you to inputting data into the `initialize_mstcar()` function, getting samples with the `run_sampler()` function, loading samples into R with the `load_samples()` function, and finally making a map with estimates gathered from the `get_medians()` function. What we've discussed here is just scratching the surface of the `RSTr` package. Other package vignettes will dive deeper into the intricacies of each component of the package, into the construction of the model itself, and into investigating the reliability of estimates. All of these things together will ensure you get the most out of using the `RSTr` package.
+This vignette introduces you to inputting data into the `mstcar()` function, getting samples with the `run_sampler()` function, loading samples into R with the `load_samples()` function, and finally making a map with estimates gathered from the `get_medians()` function. What we've discussed here is just scratching the surface of the `RSTr` package. Other package vignettes will dive deeper into the intricacies of each component of the package, into the construction of the model itself, and into investigating the reliability of estimates. All of these things together will ensure you get the most out of using the `RSTr` package.

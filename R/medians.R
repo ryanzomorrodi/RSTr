@@ -25,6 +25,11 @@
 #' low_rp <- minrp_75 < 1
 #' @export
 get_medians <- function(sample) {
+  UseMethod("get_medians")
+}
+
+#' @export
+get_medians.default <- function(sample) {
   ndims <- length(dim(sample)) - 1
   apply(sample, 1:ndims, stats::median)
 }
@@ -32,16 +37,26 @@ get_medians <- function(sample) {
 #' @rdname get_medians
 #' @export
 get_credible_interval <- function(sample, perc_ci = 0.95) {
+  UseMethod("get_credible_interval")
+}
+
+#' @export
+get_credible_interval.default <- function(sample, perc_ci = 0.95) {
   ndims <- length(dim(sample)) - 1
   alpha <- (1 - perc_ci) / 2
   list(
-    hi = apply(sample, 1:ndims, stats::quantile, 1 - alpha),
-    lo = apply(sample, 1:ndims, stats::quantile, alpha)
+    lower = apply(sample, 1:ndims, stats::quantile, alpha),
+    upper = apply(sample, 1:ndims, stats::quantile, 1 - alpha)
   )
 }
 
 #' @rdname get_medians
 #' @export
-get_relative_precision <- function(medians, ci) {
-  medians / (ci$hi - ci$lo)
+get_relative_precision <- function(medians, credible_interval) {
+  UseMethod("get_relative_precision")
+}
+
+#' @export
+get_relative_precision.default <- function(medians, credible_interval) {
+  medians / (credible_interval$upper - credible_interval$lower)
 }

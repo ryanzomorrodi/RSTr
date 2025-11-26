@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The `initialize_*()` functions include checks to ensure that all data is set up in a way that the model can use. If the checks notice something incompatible with the model, an error will be displayed in the console. Here, we list each possible error for the MSTCAR model, including its reasoning and ways to check and fix your inputs.
+The `*car()` functions include checks to ensure that all data is set up in a way that the model can use. If the checks notice something incompatible with the model, an error will be displayed in the console. Here, we list each possible error for the MSTCAR model, including its reasoning and ways to check and fix your inputs.
 
 ## Generic errors and warnings
 

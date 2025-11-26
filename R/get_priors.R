@@ -1,76 +1,63 @@
-#' Get priors
 #' @noRd
-get_priors <- function(priors, data, params, ignore_checks) {
-  model <- params$model
-  num_region <- dim(data$Y)[1]
-  num_group <- dim(data$Y)[2]
-  num_time <- dim(data$Y)[3]
-  # Prepare Hyperparameters
-  primiss <- NULL
-  if (is.null(priors$lambda_sd)) {
-    priors$lambda_sd <- data$Y
-    priors$lambda_sd[] <- 0.025
-    primiss <- c(primiss, "lambda_sd")
-  }
-  if (is.null(priors$tau_a)) {
-    priors$tau_a <- 0.001
-    primiss <- c(primiss, "tau_a")
-  }
-  if (is.null(priors$tau_b)) {
-    priors$tau_b <- 0.001
-    primiss <- c(primiss, "tau_b")
-  }
-  if (model == "ucar") {
-    if (is.null(priors$sig_a)) {
-      priors$sig_a <- 0.001
-      primiss <- c(primiss, "sig_a")
-    }
-    if (is.null(priors$sig_b)) {
-      priors$sig_b <- 0.001
-      primiss <- c(primiss, "sig_b")
-    }
-  }
-  if (model %in% c("mcar", "mstcar")) {
-    if (is.null(priors$G_df)) {
-      priors$G_df <- num_group + 2
-      primiss <- c(primiss, "G_df")
-    }
-    if (is.null(priors$G_scale)) {
-      priors$G_scale <- diag(1 / 7, num_group)
-      primiss <- c(primiss, "G_scale")
-    }
-  }
-  if (model == "mstcar") {
-    if (is.null(priors$Ag_scale)) {
-      priors$Ag_scale <- diag(1 / 7, num_group)
-      primiss <- c(primiss, "Ag_scale")
-    }
-    if (is.null(priors$Ag_df)) {
-      priors$Ag_df <- num_group + 2
-      primiss <- c(primiss, "Ag_df")
-    }
-    if (is.null(priors$G_df)) {
-      priors$G_df <- num_group + 2
-      primiss <- c(primiss, "G_df")
-    }
-    if (is.null(priors$rho_a)) {
-      priors$rho_a <- 95
-      primiss <- c(primiss, "rho_a")
-    }
-    if (is.null(priors$rho_b)) {
-      priors$rho_b <- 5
-      primiss <- c(primiss, "rho_b")
-    }
-    if (is.null(priors$rho_sd)) {
-      priors$rho_sd <- rep(0.05, num_group)
-      primiss <- c(primiss, "rho_sd")
-    }
-  }
-  if (!ignore_checks) {
-    check_priors(priors, data, params)
-  }
-  if (!is.null(primiss)) {
-    message("The following objects were created using defaults in 'priors': ", paste(primiss, collapse = " "))
-  }
-  priors
+get_priors <- function(RSTr_obj, priors) {
+  UseMethod("get_priors")
+}
+
+#' @export
+get_priors.ucar <- function(RSTr_obj, priors) {
+  if (is.null(priors$lambda_sd)) priors$lambda_sd <- array(0.025, dim = dim(RSTr_obj$data$Y))
+  priors$lambda_accept <- array(0, dim = dim(priors$lambda_sd))
+  if (is.null(priors$tau_a)) priors$tau_a <- 0.001
+  if (is.null(priors$tau_b)) priors$tau_b <- 0.001
+  if (is.null(priors$sig_a)) priors$sig_a <- 0.001
+  if (is.null(priors$sig_b)) priors$sig_b <- 0.001
+  RSTr_obj$priors <- priors
+  RSTr_obj
+}
+
+#' @export
+get_priors.mcar <- function(RSTr_obj, priors) {
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  if (is.null(priors$lambda_sd)) priors$lambda_sd <- array(0.025, dim = dim(RSTr_obj$data$Y))
+  priors$lambda_accept <- array(0, dim = dim(priors$lambda_sd))
+  if (is.null(priors$tau_a)) priors$tau_a <- 0.001
+  if (is.null(priors$tau_b)) priors$tau_b <- 0.001
+  if (is.null(priors$G_df)) priors$G_df <- num_group + 2
+  if (is.null(priors$G_scale)) priors$G_scale <- diag(1 / 7, num_group)
+  RSTr_obj$priors <- priors
+  RSTr_obj
+}
+
+#' @export
+get_priors.mstcar <- function(RSTr_obj, priors) {
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  if (is.null(priors$lambda_sd)) priors$lambda_sd <- array(0.025, dim = dim(RSTr_obj$data$Y))
+  priors$lambda_accept <- array(0, dim = dim(priors$lambda_sd))
+  if (is.null(priors$tau_a)) priors$tau_a <- 0.001
+  if (is.null(priors$tau_b)) priors$tau_b <- 0.001
+  if (is.null(priors$G_df)) priors$G_df <- num_group + 2
+  if (is.null(priors$G_scale)) priors$G_scale <- diag(1 / 7, num_group)
+  if (is.null(priors$Ag_scale)) priors$Ag_scale <- diag(1 / 7, num_group)
+  if (is.null(priors$Ag_df)) priors$Ag_df <- num_group + 2
+  RSTr_obj$priors <- priors
+  RSTr_obj
+}
+
+#' @noRd
+get_priors.mstcar_update_rho <- function(RSTr_obj, priors) {
+  num_group <- dim(RSTr_obj$data$Y)[2]
+  if (is.null(priors$lambda_sd)) priors$lambda_sd <- array(0.025, dim = dim(RSTr_obj$data$Y))
+  priors$lambda_accept <- array(0, dim = dim(priors$lambda_sd))
+  if (is.null(priors$tau_a)) priors$tau_a <- 0.001
+  if (is.null(priors$tau_b)) priors$tau_b <- 0.001
+  if (is.null(priors$G_df)) priors$G_df <- num_group + 2
+  if (is.null(priors$G_scale)) priors$G_scale <- diag(1 / 7, num_group)
+  if (is.null(priors$Ag_scale)) priors$Ag_scale <- diag(1 / 7, num_group)
+  if (is.null(priors$Ag_df)) priors$Ag_df <- num_group + 2
+  if (is.null(priors$rho_a)) priors$rho_a <- 95
+  if (is.null(priors$rho_b)) priors$rho_b <- 5
+  if (is.null(priors$rho_sd)) priors$rho_sd <- matrix(0.05, num_group, 1)
+  priors$rho_accept <- array(0, dim = dim(priors$rho_sd))
+  RSTr_obj$priors <- priors
+  RSTr_obj
 }

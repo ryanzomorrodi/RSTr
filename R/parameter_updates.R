@@ -1,68 +1,94 @@
-#' Update Z
-#'
-#' @noRd
-update_Z <- function(initial_values, spatial_data, params) {
-  if (params$model == "ucar") {
-    update_Z_ucar(initial_values, spatial_data)
-  } else if (params$model == "mcar") {
-    update_Z_mcar(initial_values, spatial_data)
-  } else if (params$model == "mstcar") {
-    update_Z_mstcar(initial_values, spatial_data)
-  }
-}
-
-#' Update tau2
-#'
-#' @noRd
-update_tau2 <- function(initial_values, spatial_data, priors, params) {
-  if (params$model == "ucar") {
-    if (params$restricted) {
-      update_tau2_ucar_restricted(initial_values, spatial_data, priors, params)
-    } else {
-      update_tau2_ucar(initial_values, spatial_data, priors)
-    }
-  } else if (params$model == "mcar") {
-    update_tau2_ucar(initial_values, spatial_data, priors)
-  } else if (params$model == "mstcar") {
-    update_tau2_mstcar(initial_values, spatial_data, priors)
-  }
-}
-
 #' Update beta
-#'
 #' @noRd
-update_beta <- function(initial_values, spatial_data, params) {
-  if (params$model == "ucar") {
-    if (params$restricted) {
-      update_beta_ucar_restricted(initial_values, spatial_data, params)
-    } else {
-      update_beta_ucar(initial_values, spatial_data)
-    }
-  } else if (params$model == "mcar") {
-    update_beta_ucar(initial_values, spatial_data)
-  } else if (params$model == "mstcar") {
-    update_beta_mstcar(initial_values, spatial_data)
-  }
+update_beta <- function(RSTr_obj) {
+  UseMethod("update_beta")
 }
 
-#' Update sig2
-#'
-#' @noRd
-update_sig2 <- function(initial_values, spatial_data, priors, params) {
-  if (params$restricted) {
-    update_sig2_ucar_restricted(initial_values, spatial_data, priors, params)
-  } else {
-    update_sig2_ucar(initial_values, spatial_data, priors)
-  }
+#' @export
+update_beta.default <- function(RSTr_obj) {
+  update_beta_default(RSTr_obj)
+}
+
+#' @export
+update_beta.rucar <- function(RSTr_obj) {
+  update_beta_ucar_restricted(RSTr_obj)
+}
+
+#' @export
+update_beta.mstcar <- function(RSTr_obj) {
+  update_beta_mstcar(RSTr_obj)
 }
 
 #' Update G
-#'
 #' @noRd
-update_G <- function(initial_values, spatial_data, priors, params) {
-  if (params$model == "mcar") {
-    update_G_mcar(initial_values, spatial_data, priors)
-  } else if (params$model == "mstcar") {
-    update_G_mstcar(initial_values, spatial_data, priors)
-  }
+update_G <- function(RSTr_obj) {
+  UseMethod("update_G")
+}
+
+#' @export
+update_G.default <- function(RSTr_obj) {
+  update_G_default(RSTr_obj)
+}
+
+#' @export
+update_G.mstcar <- function(RSTr_obj) {
+  update_G_mstcar(RSTr_obj)
+}
+
+#' Update sig2
+#' @noRd
+update_sig2 <- function(RSTr_obj) {
+  UseMethod("update_sig2")
+}
+
+#' @export
+update_sig2.default <- function(RSTr_obj) {
+  update_sig2_default(RSTr_obj)
+}
+
+#' @export
+update_sig2.rucar <- function(RSTr_obj) {
+  update_sig2_ucar_restricted(RSTr_obj)
+}
+
+#' Update tau2
+#' @noRd
+update_tau2 <- function(RSTr_obj) {
+  UseMethod("update_tau2")
+}
+
+#' @export
+update_tau2.default <- function(RSTr_obj) {
+  update_tau2_default(RSTr_obj)
+}
+
+#' @export
+update_tau2.rucar <- function(RSTr_obj) {
+  update_tau2_ucar_restricted(RSTr_obj)
+}
+
+#' @export
+update_tau2.mstcar <- function(RSTr_obj) {
+  update_tau2_mstcar(RSTr_obj)
+}
+
+#' Update Z
+#' @noRd
+update_Z <- function(RSTr_obj) {
+  UseMethod("update_Z")
+}
+
+#' @export
+update_Z.ucar <- function(RSTr_obj) {
+  update_Z_ucar(RSTr_obj)
+}
+
+#' @export
+update_Z.mcar <- function(RSTr_obj) {
+  update_Z_mcar(RSTr_obj)
+}
+
+#' @export
+update_Z.mstcar <- function(RSTr_obj) {
+  update_Z_mstcar(RSTr_obj)
 }

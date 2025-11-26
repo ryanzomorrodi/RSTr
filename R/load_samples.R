@@ -12,7 +12,7 @@
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
 #' initialize_model("test", tempdir(), data_min, adj_min, show_plots = FALSE)
-#' run_sampler("test", show_plots = FALSE, show_progress = FALSE)
+#' run_sampler("test", show_plots = FALSE, verbose = FALSE)
 #' samples <- load_samples("test", tempdir()) * 1e5
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
@@ -22,7 +22,7 @@ load_samples <- function(name, dir = tempdir(), param = "lambda", burn = 2000) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") {
     dir <- paste0(dir, "/")
   }
-  params <- readRDS(paste0(dir, name, "/params.Rds"))
+  params <- readRDS(paste0(dir, name, "/", name, ".Rds"))$params
   mar <- c("lambda" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 3, "sig2" = 3, "rho" = 2)
   if (params$model == "mstcar") mar["tau2"] = 2
   batch <- which(1:params$batch * 100 > burn)

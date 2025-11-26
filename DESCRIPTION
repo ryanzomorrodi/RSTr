@@ -26,13 +26,13 @@ Suggests:
     knitr,
     ggplot2,
     rmarkdown,
-    spdep,
     testthat (>= 3.0.0)
 Imports:
     abind,
     Rcpp,
     RcppArmadillo,
-    RcppDist
+    RcppDist,
+    spdep
 Depends:
 	R (>= 4.1.0)
 LazyData: true
