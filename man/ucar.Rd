@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialize_model.R
 \name{ucar}
 \alias{ucar}
-\alias{rucar}
+\alias{eucar}
 \alias{mcar}
 \alias{mstcar}
 \title{Initialize CAR model
@@ -25,7 +25,7 @@ ucar(
   priors = NULL
 )
 
-rucar(
+eucar(
   name,
   data,
   adjacency,
@@ -126,15 +126,15 @@ Initialize MSTCAR model
 }
 \examples{
 # Initialize an MSTCAR model
-mstcar(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
+mod_mst <- mstcar(name = "test", data = miheart, adjacency = miadj, dir = tempdir())
 # Initialize an MCAR model
 data_m <- lapply(miheart, \(x) x[, , "1979"])
-mcar("test", data_m, miadj, tempdir())
+mod_m <- mcar("test", data_m, miadj, tempdir())
 # Initialize an MCAR model with Poisson-distributed event data
-mcar("test", data_m, miadj, tempdir(), method = "poisson")
+mod_m <- mcar("test", data_m, miadj, tempdir(), method = "poisson")
 # Initialize a restricted UCAR model
 data_u <- lapply(miheart, \(x) x[, "65-74", "1979"])
-rucar("test", data_u, miadj, tempdir(), A = 6)
+mod_eu <- eucar("test", data_u, miadj, tempdir(), A = 6)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }

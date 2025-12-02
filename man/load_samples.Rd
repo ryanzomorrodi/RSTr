@@ -4,12 +4,10 @@
 \alias{load_samples}
 \title{Load MCMC samples}
 \usage{
-load_samples(name, dir = tempdir(), param = "lambda", burn = 2000)
+load_samples(RSTr_obj, param = "lambda", burn = 2000)
 }
 \arguments{
-\item{name}{Name of model}
-
-\item{dir}{Directory where model lives}
+\item{RSTr_obj}{\code{RSTr} model object to load in samples}
 
 \item{param}{Which parameter samples to load}
 
@@ -19,14 +17,13 @@ load_samples(name, dir = tempdir(), param = "lambda", burn = 2000)
 An \code{array} of samples from model \code{name}
 }
 \description{
-\code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{lambda}, but any model parameters can be loaded. Users can also specify a burn-in period.
+\code{load_samples()} gathers samples saved for model \code{RSTr_obj}. By default, loads the rate estimate samples \code{lambda}, but any model parameters can be loaded. Users can also specify a burn-in period.
 }
 \examples{
 # prepare truncated dataset
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
-initialize_model("test", tempdir(), data_min, adj_min, show_plots = FALSE)
-run_sampler("test", show_plots = FALSE, verbose = FALSE)
+mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
 samples <- load_samples("test", tempdir()) * 1e5
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
