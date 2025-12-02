@@ -214,8 +214,8 @@ mstcar <- function(
   update_rho = FALSE
 ) {
   method <- match.arg(method)
-  pars <- c("lambda", "beta", "Z", "G", "Ag", "tau2", "rho")
-  #if (update_rho) pars <- c(pars, "rho")
+  pars <- c("lambda", "beta", "Z", "G", "Ag", "tau2")
+  if (update_rho) pars <- c(pars, "rho")
   RSTr_obj <- initialize_model(
     name = name,
     data = data,

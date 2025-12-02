@@ -2,7 +2,7 @@
 #' @noRd
 impute_missing_data <- function(RSTr_obj) {
   lambda <- RSTr_obj$current_sample$lambda
-  params
+  params <- RSTr_obj$params
   method <- params$method
   miss <- params$miss
   impute_lb <- params$impute_lb
@@ -28,6 +28,7 @@ impute_missing_data <- function(RSTr_obj) {
     )
     Y[miss] <- stats::qpois(rp, rate)
   }
-  data$Y <- data
-  data
+  data$Y <- Y
+  RSTr_obj$data <- data
+  RSTr_obj
 }

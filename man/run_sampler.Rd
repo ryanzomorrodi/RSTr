@@ -4,7 +4,7 @@
 \alias{run_sampler}
 \title{Run Gibbs sampler}
 \usage{
-run_sampler(RSTr_obj, iterations, show_plots, verbose)
+run_sampler(RSTr_obj, iterations = 6000, show_plots = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{iterations}{Specifies number of iterations to run}

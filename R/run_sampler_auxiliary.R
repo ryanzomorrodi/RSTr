@@ -21,7 +21,8 @@ update_params <- function(RSTr_obj, current_batch) {
   params <- RSTr_obj$params
   params$total <- params$total + 100
   params$batch <- current_batch
-  params
+  RSTr_obj$params <- params
+  RSTr_obj
 }
 
 #' Extract all samples for first instance of parameter
@@ -29,4 +30,18 @@ update_params <- function(RSTr_obj, current_batch) {
 extract_last_margin <- function(arr) {
   idx <- c(rep(list(1), length(dim(arr)) - 1), list(seq_len(rev(dim(arr))[1])))
   do.call(`[`, c(list(arr), idx))
+}
+
+#' Prepare output to be saved and used for plots
+#' @noRd
+prepare_output <- function(output, method) {
+  mars <- sapply(output, \(x) length(dim(x)))
+  # remove parameter from `output` if no changes detected
+  for (par in names(mars)) {
+    diffs <- apply(output[[par]], 1:(mars[par] - 1), diff)
+    nodiff <- all(apply(diffs, 1:(mars[par] - 1), \(x) all(x == 0)))
+    if (nodiff) output[[par]] <- NULL
+  }
+  output$lambda <- exp_expit(output$lambda, method)
+  output
 }

@@ -1,10 +1,5 @@
 #' @noRd
 save_output <- function(output, batch, dir, name) {
-  UseMethod("save_output")
-}
-
-#' @export
-save_output.default <- function(output, batch, dir, name) {
   if (substr(dir, nchar(dir), nchar(dir)) != "/") dir <- paste0(dir, "/")
   for (par in names(output)) saveRDS(output[[par]], paste0(dir, name, "/", par, "/", par, "_out_", batch, ".Rds"))
 }
