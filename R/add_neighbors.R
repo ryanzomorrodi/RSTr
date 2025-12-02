@@ -8,6 +8,7 @@
 #' @param neighs A list of regions to mark as adjacent. Accepts a vector of indices or names assigned to \code{adjacency}
 #' @returns A modified adjacency \code{list}.
 #' @examples
+#' mamap <- arrange(mamap, GEOID)
 #' ma_adj <- spdep::poly2nb(mamap)
 #' new_neighs <- c(1, 4, 10) # attach regions 1, 4, and 10
 #' ma_adj <- add_neighbors(ma_adj, new_neighs)

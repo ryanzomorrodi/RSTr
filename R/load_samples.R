@@ -1,8 +1,7 @@
 #' Load MCMC samples
 #'
-#' \code{load_samples()} gathers samples saved for model \code{name} in directory \code{dir}. By default, loads the rate estimate samples \code{lambda}, but any model parameters can be loaded. Users can also specify a burn-in period.
-#' @param name  Name of model
-#' @param dir   Directory where model lives
+#' \code{load_samples()} gathers samples saved for model \code{RSTr_obj}. By default, loads the rate estimate samples \code{lambda}, but any model parameters can be loaded. Users can also specify a burn-in period.
+#' @param RSTr_obj \code{RSTr} model object to load in samples
 #' @param param Which parameter samples to load
 #' @param burn  Numer of burn-in samples to discard
 #'
@@ -11,18 +10,17 @@
 #' # prepare truncated dataset
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
-#' initialize_model("test", tempdir(), data_min, adj_min, show_plots = FALSE)
-#' run_sampler("test", show_plots = FALSE, verbose = FALSE)
+#' mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
 #' samples <- load_samples("test", tempdir()) * 1e5
 #' \dontshow{
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-load_samples <- function(name, dir = tempdir(), param = "lambda", burn = 2000) {
-  if (substr(dir, nchar(dir), nchar(dir)) != "/") {
-    dir <- paste0(dir, "/")
-  }
-  params <- readRDS(paste0(dir, name, "/", name, ".Rds"))$params
+load_samples <- function(RSTr_obj, param = "lambda", burn = 2000) {
+  params <- RSTr_obj$params
+  name <- params$name
+  dir <- params$dir
+  if (substr(dir, nchar(dir), nchar(dir)) != "/") dir <- paste0(dir, "/")
   mar <- c("lambda" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 3, "sig2" = 3, "rho" = 2)
   if (params$model == "mstcar") mar["tau2"] = 2
   batch <- which(1:params$batch * 100 > burn)
