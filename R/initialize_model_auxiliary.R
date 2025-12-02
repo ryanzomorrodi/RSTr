@@ -61,3 +61,34 @@ get_estimates <- function(RSTr_obj) {
   RSTr_obj$relative_precision <- relative_precision
   RSTr_obj
 }
+
+#' \code{generate_data()} converts a long \{table} featuring event counts across regions and other optional margins into a \code{list} that is readable by \code{*car()}.
+#' \code{generate_data()} will sum along any stratifications that aren't used. Filter data by desired groups and time periods before running \code{generate_data()}.
+#' @param table A \code{table} containing event and mortality counts
+#' @param event The column containing event counts
+#' @param population The column containing population counts
+#' @param region The column containing region names
+#' @param group An optional column containing sociodemographic group names
+#' @param time An optional column containing time period names
+#' @returns A \code{list} of mortality and population counts organized into multi-dimensional arrays
+#' @examples
+#' ma_data <- maexample[!is.na(maexample$Year), ]
+#' ma_data_mst <- generate_data(maexample, Deaths, Population, County.Code, Sex.Code, Year.Code) # Generates data from 1979-1981 stratified by sex
+#' ma_data_79 <- ma_data[ma_data$Year == 1979, ]
+#' ma_data_m <- generate_data(ma_data_79, Deaths, Population, County.Code, Sex.Code) # Generates 1979 data stratified by sex
+#' ma_data_u <- generate_data(ma_data_79, Deaths, Population, County.Code) # Generates 1979 data summarized for all sexes
+#' @export
+generate_data <- function(table, event, population, region, group = NULL, time = NULL) {
+  ev <- deparse(substitute(event))
+  po <- deparse(substitute(population))
+  re <- deparse(substitute(region))
+  gr <- deparse(substitute(group))
+  ti <- deparse(substitute(time))
+  formula_event <- reformulate(c(re, gr, ti), response = ev)
+  formula_population <- reformulate(c(re, gr, ti), response = po)
+  list(
+    Y = xtabs(formula_event, table),
+    n = xtabs(formula_mortality, table)
+  )
+}
+generate_data(test_dft, Y, n, county, group, year)
