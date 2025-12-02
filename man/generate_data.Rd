@@ -3,12 +3,12 @@
 \name{generate_data}
 \alias{generate_data}
 \title{\code{generate_data()} converts a long \code{table} featuring event counts across regions and other optional margins into a \code{list} that is readable by \code{*car()}.
-\code{generate_data()} will sum along any stratifications that aren't used. Filter data by desired groups and time periods before running \code{generate_data()}.}
+\code{generate_data()} will sum along any group/time stratifications that aren't specified; for example, if your dataset contains time periods and time is not specified in \code{generate_data()}, the output will be a sum of all time periods. Filter data by desired groups and time periods before running \code{generate_data()}.}
 \usage{
 generate_data(table, event, population, region, group = NULL, time = NULL)
 }
 \arguments{
-\item{table}{A \code{table} containing event and mortality counts}
+\item{table}{A \code{table} containing event and mortality counts stratified by group/region/time}
 
 \item{event}{The column containing event counts}
 
@@ -25,7 +25,7 @@ A \code{list} of mortality and population counts organized into multi-dimensiona
 }
 \description{
 \code{generate_data()} converts a long \code{table} featuring event counts across regions and other optional margins into a \code{list} that is readable by \code{*car()}.
-\code{generate_data()} will sum along any stratifications that aren't used. Filter data by desired groups and time periods before running \code{generate_data()}.
+\code{generate_data()} will sum along any group/time stratifications that aren't specified; for example, if your dataset contains time periods and time is not specified in \code{generate_data()}, the output will be a sum of all time periods. Filter data by desired groups and time periods before running \code{generate_data()}.
 }
 \examples{
 ma_data <- maexample[!is.na(maexample$Year), ]
