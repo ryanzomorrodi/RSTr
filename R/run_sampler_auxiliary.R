@@ -35,13 +35,9 @@ extract_last_margin <- function(arr) {
 #' Prepare output to be saved and used for plots
 #' @noRd
 prepare_output <- function(output, method) {
-  mars <- sapply(output, \(x) length(dim(x)))
-  # remove parameter from `output` if no changes detected
-  for (par in names(mars)) {
-    diffs <- apply(output[[par]], 1:(mars[par] - 1), diff)
-    nodiff <- all(apply(diffs, 1:(mars[par] - 1), \(x) all(x == 0)))
-    if (nodiff) output[[par]] <- NULL
-  }
   output$lambda <- exp_expit(output$lambda, method)
+  # remove parameter from `output` if no changes detected
+  difftest <- lapply(output, \(par) diff(extract_last_margin(par)))
+  output <- output[!sapply(difftest, \(par) all(par == 0))]
   output
 }
