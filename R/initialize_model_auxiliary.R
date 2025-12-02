@@ -62,7 +62,7 @@ get_estimates <- function(RSTr_obj) {
   RSTr_obj
 }
 
-#' \code{generate_data()} converts a long \{table} featuring event counts across regions and other optional margins into a \code{list} that is readable by \code{*car()}.
+#' \code{generate_data()} converts a long \code{table} featuring event counts across regions and other optional margins into a \code{list} that is readable by \code{*car()}.
 #' \code{generate_data()} will sum along any stratifications that aren't used. Filter data by desired groups and time periods before running \code{generate_data()}.
 #' @param table A \code{table} containing event and mortality counts
 #' @param event The column containing event counts
@@ -88,7 +88,7 @@ generate_data <- function(table, event, population, region, group = NULL, time =
   formula_population <- reformulate(c(re, gr, ti), response = po)
   list(
     Y = xtabs(formula_event, table),
-    n = xtabs(formula_mortality, table)
+    n = xtabs(formula_population, table)
   )
 }
 generate_data(test_dft, Y, n, county, group, year)
