@@ -100,7 +100,7 @@ ucar <- function(
     pars = pars,
     restricted = FALSE
   )
-  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj <- update_model(RSTr_obj, iterations, show_plots, verbose)
   RSTr_obj
 }
 
@@ -146,7 +146,7 @@ rucar <- function(
     A = A,
     m0 = m0
   )
-  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj <- update_model(RSTr_obj, iterations, show_plots, verbose)
   RSTr_obj
 }
 
@@ -189,7 +189,7 @@ mcar <- function(
     model = "mcar",
     pars = pars
   )
-  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj <- update_model(RSTr_obj, iterations, show_plots, verbose)
   RSTr_obj
 }
 
@@ -233,6 +233,6 @@ mstcar <- function(
     pars = pars,
     update_rho = update_rho
   )
-  RSTr_obj <- run_model(RSTr_obj, iterations, show_plots, verbose)
+  RSTr_obj <- update_model(RSTr_obj, iterations, show_plots, verbose)
   RSTr_obj
 }

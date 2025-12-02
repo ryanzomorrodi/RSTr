@@ -7,8 +7,22 @@ validate_model <- function(RSTr_obj) {
   display_errors(errout)
 }
 
-#' @noRd
-run_model <- function(RSTr_obj, iterations, show_plots, verbose) {
+#' \code{update_model()} generates further samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{*car()}.
+#' @param RSTr_obj The \code{RSTr} model object to generate samples for
+#' @param iterations Specifies number of iterations to run
+#' @param show_plots If set to \code{FALSE}, hides traceplots
+#' @param verbose If set to \code{FALSE}, hides progress bar and other messages
+#' @returns No output, saves sampler output to \code{dir}
+#' @examples
+#' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
+#' adj_min <- list(2, 1)
+#' mod_mst <- mstcar("mod_mst", data_min, adj_min, tempdir())
+#' mod_mst <- update_model(mod_mst, show_plots = FALSE, verbose = FALSE)
+#' \dontshow{
+#' unlink(paste0(tempdir(), "\\mod_mst"), recursive = TRUE)
+#' }
+#' @export
+update_model <- function(RSTr_obj, iterations = 6000, show_plots = TRUE, verbose = TRUE) {
   RSTr_obj <- run_sampler(RSTr_obj, iterations, show_plots, verbose)
   if (verbose) message("Generating estimates...")
   RSTr_obj <- get_estimates(RSTr_obj)

@@ -1,25 +1,9 @@
 #' Run Gibbs sampler
-#'
-#' \code{run_sampler()} generates samples for model \code{name} in \code{dir}. The model used to generate samples (e.g., MSTCAR, MCAR, UCAR) along with the model's other parameters are specified in \code{*car()}.
-#' @param name Name of model and corresponding folder
-#' @param dir Directory where model lives
-#' @param iterations Specifies number of iterations to run
-#' @param show_plots If set to \code{FALSE}, hides traceplots
-#' @param verbose If set to \code{FALSE}, hides progress bar
-#' @returns No output, saves sampler output to \code{dir}
-#' @examples
-#' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
-#' adj_min <- list(2, 1)
-#' mstcar("test", data_min, adj_min, tempdir())
-#' run_sampler("test", show_plots = FALSE, verbose = FALSE)
-#' \dontshow{
-#' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
-#' }
 #' @useDynLib RSTr, .registration = TRUE
 #' @importFrom Rcpp evalCpp
 #' @importFrom RcppDist bayeslm
 #' @importFrom RcppArmadillo fastLm
-#' @export
+#' @noRd
 run_sampler <- function(RSTr_obj, iterations = 6000, show_plots = TRUE, verbose = TRUE) {
   iterations <- iterations - iterations %% 100
   sampler_start <- Sys.time()

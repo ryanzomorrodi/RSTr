@@ -1,8 +1,12 @@
 #' Get spatial data
 #' @noRd
 get_spatial_data <- function(adjacency) {
+  if (class(adjacency) != "nb") {
+    adjacency <- lapply(adjacency, as.integer)
+    class(adjacency) <- c("nb")
+  }
   check_regions_unlinked(adjacency)
-  num_adj <- sapply(adjacency, length)
+  num_adj <- spdep::card(adjacency)
   island_region <- lapply(get_islands(adjacency), \(x) x - 1)
   num_island_region <- sapply(island_region, length)
   adjacency <- lapply(adjacency, \(x) x - 1)
