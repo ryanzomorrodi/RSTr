@@ -150,6 +150,8 @@ head(mst_estimates_as)
 
 `mod_mst` now shows us that our estimates are suppressed and indicates the number of reliable rates.
 
+If you want to learn more about `get_estimates()`, `age_standardize()`, and `suppress_estimates()`, read `vignette("RSTr-estimates")`.
+
 ## Illustrative Example: Mapping Estimates
 
 We can get a better picture of the geographic patterns in our data with a map. Using `ggplot` (or your favorite mapping package), Let's see how the (non-age-standardized) estimates were smoothed:

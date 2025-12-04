@@ -1,8 +1,8 @@
 ---
-title: "04: Gathering and Loading Samples"
+title: "06: Sample Processing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{04: Gathering and Loading Samples}
+  %\VignetteIndexEntry{06: Sample Processing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-After initializing the model with `*car()`, you can gather and load samples using the `run_sampler()` and `load_samples()` functions. Finally, using some basic plotting, we can look at our results and make sure they make sense.
+After initializing the model with `*car()`, you can gather and load samples using the `load_samples()` function. Finally, using some basic plotting, we can look at our results and make sure they make sense.
 
 ## The `run_sampler()` function
 

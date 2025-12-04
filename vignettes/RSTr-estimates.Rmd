@@ -1,8 +1,8 @@
 ---
-title: "05: Calculating Parameter Medians"
+title: "04: Generating Estimates: Age-standardization, Reliability, and Suppression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{05: Calculating Parameter Medians}
+  %\VignetteIndexEntry{04: Generating Estimates: Age-standardization, Reliability, and Suppression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
