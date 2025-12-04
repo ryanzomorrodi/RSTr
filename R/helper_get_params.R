@@ -1,6 +1,6 @@
 #' Get params
 #' @noRd
-get_params <- function(data, seed, method, model, name, dir, restricted, A, m0, update_rho, impute_lb, impute_ub) {
+get_params <- function(data, seed, method, model, name, dir, perc_ci, restricted, A, m0, update_rho, impute_lb, impute_ub) {
   params <- list(
     batch = 0,
     total = 0,
@@ -9,7 +9,10 @@ get_params <- function(data, seed, method, model, name, dir, restricted, A, m0, 
     dimnames = dimnames(data$Y),
     name = name,
     dir = dir,
-    missing_Y = FALSE
+    perc_ci = perc_ci,
+    missing_Y = FALSE,
+    age_standardized = FALSE,
+    suppressed = FALSE
   )
   if (any(!is.finite(data$Y))) {
     params$missing_Y <- TRUE

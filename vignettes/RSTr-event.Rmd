@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview {#sec-overview}
 
-The event and population data are at the core of the `RSTr` model. They work alongside the adjacency information to generate smoothed estimates. In this vignette, we'll discuss requirements for event and population data and walk through an example with a `data.frame`.
+The event and population data are at the core of the BYM-based models used in the `RSTr` package. They work alongside the adjacency information to generate smoothed estimates. In this vignette, we'll discuss requirements for event and population data and walk through an example with a `data.frame`.
 
 ## Requirements {#sec-requirements}
 

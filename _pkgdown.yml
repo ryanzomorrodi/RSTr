@@ -8,27 +8,32 @@ articles:
   contents:
   - RSTr-event
   - RSTr-adjacency
-  - RSTr-initialization
+  - RSTr-car
   - RSTr-samples
   - RSTr-medians
   - RSTr-models
   - RSTr-troubleshoot
 reference:
+- title: Preparing data
+  contents:
+  - generate_data
+  - add_neighbors
 - title: Modeling
   contents:
   - ucar
-  - run_sampler
-  - get_medians
-- title: Aggregation
+  - update_model
+  - load_model
+- title: Estimates
   contents:
+  - get_estimates
   - age_standardize
-  - aggregate_groups
-  - aggregate_pop
-- title: Loading and preparing data
+  - suppress_estimates
+- title: Sample/array processing
   contents:
   - load_samples
-  - load_pop
-  - add_neighbors
+  - aggregate_count
+  - aggregate_samples
+  - get_medians
 - title: Example data
   contents:
   - miheart

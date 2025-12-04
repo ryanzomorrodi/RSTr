@@ -46,9 +46,9 @@ All `*car()` functions provide several arguments:
 
 Most of these arguments are not needed, as the model has defaults for most arguments. `rucar()` and `mstcar()` have additional arguments only used by them:
 
--   `A`: In the restricted UCAR model, describes the limit of the smoothing intensity between regions;
+-   `A`: In the EUCAR model, describes the limit of the smoothing intensity between regions;
 
--   `m0`: In the restricted UCAR model, specifies the baseline neighbor count; and
+-   `m0`: In the EUCAR model, specifies the baseline neighbor count; and
 
 -   `update_rho`: In the MSTCAR model, allows for updates of the temporal correlation parameter `rho`. By default, `RSTr` does not update `rho`.
 
