@@ -22,7 +22,7 @@ new_ucar <- function(data, subclass = character()) {
 
 #' @noRd
 new_ucar_restricted <- function(data) {
-  new_ucar(data, subclass = "rucar")
+  new_ucar(data, subclass = "eucar")
 }
 
 #' @noRd
