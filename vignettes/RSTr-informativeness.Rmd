@@ -1,8 +1,8 @@
 ---
-title: "05: Model Informativeness"
+title: "04: Model Informativeness"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{05: Model Informativeness}
+  %\VignetteIndexEntry{04: Model Informativeness}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

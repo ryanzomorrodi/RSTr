@@ -9,8 +9,12 @@ articles:
   - RSTr-event
   - RSTr-adjacency
   - RSTr-car
+  - RSTr-informativeness
+  - RSTr-agestandardize
+  - RSTr-reliability
   - RSTr-samples
-  - RSTr-medians
+  - RSTr-initialvalues
+  - RSTr-priors
   - RSTr-models
   - RSTr-troubleshoot
 reference:
