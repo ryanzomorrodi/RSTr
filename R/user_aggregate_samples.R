@@ -4,6 +4,7 @@
 #' 
 #' \code{aggregate_samples()} is only meant for non-age group data, such as spatial regions, time periods, or other sociodemographic groups (race, sex, etc.). If you are interested in consolidating samples by age group, use \code{age_standardize()} instead. Additionally, if you plan on doing age-standardization along with aggregating by other groups, always aggregate groups first before doing age-standardization to ensure that the samples are properly standardized.
 #' @inheritParams age_standardize
+#' @param sample an \code{array} of samples imported with \code{load_samples()}
 #' @param pop The population array to be used for weighted averages.
 #' @returns An \code{array} of weighted-average samples.
 #' @examples

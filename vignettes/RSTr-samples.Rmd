@@ -21,11 +21,13 @@ In the first series of vignettes, we worked with high-level wrapper functions li
 Before we begin, note that the above functions make direct changes to our `RSTr` model object. We can manually save our estimates to the model object, but these estimates will not be automatically added. In exchange for more power with sample processing, we lose some of the convenience afforded to us by these wrapper functions.
 
 ## The `load_samples()` function
+```{r, include = FALSE}
+library(RSTr)
+```
 
 To begin, let's generate samples for a new model:
 
 ```{r, results = "hide", fig.keep = "last"}
-library(RSTr)
 mod_mst <- mstcar(name = "my_test_model", data = miheart, adjacency = miadj, seed = 1234)
 ```
 
@@ -101,7 +103,7 @@ samples <- age_standardize(
     std_pop,
     new_name = "35-64",
     groups = c("35-44", "45-54", "55-64"),
-    margin_age,
+    margin = margin_age,
     bind_new = TRUE
 )
 ```
@@ -137,6 +139,7 @@ medians_supp[low_rel_prec | low_population] <- NA
 Let's now map our suppressed estimates:
 
 ```{r}
+library(ggplot2)
 est_3544 <- medians_supp[, "35-44", "1988"]
 
 ggplot(mishp) +

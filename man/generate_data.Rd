@@ -30,8 +30,11 @@ A \code{list} of mortality and population counts organized into multi-dimensiona
 }
 \examples{
 ma_data <- maexample[!is.na(maexample$Year), ]
-ma_data_mst <- generate_data(ma_data, Deaths, Population, County.Code, Sex.Code, Year.Code) # Generates data from 1979-1981 stratified by sex
+# Generates data from 1979-1981 stratified by sex
+ma_data_mst <- generate_data(ma_data, Deaths, Population, County.Code, Sex.Code, Year.Code)
 ma_data_79 <- ma_data[ma_data$Year == 1979, ]
-ma_data_m <- generate_data(ma_data_79, Deaths, Population, County.Code, Sex.Code) # Generates 1979 data stratified by sex
-ma_data_u <- generate_data(ma_data_79, Deaths, Population, County.Code) # Generates 1979 data summarized for all sexes
+# Generates 1979 data stratified by sex
+ma_data_m <- generate_data(ma_data_79, Deaths, Population, County.Code, Sex.Code)
+# Generates 1979 data summarized for all sexes
+ma_data_u <- generate_data(ma_data_79, Deaths, Population, County.Code)
 }

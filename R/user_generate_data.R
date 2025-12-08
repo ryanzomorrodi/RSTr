@@ -13,10 +13,13 @@
 #' @returns A \code{list} of mortality and population counts organized into multi-dimensional arrays.
 #' @examples
 #' ma_data <- maexample[!is.na(maexample$Year), ]
-#' ma_data_mst <- generate_data(ma_data, Deaths, Population, County.Code, Sex.Code, Year.Code) # Generates data from 1979-1981 stratified by sex
+#' # Generates data from 1979-1981 stratified by sex
+#' ma_data_mst <- generate_data(ma_data, Deaths, Population, County.Code, Sex.Code, Year.Code)
 #' ma_data_79 <- ma_data[ma_data$Year == 1979, ]
-#' ma_data_m <- generate_data(ma_data_79, Deaths, Population, County.Code, Sex.Code) # Generates 1979 data stratified by sex
-#' ma_data_u <- generate_data(ma_data_79, Deaths, Population, County.Code) # Generates 1979 data summarized for all sexes
+#' # Generates 1979 data stratified by sex
+#' ma_data_m <- generate_data(ma_data_79, Deaths, Population, County.Code, Sex.Code)
+#' # Generates 1979 data summarized for all sexes
+#' ma_data_u <- generate_data(ma_data_79, Deaths, Population, County.Code)
 #' @export
 generate_data <- function(table, event, population, region, group = NULL, time = NULL) {
   ev <- deparse(substitute(event))
@@ -24,10 +27,12 @@ generate_data <- function(table, event, population, region, group = NULL, time =
   re <- deparse(substitute(region))
   gr <- deparse(substitute(group))
   ti <- deparse(substitute(time))
-  formula_event <- reformulate(c(re, gr, ti), response = ev)
-  formula_population <- reformulate(c(re, gr, ti), response = po)
+  formula_event <- stats::reformulate(c(re, gr, ti), response = ev)
+  formula_population <- stats::reformulate(c(re, gr, ti), response = po)
   list(
     Y = xtabs(formula_event, table),
     n = xtabs(formula_population, table)
   )
 }
+
+stats::ts

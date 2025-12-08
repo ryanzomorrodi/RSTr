@@ -14,6 +14,8 @@ aggregate_samples(
 )
 }
 \arguments{
+\item{sample}{an \code{array} of samples imported with \code{load_samples()}}
+
 \item{pop}{The population array to be used for weighted averages.}
 
 \item{margin}{The margin on which the groups of interest are stratified.}

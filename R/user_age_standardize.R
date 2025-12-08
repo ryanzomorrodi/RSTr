@@ -42,12 +42,12 @@
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-age_standardize <- function(object, std_pop, new_name, groups, ...) {
+age_standardize <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
   UseMethod("age_standardize")
 }
 
 #' @export
-age_standardize.default <- function(object, std_pop, new_name = NULL, groups = NULL, margin, bind_new = FALSE) {
+age_standardize.default <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
   mar <- seq_along(dim(object))[-margin]
   wts <- std_pop / sum(std_pop)
   sub_sample <- object
@@ -71,14 +71,14 @@ age_standardize.default <- function(object, std_pop, new_name = NULL, groups = N
 }
 
 #' @export
-age_standardize.RSTr <- function(object, std_pop, new_name, groups = NULL) {
+age_standardize.RSTr <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
   object$params$age_standardized <- TRUE
   samples <- load_samples(object)
   if (is.null(groups)) groups <- 1:dim(samples)[2]
   data <- lapply(object$data, aggregate_count, 2, groups, TRUE, new_name)
   data <- lapply(data, \(x) x[, new_name, , drop = FALSE])
   samples <- subset_array(samples, 2, groups)
-  samples <- age_standardize(samples, std_pop, new_name, groups, 2, TRUE)[, new_name, , , drop = FALSE]
+  samples <- age_standardize(samples, std_pop, new_name, groups, margin = 2, bind_new = TRUE)[, new_name, , , drop = FALSE]
   medians <- get_medians(samples)
   credible_interval <- get_credible_interval(samples)
   relative_precision <- get_relative_precision(medians, credible_interval)

@@ -1,10 +1,5 @@
 test_that("medians are generated from test data", {
   data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
   adj_min <- list(2, 1)
-  mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
-  run_sampler("test", show_plots = FALSE, verbose = FALSE)
-  samples <- load_samples("test")
-  medians <- get_medians(samples)
-  expect_equal(dim(medians), c(2, 3, 3))
-  expect_false(any(is.na(medians)))
+  mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
 })

@@ -16,7 +16,7 @@ run_sampler <- function(RSTr_obj, iterations = 6000, show_plots = TRUE, verbose 
   if (verbose) message("Starting sampler on Batch ", start_batch + 1, " at ", format(Sys.time(), "%a %b %d %X"))
   for (batch in batches) {
     if (verbose) display_progress(batch, max(batches), total, 0, sampler_start)
-    output <- setNames(vector("list", length(RSTr_obj$current_sample)), names(RSTr_obj$current_sample))
+    output <- stats::setNames(vector("list", length(RSTr_obj$current_sample)), names(RSTr_obj$current_sample))
     RSTr_obj$current_sample$lambda <- log_logit(RSTr_obj$current_sample$lambda, method)
     for (it in 1:100) {
       if (missing_Y) RSTr_obj <- impute_missing_data(RSTr_obj)
@@ -50,7 +50,7 @@ update_plots <- function(plots, output, batch, start_batch) {
   }
   plots <- rbind(plots, sapply(output, extract_last_margin))
   if (start < 2000) plots <- plots[-(1:5), ]
-  ts(plots, start = start, frequency = 0.1)
+  stats::ts(plots, start = start, frequency = 0.1)
 }
 
 #' Append new values to output

@@ -1,7 +1,7 @@
 #' Get spatial data
 #' @noRd
 get_spatial_data <- function(adjacency) {
-  if (class(adjacency) != "nb") {
+  if (inherits(adjacency, "nb")) {
     adjacency <- lapply(adjacency, as.integer)
     class(adjacency) <- c("nb")
   }
@@ -55,3 +55,6 @@ check_regions_unlinked <- function(adjacency) {
     stop("Some regions in 'adjacency' have no neighbors. Ensure all regions have at least 1 neighbor. Check vignette('RSTr-adjacency') for more information")
   }
 }
+
+
+
