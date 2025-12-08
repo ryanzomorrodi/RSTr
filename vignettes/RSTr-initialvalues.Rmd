@@ -1,8 +1,8 @@
 ---
-title: "07: Initial Values"
+title: "08: Initial Values"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{07: Initial Values}
+  %\VignetteIndexEntry{08: Initial Values}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

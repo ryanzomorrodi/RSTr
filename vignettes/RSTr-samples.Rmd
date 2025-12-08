@@ -1,8 +1,8 @@
 ---
-title: "06: Sample Processing"
+title: "07: Sample Processing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{06: Sample Processing}
+  %\VignetteIndexEntry{07: Sample Processing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

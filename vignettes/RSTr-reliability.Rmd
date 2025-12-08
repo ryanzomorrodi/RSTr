@@ -1,8 +1,8 @@
 ---
-title: "05: Generating Estimates: Reliability and Suppression"
+title: "06: Generating Estimates: Reliability and Suppression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{05: Generating Estimates: Reliability and Suppression}
+  %\VignetteIndexEntry{06: Generating Estimates: Reliability and Suppression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

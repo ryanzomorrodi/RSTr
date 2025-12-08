@@ -1,8 +1,8 @@
 ---
-title: "04: Generating Estimates: Age-standardization"
+title: "05: Generating Estimates: Age-standardization"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{04: Generating Estimates: Age-standardization}
+  %\VignetteIndexEntry{05: Generating Estimates: Age-standardization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
