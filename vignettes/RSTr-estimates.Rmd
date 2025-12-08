@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-In the previous vignette, we ran our model using `run_sampler()`, imported estimates using `load_samples()`, age-standardized and year-aggregated our estimates, and finally did some cursory exploration of large- and small-population counties in our dataset. Now, we can calculate our estimates, investigate measures of reliability, and investigate the implications of our measures of reliability. Note that this process is identical for all types of models.
+In the previous vignette, we discussed the model setup process in-depth. But how do we get our estimates once we've run our model? In this vignette, we discuss extracting estimates from our model object with the `get_estimates()` function, age-standardization with `age-standardize()`, and how we can use reliability criteria to suppress our estimates with `suppress_estimates()`.
 
 ## The `get_medians()` function
 

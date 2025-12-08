@@ -31,8 +31,7 @@ Y_{i} &\sim \text{Binomial}(n_{i}, \lambda_{i}) \\
 \end{split}
 $$
 
-For models using `method = "poisson"`,
-$$  
+For models using `method = "poisson"`, $$  
 \begin{split}
 Y_{i} &\sim \text{Poisson}(n_{i} \lambda_{i}) \\
 \theta_{i} &= \text{Log}(\lambda_{i}) \\

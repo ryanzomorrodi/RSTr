@@ -44,4 +44,4 @@ The MCAR model shares all of the priors as the MSTCAR model, but does not includ
 
 ### Priors for the UCAR/EUCAR model
 
-The UCAR models include only the following from above: `lambda_sd`, `tau_a`, and `tau_b`. UCAR models also take priors `sig_a` and `sig_b`, which hold similar shape and restriction to `tau_a` and `tau_b`. 
+The UCAR models include only the following from above: `lambda_sd`, `tau_a`, and `tau_b`. UCAR models also take priors `sig_a` and `sig_b`, which hold similar shape and restriction to `tau_a` and `tau_b`.

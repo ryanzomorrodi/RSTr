@@ -24,7 +24,7 @@ The current version of `RSTr` features four models to choose from: the Univariat
 
 ### The UCAR model
 
-The UCAR model (function call `ucar()`) is the basis of all models used in `RSTr`. The premise of the UCAR is to spatially smooth estimates across spatial regions using a random effects estimator `Z`. The intensity of its smoothing in a region is based on the event and population counts of that region and the counts in its neighboring regions. 
+The UCAR model (function call `ucar()`) is the basis of all models used in `RSTr`. The premise of the UCAR is to spatially smooth estimates across spatial regions using a random effects estimator `Z`. The intensity of its smoothing in a region is based on the event and population counts of that region and the counts in its neighboring regions.
 
 The UCAR model only smooths across spatial regions and not across sociodemographic groups or time periods. While datasets that include these stratifications can be run with `ucar()`, the user would be effectively running several concurrent UCAR models. The UCAR model is recommended if the user is only has data for one sociodemographic group of interest and one time-period.
 
