@@ -25,7 +25,8 @@ check_unused_data <- function(data) {
 #' Check for missing elements
 #' @noRd
 check_missing_data_objects <- function(data) {
-  miss <- sapply(c("Y", "n"), \(x) !any(names(data) == x))
+  chk <- c("Y", "n")
+  miss <- sapply(chk, \(x) !any(names(data) == x))
   if (any(miss)) {
     stop("One or more objects missing from list 'data': ", paste(chk[miss], collapse = ", "))
   }

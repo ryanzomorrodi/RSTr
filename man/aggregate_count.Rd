@@ -15,11 +15,11 @@ aggregate_count(
 \arguments{
 \item{count}{The \code{array} to aggregate.}
 
-\item{margin}{The margin on which the groups of interest are stratified.}
+\item{margin}{For `array`s, The margin on which the groups of interest are stratified.}
 
 \item{groups}{A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.}
 
-\item{bind_new}{If set to \code{TRUE}, will bind to the original sample dataset. Otherwise, will generate a standalone array of samples.}
+\item{bind_new}{If set to \code{TRUE}, will bind an `array` to the original sample dataset. Otherwise, will generate a standalone array of samples.}
 
 \item{new_name}{The name to assign to the age-standardized group.}
 }

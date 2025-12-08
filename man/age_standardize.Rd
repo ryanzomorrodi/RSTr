@@ -4,10 +4,14 @@
 \alias{age_standardize}
 \title{Age-standardize samples}
 \usage{
-## S3 method for class 'RSTr':
-age_standardize(object, std_pop, new_name, groups = NULL)
-## Default S3 method:
-age_standardize(object, std_pop, margin, groups = NULL, bind_new = FALSE, new_name = NULL)
+age_standardize(
+  object,
+  std_pop,
+  new_name = NULL,
+  groups = NULL,
+  margin = NULL,
+  bind_new = FALSE
+)
 }
 \arguments{
 \item{object}{An \code{RSTr} model object or an \code{array} of samples imported with \code{load_samples()}.}
@@ -18,9 +22,9 @@ age_standardize(object, std_pop, margin, groups = NULL, bind_new = FALSE, new_na
 
 \item{groups}{A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.}
 
-\item{margin}{The margin on which the groups of interest are stratified.}
+\item{margin}{For `array`s, The margin on which the groups of interest are stratified.}
 
-\item{bind_new}{If set to \code{TRUE}, will bind to the original sample dataset. Otherwise, will generate a standalone array of samples.}
+\item{bind_new}{If set to \code{TRUE}, will bind an `array` to the original sample dataset. Otherwise, will generate a standalone array of samples.}
 }
 \value{
 An \code{RSTr} object or an \code{array} of age-standardized samples.

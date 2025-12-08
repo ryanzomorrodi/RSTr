@@ -45,7 +45,7 @@ To begin, let's first arrange `mamap` by `GEOID` to ensure the counties are in t
 library(dplyr)
 library(spdep)
 
-ma_shp <- mamap[order(mamap$GEOID), ]
+ma_shp <- sf::st_as_sf(mamap[order(mamap$GEOID), ])
 ma_adj <- poly2nb(ma_shp)
 ```
 

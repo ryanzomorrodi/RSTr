@@ -1,7 +1,7 @@
 #' Get spatial data
 #' @noRd
 get_spatial_data <- function(adjacency) {
-  if (inherits(adjacency, "nb")) {
+  if (!inherits(adjacency, "nb")) {
     adjacency <- lapply(adjacency, as.integer)
     class(adjacency) <- c("nb")
   }

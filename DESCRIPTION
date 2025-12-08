@@ -18,13 +18,14 @@ Description: Takes Poisson or Binomial discrete spatial data and runs a Gibbs sa
 License: GPL (>= 3)
 Encoding: UTF-8
 LinkingTo: 
-	Rcpp, 
-	RcppArmadillo,
+    Rcpp, 
+    RcppArmadillo,
     RcppDist
 Suggests: 
     dplyr,
     knitr,
     ggplot2,
+    sf,
     rmarkdown,
     testthat (>= 3.0.0)
 Imports:

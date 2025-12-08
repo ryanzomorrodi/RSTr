@@ -25,18 +25,9 @@
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
 #' # MSTCAR model
-#' mod_mst <- mstcar(name = "mod_mst", data = data_min, adjacency = adj_min, dir = tempdir())
-#' # MCAR model
-#' mod_m <- mcar("mod_m", data_min, adj_min, tempdir())
-#' # MCAR model with Poisson-distributed event data
-#' mod_mpois <- mcar("mod_mpois", data_min, adj_min, tempdir(), method = "poisson")
-#' # EUCAR model
-#' mod_eu <- eucar("mod_eu", data_eu, adj_min, tempdir(), A = 6)
+#' mod_mst <- mstcar(name = "test", data = data_min, adjacency = adj_min, dir = tempdir())
 #' \dontshow{
-#' unlink(paste0(tempdir(), "\\mod_mst"), recursive = TRUE)
-#' unlink(paste0(tempdir(), "\\mod_m"), recursive = TRUE)
-#' unlink(paste0(tempdir(), "\\mod_mpois"), recursive = TRUE)
-#' unlink(paste0(tempdir(), "\\mod_eu"), recursive = TRUE)
+#' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
 ucar <- function(

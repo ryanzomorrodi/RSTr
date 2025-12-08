@@ -30,8 +30,8 @@ generate_data <- function(table, event, population, region, group = NULL, time =
   formula_event <- stats::reformulate(c(re, gr, ti), response = ev)
   formula_population <- stats::reformulate(c(re, gr, ti), response = po)
   list(
-    Y = xtabs(formula_event, table),
-    n = xtabs(formula_population, table)
+    Y = stats::xtabs(formula_event, table),
+    n = stats::xtabs(formula_population, table)
   )
 }
 

@@ -2,17 +2,12 @@
 #' 
 #' Age-standardizes samples using a standard population for either an \code{RSTr} model object or an \code{array} of samples.
 #' 
-#' @usage
-#' ## S3 method for class 'RSTr':
-#' age_standardize(object, std_pop, new_name, groups = NULL)
-#' ## Default S3 method:
-#' age_standardize(object, std_pop, margin, groups = NULL, bind_new = FALSE, new_name = NULL)
 #' @param object An \code{RSTr} model object or an \code{array} of samples imported with \code{load_samples()}.
 #' @param std_pop A vector of standard populations.
 #' @param new_name The name to assign to the age-standardized group.
 #' @param groups A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.
-#' @param margin The margin on which the groups of interest are stratified.
-#' @param bind_new If set to \code{TRUE}, will bind to the original sample dataset. Otherwise, will generate a standalone array of samples.
+#' @param margin For `array`s, The margin on which the groups of interest are stratified.
+#' @param bind_new If set to \code{TRUE}, will bind an `array` to the original sample dataset. Otherwise, will generate a standalone array of samples.
 #' @returns An \code{RSTr} object or an \code{array} of age-standardized samples.
 #' @examples
 #' std_pop <- c(113154, 100640, 95799)
@@ -42,12 +37,12 @@
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-age_standardize <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
+age_standardize <- function(object, std_pop, new_name = NULL, groups = NULL, margin = NULL, bind_new = FALSE) {
   UseMethod("age_standardize")
 }
 
 #' @export
-age_standardize.default <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
+age_standardize.default <- function(object, std_pop, new_name = NULL, groups = NULL, margin = NULL, bind_new = FALSE) {
   mar <- seq_along(dim(object))[-margin]
   wts <- std_pop / sum(std_pop)
   sub_sample <- object
@@ -71,7 +66,7 @@ age_standardize.default <- function(object, std_pop, new_name = NULL, groups = N
 }
 
 #' @export
-age_standardize.RSTr <- function(object, std_pop, new_name = NULL, groups = NULL, ...) {
+age_standardize.RSTr <- function(object, std_pop, new_name = NULL, groups = NULL, margin = NULL, bind_new = FALSE) {
   object$params$age_standardized <- TRUE
   samples <- load_samples(object)
   if (is.null(groups)) groups <- 1:dim(samples)[2]
