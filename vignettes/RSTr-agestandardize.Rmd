@@ -1,0 +1,80 @@
+---
+title: "04: Generating Estimates: Age-standardization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{04: Generating Estimates: Age-standardization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+In the previous vignette, we discussed the model setup process in-depth. But how do we get our estimates once we've run our model? In this vignette, we discuss extracting estimates from our model object with the `get_estimates()` function, and how to age-standardize those estimates with `age_standardize()`.
+
+## The `get_estimates()` function
+
+```{r, include = FALSE}
+library(RSTr)
+```
+
+In the `RSTr` introductory vignette, we generated age-standardized estimates for `lambda` based on our example Michigan dataset. To extract rates from an `RSTr` object, we can simply run `get_estimates()`:
+
+```{r, results = "hide", fig.keep = "last"}
+mod_mst <- mstcar(name = "my_test_model", data = miheart, adjacency = miadj)
+```
+
+```{r}
+estimates <- get_estimates(mod_mst, rates_per = 1e5)
+head(estimates)
+```
+
+## The `age_standardization()` function
+
+In many cases, we will want to age-standardize our estimates based on some (or all) age groups in our dataset. In our Michigan dataset, we have six ten-year age groups over which we can standardize; let's age-standardize from ages 35-64. For `RSTr` objects, `age_standardize()` takes in four arguments:
+
+-   `RSTr_obj`: The `RSTr` model object created with `*car()`;
+
+-   `std_pop`: A `vector` of standard populations associated with the age groups of interest. Since our Michigan data is from 1979-1988, we can use 1980 standard populations from [NIH](https://seer.cancer.gov/stdpopulations/stdpop.19ages.html). It is recommended that you use the standard population that is most closely associated with your dataset;
+
+-   `new_name`: The name of your new standard population group; and
+
+-   `groups`: A `vector` of names matching each group of interest. To age-standardize by all groups in a dataset, leave this argument blank.
+
+Once we have our `std_pop` vector, we can age-standardize our estimates:
+
+```{r}
+std_pop <- c(113154, 100640, 95799)
+mod_mst <- age_standardize(mod_mst, std_pop, new_name = "35-64", groups = c("35-44", "45-54", "55-64"))
+mod_mst
+```
+
+Notice now that the `mod_mst` object indicates we have age-standardized our estimates and the names of our age-standardized group. We can also add on to our list of age-standardized estimates by simply specifying a different group:
+
+```{r}
+std_pop <- c(68775, 34116, 9888)
+mod_mst <- age_standardize(mod_mst, std_pop, new_name = "65up", groups = c("65-74", "75-84", "85+"))
+mod_mst
+```
+
+If we want to generate estimates for *all* groups, i.e. 35 and up, we can omit the `groups` argument and expand `std_pop` to include all of our populations:
+
+```{r}
+std_pop <- c(113154, 100640, 95799, 68775, 34116, 9888)
+mod_mst <- age_standardize(mod_mst, std_pop, new_name = "35up")
+mod_mst
+mst_estimates_as <- get_estimates(mod_mst)
+head(mst_estimates_as)
+```
+
+Now, `get_estimates(mod_mst)` shows the age-standardized estimates as opposed to our non-standardized estimates. Should you want to see the non-standardized estimates instead, you can set the argument `standardized = FALSE`.
+
+## Final thoughts
+
+In this vignette, we explored the `get_estimates()` function and investigated age-standardization with the `age_standardize()` function. Age-standardization is one of the most important features of the `RSTr` package; using just a few arguments, we can easily generate estimates across our population groups.

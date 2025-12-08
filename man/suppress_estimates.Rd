@@ -4,23 +4,23 @@
 \alias{suppress_estimates}
 \title{Suppress estimates based on reliability criteria}
 \usage{
-suppress_estimates(RSTr_obj, pop_threshold = Inf)
+suppress_estimates(RSTr_obj, threshold = Inf, type = c("population", "event"))
 }
 \arguments{
 \item{RSTr_obj}{An \code{RSTr} model object.}
 
-\item{rates_per}{The desired scaling for estimate rates.}
+\item{threshold}{The population/event suppression threshold.}
 
-\item{standardized}{If \code{RSTr_obj} contains age-standardized rates, shows the age-standardized rates. If set to \code{FALSE}, always shows the non-age-standardized rates.}
+\item{type}{Determines whether suppression threshold is based on population counts or event counts.}
 }
 \value{
-A long \code{table} containing region/group/time period names, estimates, credible intervals, relative precisions, and the associated event/population counts.
+An \code{RSTr} model object with suppressed estimates.
 }
 \description{
-Generates suppressed estimates for an \code{RSTr} model object with a given relative precision and population threshold.
+Generates suppressed estimates for an \code{RSTr} model object with a given relative precision and population/event threshold.
 }
 \details{
-While the \code{pop_threshold} argument is optional, population thresholds are necessary for non-enhanced models. Population thresholds should only be omitted for enhanced CAR models, such as the EUCAR.
+While the \code{threshold} argument is optional, population/event thresholds are necessary for non-enhanced models. Population/event thresholds should only be omitted for enhanced CAR models, such as the EUCAR.
 }
 \examples{
 std_pop <- c(113154, 100640, 95799)

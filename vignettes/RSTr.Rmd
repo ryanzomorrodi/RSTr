@@ -86,7 +86,9 @@ Here, we use the `mstcar()` function to specify our model. `mstcar()` accepts a 
 
 Note that `mstcar()` accepts more arguments than are used here, but these are the only ones needed to get started. Priors and initial values, for example, can be specified manually, but this is outside the scope of this vignette. There will also be checks performed on the input data: if something is wrong, warnings and error messages will tell you what is wrong and how to fix it. For a list of diagnostic errors and what they mean, read `vignette("RSTr-troubleshooting")`.
 
-The `RSTr` package works by generating samples in batches and saving them locally inside of the model directory to be retrieved once the model is finished running. Generating samples in batches helps facilitate the tuning of the underlying MCMC algorithm and helps avoid computational burden by only holding a fraction of the total samples in memory at any given time. `RSTr` runs 6,000 iterations split into 60 batches of size 100 each. All batches are thinned for every 10 iterations by default, as the `lambdas` (a.k.a., the rate estimates) tend to exhibit autocorrelation. Moreover, thinning saves space when writing samples to the hard drive, as batches from larger models can balloon to gigabytes of size before thinning. Console outputs will show the current batch number, the progress within that batch, and the elapsed time. The model `Rds` file will be updated as the sampler progresses in case you need to reload your model at a later date. If the model crashes for any reason or R closes while the model is being run, the model `Rds` file will keep track of the current batch and pick back up where it left off when re-run.
+The `RSTr` package works by generating samples in batches and saving them locally inside of the model directory to be retrieved once the model is finished running. Generating samples in batches helps facilitate the tuning of the underlying MCMC algorithm and helps avoid computational burden by only holding a fraction of the total samples in memory at any given time. `RSTr` runs 6,000 iterations split into 60 batches of size 100 each. All batches are thinned for every 10 iterations by default, as the `lambdas` (a.k.a., the rate estimates) tend to exhibit autocorrelation. Moreover, thinning saves space when writing samples to the hard drive, as batches from larger models can balloon to gigabytes of size before thinning. 
+
+Console outputs will show the current batch number, the progress within that batch, and the elapsed time. The model `Rds` file will be updated as the sampler progresses in case you need to reload your model at a later date. If the model crashes for any reason or R closes while the model is being run, the model `Rds` file will keep track of the current batch and pick back up where it left off when re-run. While `mstcar()` is running, the R plot window will show traceplots from a selection of estimates to check stability and diagnose any potential issues.
 
 If you want to learn more about `mstcar()` and the other model functions, read `vignette("RSTr-car")`.
 
@@ -109,7 +111,7 @@ The `mst_estimates` object contains in-depth information about our model estimat
 
 ### `age_standardize()` {#sec-agestandardize}
 
-One of the most important features of the `RSTr` package is the ability to easily generate age-standardized estimates. Let's say we want to get age-standardized estimates for the 35-64 age group; for our model, we use the `age_standardize()` function and specify the groups of interest and the name we want to give them. Since we are using data from 1979-1988, we can use 1980 standard populations from [NIH](https://seer.cancer.gov/stdpopulations/stdpop.19ages.html) to generate a `std_pop` standard population vector:
+One of the most important features of the `RSTr` package is the ability to easily generate age-standardized estimates. Let's say we want to get age-standardized estimates for the 35-64 age group; for our model, we use the `age_standardize()` function, then specify the groups of interest, their associated standard populations, and the name we want to give them. Since we are using data from 1979-1988, we can use 1980 standard populations from [NIH](https://seer.cancer.gov/stdpopulations/stdpop.19ages.html) to generate a `std_pop` standard population vector:
 
 ```{r}
 std_pop <- c(113154, 100640, 95799)
@@ -128,14 +130,11 @@ mod_mst
 If we want to generate estimates for *all* groups, i.e. 35 and up, we can omit the `groups` argument and expand `std_pop` to include the 65-up standard populations:
 
 ```{r}
-std_pop <- c(113154, 100640, 95799, 68775, 34116, 9888)
-mod_mst <- age_standardize(mod_mst, std_pop, new_name = "35up")
-mod_mst
 mst_estimates_as <- get_estimates(mod_mst)
 head(mst_estimates_as)
 ```
 
-Now, `get_estimates(mod_mst)` shows the age-standardized estimates as opposed to our non-standardized estimates. Should you want to see those instead, you can set the argument `standardized = FALSE`.
+Now, `get_estimates(mod_mst)` shows the age-standardized estimates. Should you want to see those instead, you can set the argument `standardized = FALSE`.
 
 ### `suppress_estimates()` {#sec-suppressestimates}
 

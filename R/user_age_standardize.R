@@ -54,7 +54,7 @@ age_standardize.default <- function(object, std_pop, new_name = NULL, groups = N
   if (!is.null(groups)) {
     sub_sample <- subset_array(object, margin, groups)
   }
-  if (bind_new) {
+  if (bind_new == TRUE) {
     new_dim <- dim(object)
     new_dim[margin] <- 1
     agg_sample <- array(
