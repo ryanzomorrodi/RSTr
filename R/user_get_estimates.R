@@ -39,7 +39,7 @@ get_estimates <- function(RSTr_obj, rates_per = 1e5, standardized = TRUE) {
     est_table$events <- c(RSTr_obj$data$Y)
     est_table$population <- c(RSTr_obj$data$n)
   }
-  dupe_test <- which(!(apply(est_table[, 1:3], 2, \(col) length(unique(col))) != 1))
-  if (length(dupe_test) > 0) est_table <- est_table[, -dupe_test]
+  na_test <- which(apply(est_table[, 1:3], 2, \(col) all(is.na(col))))
+  if (length(na_test) > 0) est_table <- est_table[, -na_test]
   est_table
 }

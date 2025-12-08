@@ -12,6 +12,8 @@ save_model <- function(RSTr_obj) {
 
 #' @noRd
 create_model_directory <- function(name, dir, pars) {
-  if (!dir.exists(paste0(dir, name))) dir.create(paste0(dir, "/", name))
-  for (par in pars) dir.create(paste0(dir, "/", name, "/", par), showWarnings = FALSE)
+  new_dir <- paste0(dir, "/", name)
+  if (!dir.exists(new_dir)) dir.create(new_dir)
+  param_dirs <- paste0(dir, "/", name, "/", pars)
+  for (par in param_dirs) if(!dir.exists(par)) dir.create(par)
 }
