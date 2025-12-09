@@ -120,15 +120,7 @@ mod_mst <- age_standardize(mod_mst, std_pop, new_name = "35-64", groups = c("35-
 mod_mst
 ```
 
-Notice now that the `mod_mst` object indicates we have age-standardized our estimates and the names of our age-standardized groups. We can also add on to our list of age-standardized estimates by simply specifying a different group:
-
-```{r}
-std_pop <- c(68775, 34116, 9888)
-mod_mst <- age_standardize(mod_mst, std_pop, new_name = "65up", groups = c("65-74", "75-84", "85+"))
-mod_mst
-```
-
-If we want to generate estimates for *all* groups, i.e. 35 and up, we can omit the `groups` argument and expand `std_pop` to include the 65-up standard populations:
+Notice now that the `mod_mst` object indicates we have age-standardized our estimates and the names of our age-standardized groups.
 
 ```{r}
 mst_estimates_as <- get_estimates(mod_mst)
