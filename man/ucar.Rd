@@ -129,7 +129,7 @@ An \code{RSTr} model object.
 data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 adj_min <- list(2, 1)
 # MSTCAR model
-mod_mst <- mstcar(name = "test", data = data_min, adjacency = adj_min, dir = tempdir())
+mod_mst <- mstcar(name = "test", data = data_min, adjacency = adj_min, dir = tempdir(), show_plots = FALSE, verbose = FALSE)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }
