@@ -22,7 +22,6 @@ LinkingTo:
     RcppArmadillo,
     RcppDist
 Suggests: 
-    dplyr,
     knitr,
     ggplot2,
     sf,
