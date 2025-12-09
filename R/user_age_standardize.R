@@ -6,14 +6,14 @@
 #' @param std_pop A vector of standard populations.
 #' @param new_name The name to assign to the age-standardized group.
 #' @param groups A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.
-#' @param margin For `array`s, The margin on which the groups of interest are stratified.
-#' @param bind_new If set to \code{TRUE}, will bind an `array` to the original sample dataset. Otherwise, will generate a standalone array of samples.
+#' @param margin For \code{array}s, The margin on which the groups of interest are stratified.
+#' @param bind_new If set to \code{TRUE}, will bind an \code{array} to the original sample dataset. Otherwise, will generate a standalone array of samples.
 #' @returns An \code{RSTr} object or an \code{array} of age-standardized samples.
 #' @examples
 #' std_pop <- c(113154, 100640, 95799)
 #' data_min <- lapply(miheart, \(x) x[1:2, 1:3, 1:3])
 #' adj_min <- list(2, 1)
-#' mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE)
+#' mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE, verbose = FALSE)
 #' # age-standardize by all age groups
 #' mod_mst <- age_standardize(mod_mst, std_pop, "35-64")
 #' # Add onto age-standardized estimates. Age-standardize only by the first two age groups
