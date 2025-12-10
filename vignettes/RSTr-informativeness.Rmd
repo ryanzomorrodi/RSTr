@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Up to this point, we've discussed preparing count/adjacency data, model setup, and age-standardization. In `vignette("reliability")`, we discussed how to suppress estimates based on reliability criteria, including population thresholds and relative precision. However, there are cases where the event or population counts are too low for RSTr to meaningfully gather information from neighboring regions; in these cases, the standard BYM models will apply excessive spatial smoothing to the estimates, artificially inflating the estimate's relative precision. In this vignette, we will look under the hood of the CAR models and how they perform spatial smoothing, discuss model informativeness, and how to work with restricted models in your data.
+Up to this point, we've discussed preparing count/adjacency data, model setup, and age-standardization. In `vignette("RSTr-reliability")`, we discussed how to suppress estimates based on reliability criteria, including population thresholds and relative precision. However, there are cases where the event or population counts are too low for RSTr to meaningfully gather information from neighboring regions; in these cases, the standard BYM models will apply excessive spatial smoothing to the estimates, artificially inflating the estimate's relative precision. In this vignette, we will look under the hood of the CAR models and how they perform spatial smoothing, discuss model informativeness, and how to work with restricted models in your data.
 
 -   RSTr's models help to smooth estimates with low event counts
 -   What if events are too low?
