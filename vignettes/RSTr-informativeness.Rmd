@@ -34,11 +34,11 @@ library(RSTr)
 Spatial smoothing acts by way of a spatial random effects estimator `Z`; this is essentially the parameter that tells the model how much to either increase or decrease its corresponding estimated rate `lambda`. In CAR mdoels, the strength of `Z` itself is determined by a host of factors, most importantly the spatial variance `sig2` (for UCAR; `G` for MCAR and MSTCAR). We can investigate the traceplot of `sig2` in a UCAR model to see its interactions with the traceplot of `Z`:
 
 ```{r, results = "hide", fig.keep = "last"}
-data_u <- lapply(miheart, \(x) x[, "75-84", "1988", drop = FALSE])
+data_u <- lapply(miheart, \(x) x[, "55-64", "1979", drop = FALSE])
 mod_ucar <- ucar("my_test_model", data_u, miadj, tempdir(), seed = 1234)
 ```
 
-Note that the variability of `Z` is correlated with the magnitude of `sig2`: the two valleys in `sig2` at around 4000 iterations are correlated with the . The magnitude of `sig2` has further implications on the rate estimates `lambda`. Smaller `sig2` values mean that the variance between neighbors is also smaller. In short, the smaller the `sig2`, the closer in value an estimate and its neighbors will be. When combined with the comparatively intense smoothing applied to smaller event/population regions, these unrestricted CAR models will work too hard to fill in the gaps in information, not only pushing the estimate value too close to the mean `beta` but also artificially inflating its relative precision.
+The magnitude of `sig2` has further implications on the rate estimates `lambda`. Smaller `sig2` values mean that the variance between neighbors is also smaller. In short, the smaller the `sig2`, the closer in value an estimate and its neighbors will be. When combined with the comparatively intense smoothing applied to smaller event/population regions, these unrestricted CAR models will work too hard to fill in the gaps in information, not only pushing the estimate value too close to the mean `beta` but also artificially inflating its relative precision.
 
 In unrestricted CAR models, oversmoothing is partially addressed by imposing an additional reliability criterion of either a population or event threshold. If an estimate has a relative precision greater than 1, we can still mark it as unreliable if this threshold is too small. We can investigate this over all of our datapoints by comparing the event counts to their corresponding relative precisions. For the purposes of this example, we will omit counties with > 10,000 population:
 
@@ -108,40 +108,6 @@ ggplot(mishp) +
 
 As expected, the gradient of estimates is much more sharp on the EUCAR model map in comparison to the unrestricted UCAR map. This is due to the decreased intensity of our spatial smoothing. Additionally, the spread of estimates for the EUCAR model is wider than that in the unrestricted UCAR model because of its increased spatial variance.
 
-## The EUCAR Model, Reliability, and Suppression
-
-Remember that for unrestricted CAR models, we have to impose an additional event/population threshold for reliability to capture high-precision estimates in low-event areas. As we saw in the event/relative precision plot, these thresholds are no longer necessary when we suppress our estimates with an EUCAR model:
-
-```{r}
-mod_eucar <- suppress_estimates(mod_eucar)
-```
-
-Let's compare our suppressed estimates to suppressed crude estimates on another map:
-
-```{r}
-est_crude <- data_u$Y / data_u$n * 1e5
-est_crude[data_u$Y < 10] = NA # Suppression criteria for CDC WONDER 
-est_eucar <- get_estimates(mod_eucar)
-ggplot(mishp) +
-  geom_sf(aes(fill = est_crude)) +
-  labs(
-    title = "Crude Estimates",
-    fill = "Deaths per 100,000"
-  ) +
-  scale_fill_viridis_c() +
-  theme_void()
-ggplot(mishp) +
-  geom_sf(aes(fill = est_eucar$medians_suppressed)) +
-  labs(
-    title = "Spatially Smoothed Estimates, EUCAR Model",
-    fill = "Deaths per 100,000"
-  ) +
-  scale_fill_viridis_c() +
-  theme_void()
-```
-
-Not only are we able to see more estimates using the EUCAR model than with the crude data, we also get the benefit of spatially smoothing our estimates without oversmoothing.
-
 ## Enhanced models and age-standardization
 
 When age-standardizing across a CAR model, informativeness is cumulative: informativeness in individual rates when spatially smoothing will compound the informativeness in estimates age-standardized by spatially smoothed rates. Therefore, the EUCAR is an excellent choice for modelling with age-standardization. Not only will individual estimates not be over-smoothed, the age-standardized estimates will benefit from enhanced reliability due to compounded event counts in the crude data.
@@ -159,10 +125,9 @@ While our individual groups will have lower relative precisions due to lower res
 ```{r}
 std_pop <- c(68775, 34116, 9888)
 mod_eucar <- age_standardize(mod_eucar, std_pop, "65up")
-mod_eucar <- suppress_estimates(mod_eucar)
 est_eucar <- get_estimates(mod_eucar)
 ggplot(mishp) +
-  geom_sf(aes(fill = est_eucar$medians_suppressed)) +
+  geom_sf(aes(fill = est_eucar$medians)) +
   labs(
     title = "Age-Standardized Spatially Smoothed Estimates, EUCAR Model",
     fill = "Deaths per 100,000"
@@ -172,6 +137,25 @@ ggplot(mishp) +
 ```
 
 With a combination of restricted models and age-standardization, we get the benefits of spatial smoothing from the CAR model without risk of oversmoothing.
+
+## The EUCAR Model, Reliability, and Suppression
+
+Remember that for unrestricted CAR models, we have to impose an additional event/population threshold for reliability to capture high-precision estimates in low-event areas. As we saw in the event/relative precision plot, these thresholds are no longer necessary when we suppress our estimates with an EUCAR model:
+
+```{r}
+mod_eucar <- suppress_estimates(mod_eucar)
+est_eucar <- get_estimates(mod_eucar)
+ggplot(mishp) +
+  geom_sf(aes(fill = est_eucar$medians_suppressed)) +
+  labs(
+    title = "Spatially Smoothed Estimates, EUCAR Model",
+    fill = "Deaths per 100,000"
+  ) +
+  scale_fill_viridis_c() +
+  theme_void()
+```
+
+With the EUCAR model, we get the benefit of age-standardizing our spatially smoothed estimates without the compounded oversmoothing from unrestricted models.
 
 ## Choosing between enhanced vs unrestricted models
 
