@@ -116,7 +116,7 @@ eucar <- function(
     impute_ub = impute_ub,
     initial_values = initial_values,
     priors = priors,
-    model = "ucar",
+    model = "eucar",
     pars = pars,
     restricted = TRUE,
     A = A,
@@ -238,7 +238,6 @@ initialize_model <- function(
   update_rho = NULL
 ) {
   RSTr_obj <- create_new_model(model, data, restricted, update_rho)
-  #if (show_plots & (dim(RSTr_obj$data$Y)[3] > 1)) make_data_plots(RSTr_obj$data)
   RSTr_obj$params <- get_params(RSTr_obj$data, seed, method, model, name, dir, perc_ci, restricted, A, m0, update_rho, impute_lb, impute_ub)
   RSTr_obj$spatial_data <- get_spatial_data(adjacency)
   RSTr_obj <- get_priors(RSTr_obj, priors)

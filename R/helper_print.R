@@ -4,6 +4,7 @@ print.RSTr <- function(x, ...) {
   cat("Model name:", x$params$name, "\n")
   cat("Model type:", toupper(x$params$model), "\n")
   cat("Data likelihood:", x$params$method, "\n")
+  cat("Estimate Credible Interval:", paste0(round(x$params$perc_ci * 100, 2), "%"), "\n")
   cat("Number of geographic units:", dim(x$data$Y)[1], "\n")
   #cat("Model informativeness:", "TBD", "\n")
   cat("Number of samples:", x$params$total, "\n")

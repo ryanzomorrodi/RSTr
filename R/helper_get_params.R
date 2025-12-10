@@ -24,12 +24,12 @@ get_params <- function(data, seed, method, model, name, dir, perc_ci, restricted
     set.seed(seed)
     params$seed <- .Random.seed
   }
-  if (model == "ucar") {
+  if (model %in% c("ucar", "eucar")) {
     params$restricted <- restricted
     if (restricted) {
       if (is.null(A)) A <- array(6 / dim(data$Y)[2], dim = dim(data$Y)[-1])
       if (is.null(m0)) m0 <- 3
-      params$A <- A
+      params$A <- array(A, dim = dim(data$Y)[2:3])
       params$m0 <- m0
     }
   } else if (model == "mstcar") {

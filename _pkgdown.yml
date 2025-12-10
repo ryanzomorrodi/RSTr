@@ -9,9 +9,9 @@ articles:
   - RSTr-event
   - RSTr-adjacency
   - RSTr-car
-  - RSTr-informativeness
   - RSTr-agestandardize
   - RSTr-reliability
+  - RSTr-informativeness
   - RSTr-samples
   - RSTr-initialvalues
   - RSTr-priors

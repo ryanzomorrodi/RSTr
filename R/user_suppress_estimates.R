@@ -20,14 +20,14 @@
 #' unlink(paste0(tempdir(), "\\test"), recursive = TRUE)
 #' }
 #' @export
-suppress_estimates <- function(RSTr_obj, threshold = Inf, type = c("population", "event")) {
+suppress_estimates <- function(RSTr_obj, threshold = 0, type = c("population", "event")) {
   type <- match.arg(type)
   RSTr_obj$params$suppressed <- TRUE
   RSTr_obj$params$suppress_threshold <- threshold
-  if (is.infinite(threshold) & !(RSTr_obj$params$model %in% c("eucar"))) {
+  if (threshold == 0 & !(RSTr_obj$params$model %in% c("eucar"))) {
     warning("Suppressing estimates without a population/event threshold is not recommended for non-enhanced models. Specify `threshold` or re-run with enhanced model")
   }
-  if (is.finite(threshold) & (RSTr_obj$params$model %in% c("eucar"))) {
+  if (threshold > 0 & (RSTr_obj$params$model %in% c("eucar"))) {
     warning("Suppressing estimates with a population/event threshold not necessary for EUCAR models")
   }
   medians_suppressed <- RSTr_obj$medians

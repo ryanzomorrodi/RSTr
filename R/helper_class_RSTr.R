@@ -2,7 +2,9 @@
 create_new_model <- function(model, data, restricted = NULL, update_rho = NULL) {
   data <- prepare_data(data)
   if (model == "ucar") {
-    if (restricted) new_ucar_restricted(data) else new_ucar(data)
+    new_ucar(data)
+  } else if (model == "eucar") {
+    new_ucar_restricted(data)
   } else if (model == "mcar") {
     new_mcar(data)
   } else if (model == "mstcar") {
