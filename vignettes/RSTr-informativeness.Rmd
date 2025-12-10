@@ -69,7 +69,7 @@ The UCAR model's informativeness, `a0`, is determined by a mix of the spatial va
 
 Let's run an EUCAR model using the `eucar()` function, setting an informativeness ceiling of `A = 6`:
 
-```{r}
+```{r, results = "hide", fig.keep = "last"}
 mod_eucar <- eucar("my_test_model", data_u, miadj, tempdir(), seed = 1234, A = 6)
 ```
 
