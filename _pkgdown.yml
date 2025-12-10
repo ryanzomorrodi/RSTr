@@ -37,7 +37,10 @@ reference:
   - load_samples
   - aggregate_count
   - aggregate_samples
+  - standardize_samples
   - get_medians
+  - get_credible_interval
+  - get_relative_precision
 - title: Example data
   contents:
   - miheart

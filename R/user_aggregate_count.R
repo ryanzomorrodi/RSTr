@@ -2,7 +2,7 @@
 #' 
 #' Sums counts over event/population arrays. Useful when manually generating group-aggregated/age-standardized estimates and a population threshold is needed for suppression.
 #' 
-#' @inheritParams age_standardize
+#' @inheritParams standardize_samples
 #' @param count The \code{array} to aggregate.
 #' @returns An \code{array} of aggregated count data.
 #' @examples

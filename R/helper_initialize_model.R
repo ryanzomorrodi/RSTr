@@ -18,13 +18,6 @@ prepare_data <- function(data) {
 }
 
 #' @noRd
-make_data_plots <- function(data) {
-  data_series <- sapply(data, apply, 3, sum, na.rm = TRUE)
-  data_series <- stats::ts(data_series, start = rownames(data_series)[1])
-  plot(data_series, type = "p", main = NA, nc = 2)
-}
-
-#' @noRd
 post_sampler_output <- function(RSTr_obj) {
   samples <- load_samples(RSTr_obj)
   medians <- get_medians(samples)

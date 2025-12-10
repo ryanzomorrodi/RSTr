@@ -2,35 +2,24 @@
 % Please edit documentation in R/user_age_standardize.R
 \name{age_standardize}
 \alias{age_standardize}
-\title{Age-standardize samples}
+\title{Age-standardize model objects}
 \usage{
-age_standardize(
-  object,
-  std_pop,
-  new_name = NULL,
-  groups = NULL,
-  margin = NULL,
-  bind_new = FALSE
-)
+age_standardize(RSTr_obj, std_pop, new_name, groups = NULL)
 }
 \arguments{
-\item{object}{An \code{RSTr} model object or an \code{array} of samples imported with \code{load_samples()}.}
+\item{RSTr_obj}{An \code{RSTr} model object.}
 
 \item{std_pop}{A vector of standard populations.}
 
 \item{new_name}{The name to assign to the age-standardized group.}
 
 \item{groups}{A vector of either indices for each group or a vector of strings for each group name. If set to \code{NULL}, will use all groups in the dataset.}
-
-\item{margin}{For \code{array}s, The margin on which the groups of interest are stratified.}
-
-\item{bind_new}{If set to \code{TRUE}, will bind an \code{array} to the original sample dataset. Otherwise, will generate a standalone array of samples.}
 }
 \value{
-An \code{RSTr} object or an \code{array} of age-standardized samples.
+An \code{RSTr} object with age-standardized estimates.
 }
 \description{
-Age-standardizes samples using a standard population for either an \code{RSTr} model object or an \code{array} of samples.
+Age-standardizes samples using a standard population for an \code{RSTr} model object.
 }
 \examples{
 std_pop <- c(113154, 100640, 95799)
@@ -41,21 +30,6 @@ mod_mst <- mstcar("test", data_min, adj_min, tempdir(), show_plots = FALSE, verb
 mod_mst <- age_standardize(mod_mst, std_pop, "35-64")
 # Add onto age-standardized estimates. Age-standardize only by the first two age groups
 mod_mst <- age_standardize(mod_mst, std_pop[1:2], "35-54", groups = 1:2)
-
-std_pop <- c(113154, 100640, 95799)
-age_margin <- 2
-# age-standardize by all age groups
-samples_3564 <- age_standardize(minsample, std_pop, margin = age_margin)
-# age-standardize only by the first two age groups
-samples_3554 <- age_standardize(minsample, std_pop[1:2], groups = 1:2, margin = age_margin)
-# bind age-standardized samples to original samples
-samples_as <- age_standardize(
-  minsample,
-  std_pop,
-  new_name = "35-64",
-  margin = age_margin,
-  bind_new = TRUE
-)
 \dontshow{
 unlink(paste0(tempdir(), "\\\\test"), recursive = TRUE)
 }
