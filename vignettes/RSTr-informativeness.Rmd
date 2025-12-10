@@ -148,7 +148,7 @@ When age-standardizing across a CAR model, informativeness is cumulative: inform
 
 We can re-run both models with three age groups: 35-44, 45-54, and 55-64. Since we are now running our models across multiple groups, we will need to extend our `A`s to match the number of groups. Additionally, since our informativeness meaures are cumulative when age-standardizing, we should split our `A = 6` informativeness ceiling among all of our groups of interest. If we want, we can weight each group's `A` by their total events:
 
-```{r}
+```{r, results = "hide", fig.keep = "last"}
 data_u <- lapply(miheart, \(x) x[, c("65-74", "75-84", "85+"), "1988", drop = FALSE])
 A <- 6 * colSums(data_u$Y) / sum(data_u$Y)
 mod_eucar <- eucar("test_eucar", data_u, miadj, tempdir(), seed = 1234, A = A)
