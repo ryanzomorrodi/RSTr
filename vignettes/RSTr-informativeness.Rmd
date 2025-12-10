@@ -181,7 +181,7 @@ Now that we've elucidated the benefits of using enhanced models, we can work thr
 
 -    The MCAR model is useful if you are specifically interested in interactions between sociodemographic groups and don't have temporal data.
 
--    The MSTCAR model is the best option when investigating *linear* trends in temporal data or if you are specifically interested in interactions between sociodemographic groups across time. If your trends depict multiple behaviors, it is recommended to either run two MSTCAR models with separate time periods or to run concurrent EUCAR models. Note that `eucar()`, `ucar()`, and `mcar()` all accept up to three-dimensional arrays and will concurrently run models for different groups/time periods.
+-    The MSTCAR model is the best option when investigating *linear* trends in temporal data or if you are specifically interested in interactions between sociodemographic groups across time. If your trends depict multiple behaviors, it is recommended to either run two MSTCAR models with separate time periods or to run concurrent EUCAR models. Note that all `*car()` functions accept up to three-dimensional arrays and will concurrently run models for different groups/time periods if necessary.
 
 ## Future developments
 
