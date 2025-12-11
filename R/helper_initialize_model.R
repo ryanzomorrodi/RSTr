@@ -1,10 +1,19 @@
 #' @noRd
 validate_model <- function(RSTr_obj) {
-  errout <- NULL
-  errout <- check_data(RSTr_obj, errout)
-  errout <- check_initial_values(RSTr_obj, errout)
-  errout <- check_priors(RSTr_obj, errout)
+  errout <- c(
+    check_data(RSTr_obj),
+    check_initial_values(RSTr_obj),
+    check_priors(RSTr_obj)
+  )
   display_errors(errout)
+}
+
+#' Display errors
+#' @noRd
+display_errors <- function(errout) {
+  if (length(errout)) {
+    stop(paste0(length(errout), "error(s) found:\n", paste(errout, collapse = "\n ")))
+  }
 }
 
 #' @noRd
