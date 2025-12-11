@@ -18,7 +18,7 @@ check_data <- function(RSTr_obj, errout = NULL) {
 check_unused_data <- function(data) {
   chk_elem <- which(!(names(data) %in% c("Y", "n")))
   if (length(chk_elem)) {
-    warning("Unused elements of list 'data':", paste(names(data)[chk_elem], collapse = ", "))
+    warning("Unused elements of list 'data':", toString(names(data)[chk_elem]))
   }
 }
 
@@ -28,7 +28,7 @@ check_missing_data_objects <- function(data) {
   chk <- c("Y", "n")
   miss <- sapply(chk, \(x) !any(names(data) == x))
   if (any(miss)) {
-    stop("One or more objects missing from list 'data': ", paste(chk[miss], collapse = ", "))
+    stop("One or more objects missing from list 'data': ", toString(chk[miss]))
   }
 }
 

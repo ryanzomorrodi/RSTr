@@ -19,8 +19,8 @@ load_samples <- function(RSTr_obj, param = "lambda", burn = 2000) {
   params <- RSTr_obj$params
   name <- RSTr_obj$params$name
   dir <- RSTr_obj$params$dir
-  mar <- c("lambda" = 4, "beta" = 4, "Z" = 4, "G" = 4, "Ag" = 3, "tau2" = 3, "sig2" = 3, "rho" = 2)
-  if (params$model == "mstcar") mar["tau2"] = 2
+  mar <- c(lambda = 4, beta = 4, Z = 4, G = 4, Ag = 3, tau2 = 3, sig2 = 3, rho = 2)
+  if (params$model == "mstcar") mar["tau2"] <- 2
   batch <- which(1:params$batch * 100 > burn)
   files <- paste0(dir, "/", name, "/", param, "/", param, "_out_", batch, ".Rds")
   output <- abind::abind(lapply(files, readRDS), along = mar[param])

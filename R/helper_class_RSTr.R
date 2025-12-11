@@ -1,15 +1,14 @@
 #' @noRd
 create_new_model <- function(model, data, restricted = NULL, update_rho = NULL) {
   data <- prepare_data(data)
-  if (model == "ucar") {
-    new_ucar(data)
-  } else if (model == "eucar") {
-    new_ucar_restricted(data)
-  } else if (model == "mcar") {
-    new_mcar(data)
-  } else if (model == "mstcar") {
-    if (update_rho) new_mstcar_update_rho(data) else new_mstcar(data)
-  }
+  switch (
+    ucar = new_ucar(data),
+    eucar = new_ucar_restricted(data),
+    mcar = new_mcar(data),
+    mstcar = {
+      if (update_rho) new_mstcar_update_rho(data) else new_mstcar(data)
+    }
+  )
 }
 
 #' @noRd

@@ -9,7 +9,6 @@ get_initial_values.ucar <- function(RSTr_obj, initial_values, method) {
   Y <- RSTr_obj$data$Y
   n <- RSTr_obj$data$n
   island_id <- RSTr_obj$spatial_data$island_id
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- length(unique(island_id))
@@ -40,7 +39,6 @@ get_initial_values.mcar <- function(RSTr_obj, initial_values, method) {
   Y <- RSTr_obj$data$Y
   n <- RSTr_obj$data$n
   island_id <- RSTr_obj$spatial_data$island_id
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- length(unique(island_id))
@@ -71,7 +69,6 @@ get_initial_values.mstcar <- function(RSTr_obj, initial_values, method) {
   Y <- RSTr_obj$data$Y
   n <- RSTr_obj$data$n
   island_id <- RSTr_obj$spatial_data$island_id
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- length(unique(island_id))

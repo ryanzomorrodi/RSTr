@@ -9,7 +9,6 @@ check_initial_values <- function(RSTr_obj, errout = NULL) {
 check_initial_values.ucar <- function(RSTr_obj, errout = NULL) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- RSTr_obj$spatial_data$num_island
@@ -31,7 +30,6 @@ check_initial_values.ucar <- function(RSTr_obj, errout = NULL) {
 check_initial_values.mcar <- function(RSTr_obj, errout = NULL) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- RSTr_obj$spatial_data$num_island
@@ -54,7 +52,6 @@ check_initial_values.mcar <- function(RSTr_obj, errout = NULL) {
 check_initial_values.mstcar <- function(RSTr_obj, errout = NULL) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
-  num_region <- dim(Y)[[1]]
   num_group <- dim(Y)[[2]]
   num_time <- dim(Y)[[3]]
   num_island <- RSTr_obj$spatial_data$num_island
@@ -76,9 +73,9 @@ check_initial_values.mstcar <- function(RSTr_obj, errout = NULL) {
 #' Check for missing elements
 #' @noRd
 check_missing_initial_values <- function(RSTr_obj, chk) {
-  miss <- sapply(1:length(chk), \(x) !any(names(RSTr_obj$initial_values) == chk[x]))
+  miss <- sapply(seq_along(chk), \(x) !any(names(RSTr_obj$initial_values) == chk[x]))
   if (sum(miss)) {
-    stop("One or more objects missing from list 'initial_values': ", paste(chk[miss], collapse = ", "))
+    stop("One or more objects missing from list 'initial_values': ", toString(chk[miss]))
   }
 }
 
@@ -87,7 +84,7 @@ check_missing_initial_values <- function(RSTr_obj, chk) {
 check_unused_initial_values <- function(RSTr_obj, chk) {
   chk_elem <- which(!(names(RSTr_obj$initial_values) %in% chk))
   if (length(chk_elem)) {
-    warning(paste("Unused elements of list 'initial_values':", paste(names(RSTr_obj$initial_values)[chk_elem], collapse = ", ")))
+    warning(paste("Unused elements of list 'initial_values':", toString(names(RSTr_obj$initial_values)[chk_elem])))
   }
 }
 
@@ -100,7 +97,7 @@ check_beta <- function(beta, num_island, num_group, num_time, errout) {
     errout <- c(errout, errtxt)
   }
   # values are infinite
-  if (any(!is.finite(beta))) {
+  if (!all(is.finite(beta))) {
     errtxt <- "beta contains infinite values. Ensure all(is.finite(beta)) or use default value"
     errout <- c(errout, errtxt)
   }
@@ -128,7 +125,7 @@ check_lambda <- function(lambda, Y, method, errout) {
 #' @noRd
 check_sig2 <- function(sig2, errout) {
   # is non-positive or infinite
-  if (any(sig2 <= 0) | any(!is.finite(sig2))) {
+  if (any(sig2 <= 0) || !all(is.finite(sig2))) {
     errtxt <- "sig2 contains non-positive or infinite values. Ensure all sig2 > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -139,7 +136,7 @@ check_sig2 <- function(sig2, errout) {
 #' @noRd
 check_tau2 <- function(tau2, errout) {
   # is non-positive or infinite
-  if (any(tau2 <= 0) | any(!is.finite(tau2))) {
+  if (any(tau2 <= 0) || !all(is.finite(tau2))) {
     errtxt <- "Some or all tau2 are non-positive or infinite. Ensure all tau2 > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -155,7 +152,7 @@ check_Z <- function(Z, Y, errout) {
     errout <- c(errout, errtxt)
   }
   # values are infinite
-  if (any(!is.finite(Z))) {
+  if (!all(is.finite(Z))) {
     errtxt <- "Z contains infinite values. Ensure all(is.finite(Z)) or use default value"
     errout <- c(errout, errtxt)
   }
@@ -173,7 +170,7 @@ check_G <- function(G, errout) {
     errout <- c(errout, errtxt)
   }
   # off-diagonal values are infinite
-  if (any(!is.finite(gcor))) {
+  if (!all(is.finite(gcor))) {
     errtxt <- "Off-diagonals of G contain infinite values. Ensure all(is.finite(G)) or use default value"
     errout <- c(errout, errtxt)
   }
@@ -201,7 +198,7 @@ check_Ag <- function(Ag, errout) {
     errout <- c(errout, errtxt)
   }
   # values are infinite
-  if (any(!is.finite(Ag))) {
+  if (!all(is.finite(Ag))) {
     errtxt <- "Ag contains infinite values. Ensure Ag is finite or use default value"
     errout <- c(errout, errtxt)
   }

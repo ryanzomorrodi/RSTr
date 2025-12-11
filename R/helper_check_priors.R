@@ -6,7 +6,6 @@ check_priors <- function(RSTr_obj, errout) {
 #' @noRd
 check_priors.ucar <- function(RSTr_obj, errout) {
   priors <- RSTr_obj$priors
-  num_group <- dim(RSTr_obj$data$Y)[2]
   chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "sig_a", "sig_b")
   check_missing_priors(priors, chk)
   # Check for warnings
@@ -82,7 +81,7 @@ check_priors.mstcar_update_rho <- function(RSTr_obj, errout) {
 check_missing_priors <- function(priors, chk) {
   miss <- sapply(chk, \(x) !any(names(priors) == x))
   if (any(miss)) {
-    stop("One or more objects missing from list 'priors': ", paste(chk[miss], collapse = ", "))
+    stop("One or more objects missing from list 'priors': ", toString(chk[miss]))
   }
 }
 
@@ -90,14 +89,14 @@ check_missing_priors <- function(priors, chk) {
 check_unused_priors <- function(priors, chk) {
   chk_elem <- !(names(priors) %in% chk)
   if (any(chk_elem)) {
-    warning("Unused elements of list 'priors':", paste(names(priors)[chk_elem], collapse = ", "))
+    warning("Unused elements of list 'priors':", toString(names(priors)[chk_elem]))
   }
 }
 
 #' @noRd
 check_tau_a <- function(tau_a, errout) {
   # is non-positive or infinite
-  if ((tau_a <= 0) | !is.finite(tau_a)) {
+  if ((tau_a <= 0) || !is.finite(tau_a)) {
     errtxt <- "tau_a is not positive. Ensure tau_a > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -107,7 +106,7 @@ check_tau_a <- function(tau_a, errout) {
 #' @noRd
 check_tau_b <- function(tau_b, errout) {
   # is non-positive or infinite
-  if ((tau_b <= 0) | !is.finite(tau_b)) {
+  if ((tau_b <= 0) || !is.finite(tau_b)) {
     errtxt <- "tau_b is not positive. Ensure tau_b > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -132,7 +131,7 @@ check_lambda_sd <- function(lambda_sd, Y, errout) {
 #' @noRd
 check_sig_a <- function(sig_a, errout) {
   # is non-positive or infinite
-  if ((sig_a <= 0) | !is.finite(sig_a)) {
+  if ((sig_a <= 0) || !is.finite(sig_a)) {
     errtxt <- "sig_a is not positive. Ensure sig_a > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -142,7 +141,7 @@ check_sig_a <- function(sig_a, errout) {
 #' @noRd
 check_sig_b <- function(sig_b, errout) {
   # is non-positive or infinite
-  if ((sig_b <= 0) | !is.finite(sig_b)) {
+  if ((sig_b <= 0) || !is.finite(sig_b)) {
     errtxt <- "sig_b is not positive. Ensure sig_b > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -162,7 +161,7 @@ check_G_scale <- function(G_scale, num_group, errout) {
     errout <- c(errout, errtxt)
   }
   # values are infinite
-  if (any(!is.finite(G_scale))) {
+  if (!all(is.finite(G_scale))) {
     errtxt <- "G_scale contains infinite values. Ensure G_scale is finite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -203,7 +202,7 @@ check_Ag_scale <- function(Ag_scale, num_group, errout) {
     errout <- c(errout, errtxt)
   }
   # values are infinite
-  if (any(!is.finite(Ag_scale))) {
+  if (!all(is.finite(Ag_scale))) {
     errtxt <- "Ag_scale contains infinite values. Ensure Ag_scale is finite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -233,7 +232,7 @@ check_Ag_df <- function(Ag_df, num_group, errout) {
 #' @noRd
 check_rho_a <- function(rho_a, errout) {
   # is non-positive or infinite
-  if ((rho_a <= 0) | !is.finite(rho_a)) {
+  if ((rho_a <= 0) || !is.finite(rho_a)) {
     errtxt <- "rho_a is not positive. Ensure rho_a > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
@@ -243,7 +242,7 @@ check_rho_a <- function(rho_a, errout) {
 #' @noRd
 check_rho_b <- function(rho_b, errout) {
   # is non-positive or infinite
-  if ((rho_b <= 0) | !is.finite(rho_b)) {
+  if ((rho_b <= 0) || !is.finite(rho_b)) {
     errtxt <- "rho_b is not positive. Ensure rho_b > 0 and not infinite or use default value"
     errout <- c(errout, errtxt)
   }
