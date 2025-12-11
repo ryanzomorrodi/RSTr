@@ -1,4 +1,3 @@
-#' @noRd
 get_priors <- function(RSTr_obj, priors) {
   UseMethod("get_priors")
 }
@@ -43,7 +42,7 @@ get_priors.mstcar <- function(RSTr_obj, priors) {
   RSTr_obj
 }
 
-#' @noRd
+#' @export
 get_priors.mstcar_update_rho <- function(RSTr_obj, priors) {
   num_group <- dim(RSTr_obj$data$Y)[2]
   if (is.null(priors$lambda_sd)) priors$lambda_sd <- array(0.025, dim = dim(RSTr_obj$data$Y))

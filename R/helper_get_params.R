@@ -1,5 +1,3 @@
-#' Get params
-#' @noRd
 get_params <- function(data, seed, method, model, name, dir, perc_ci, restricted, A, m0, update_rho, impute_lb, impute_ub) {
   params <- list(
     batch = 0,

@@ -1,11 +1,8 @@
-#' Check initial values
-#' @noRd
 check_initial_values <- function(RSTr_obj) {
   UseMethod("check_initial_values")
 }
 
-#' Check initial values UCAR
-#' @noRd
+#' @export
 check_initial_values.ucar <- function(RSTr_obj) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
@@ -26,8 +23,7 @@ check_initial_values.ucar <- function(RSTr_obj) {
   )
 }
 
-#' Check initial values MCAR
-#' @noRd
+#' @export
 check_initial_values.mcar <- function(RSTr_obj) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
@@ -49,8 +45,7 @@ check_initial_values.mcar <- function(RSTr_obj) {
   )
 }
 
-#' Check initial values MSTCAR
-#' @noRd
+#' @export
 check_initial_values.mstcar <- function(RSTr_obj) {
   Y <- RSTr_obj$data$Y
   method <- RSTr_obj$params$method
@@ -73,8 +68,6 @@ check_initial_values.mstcar <- function(RSTr_obj) {
   )
 }
 
-#' Check for missing elements
-#' @noRd
 check_missing_initial_values <- function(RSTr_obj, chk) {
   miss <- sapply(seq_along(chk), \(x) !any(names(RSTr_obj$initial_values) == chk[x]))
   if (sum(miss)) {
@@ -82,8 +75,6 @@ check_missing_initial_values <- function(RSTr_obj, chk) {
   }
 }
 
-#' Check for unused elements
-#' @noRd
 check_unused_initial_values <- function(RSTr_obj, chk) {
   chk_elem <- which(!(names(RSTr_obj$initial_values) %in% chk))
   if (length(chk_elem)) {
@@ -91,8 +82,6 @@ check_unused_initial_values <- function(RSTr_obj, chk) {
   }
 }
 
-#' Check beta
-#' @noRd
 check_beta <- function(beta, num_island, num_group, num_time) {
   err_messages <- character()
   # dimensions don't match num_island num_group num_time
@@ -112,8 +101,6 @@ check_beta <- function(beta, num_island, num_group, num_time) {
   err_messages
 }
 
-#' Check lambda
-#' @noRd
 check_lambda <- function(lambda, Y, method) {
   err_messages <- character()
   # dimensions don't match num_region num_group num_time
@@ -135,8 +122,6 @@ check_lambda <- function(lambda, Y, method) {
   err_messages
 }
 
-#' Check sig2
-#' @noRd
 check_sig2 <- function(sig2) {
   # is non-positive or infinite
   if (any(sig2 <= 0) || !all(is.finite(sig2))) {
@@ -144,8 +129,6 @@ check_sig2 <- function(sig2) {
   }
 }
 
-#' Check tau2
-#' @noRd
 check_tau2 <- function(tau2) {
   # is non-positive or infinite
   if (any(tau2 <= 0) || !all(is.finite(tau2))) {
@@ -153,8 +136,6 @@ check_tau2 <- function(tau2) {
   }
 }
 
-#' Check Z
-#' @noRd
 check_Z <- function(Z, Y) {
   err_messages <- character()
   # dimensions don't match num_region num_group num_time
@@ -174,8 +155,6 @@ check_Z <- function(Z, Y) {
   err_messages
 }
 
-#' Check G
-#' @noRd
 check_G <- function(G) {
   err_messages <- character()
   sig2 <- apply(G, 3, diag)
@@ -197,8 +176,6 @@ check_G <- function(G) {
   err_messages
 }
 
-#' Check rho
-#' @noRd
 check_rho <- function(rho) {
   # is non-positive or infinite
   if (any((rho <= 0) | !is.finite(rho))) {
@@ -206,8 +183,6 @@ check_rho <- function(rho) {
   }
 }
 
-#' Check Ag
-#' @noRd
 check_Ag <- function(Ag) {
   err_messages <- character()
   # matrix is not symmetric

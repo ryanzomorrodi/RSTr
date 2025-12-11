@@ -1,9 +1,8 @@
-#' @noRd
 check_priors <- function(RSTr_obj) {
   UseMethod("check_priors")
 }
 
-#' @noRd
+#' @export
 check_priors.ucar <- function(RSTr_obj) {
   priors <- RSTr_obj$priors
   chk <- c("tau_a", "tau_b", "lambda_sd", "lambda_accept", "sig_a", "sig_b")
@@ -20,7 +19,7 @@ check_priors.ucar <- function(RSTr_obj) {
   )
 }
 
-#' @noRd
+#' @export
 check_priors.mcar <- function(RSTr_obj) {
   priors <- RSTr_obj$priors
   num_group <- dim(RSTr_obj$data$Y)[2]
@@ -38,7 +37,7 @@ check_priors.mcar <- function(RSTr_obj) {
   )
 }
 
-#' @noRd
+#' @export
 check_priors.mstcar <- function(RSTr_obj) {
   priors <- RSTr_obj$priors
   num_group <- dim(RSTr_obj$data$Y)[2]
@@ -58,7 +57,7 @@ check_priors.mstcar <- function(RSTr_obj) {
   )
 }
 
-#' @noRd
+#' @export
 check_priors.mstcar_update_rho <- function(RSTr_obj, errout) {
   priors <- RSTr_obj$priors
   num_group <- dim(RSTr_obj$data$Y)[2]
@@ -81,7 +80,6 @@ check_priors.mstcar_update_rho <- function(RSTr_obj, errout) {
   )
 }
 
-#' @noRd
 check_missing_priors <- function(priors, chk) {
   miss <- sapply(chk, \(x) !any(names(priors) == x))
   if (any(miss)) {
@@ -89,7 +87,6 @@ check_missing_priors <- function(priors, chk) {
   }
 }
 
-#' @noRd
 check_unused_priors <- function(priors, chk) {
   chk_elem <- !(names(priors) %in% chk)
   if (any(chk_elem)) {
@@ -97,7 +94,6 @@ check_unused_priors <- function(priors, chk) {
   }
 }
 
-#' @noRd
 check_tau_a <- function(tau_a) {
   # is non-positive or infinite
   if ((tau_a <= 0) || !is.finite(tau_a)) {
@@ -105,7 +101,6 @@ check_tau_a <- function(tau_a) {
   }
 }
 
-#' @noRd
 check_tau_b <- function(tau_b) {
   # is non-positive or infinite
   if ((tau_b <= 0) || !is.finite(tau_b)) {
@@ -113,7 +108,6 @@ check_tau_b <- function(tau_b) {
   }
 }
 
-#' @noRd
 check_lambda_sd <- function(lambda_sd, Y) {
   err_messages <- character()
   # dim not num_time num_region
@@ -133,7 +127,6 @@ check_lambda_sd <- function(lambda_sd, Y) {
   err_messages
 }
 
-#' @noRd
 check_sig_a <- function(sig_a) {
   # is non-positive or infinite
   if ((sig_a <= 0) || !is.finite(sig_a)) {
@@ -141,7 +134,6 @@ check_sig_a <- function(sig_a) {
   }
 }
 
-#' @noRd
 check_sig_b <- function(sig_b) {
   # is non-positive or infinite
   if ((sig_b <= 0) || !is.finite(sig_b)) {
@@ -149,7 +141,6 @@ check_sig_b <- function(sig_b) {
   }
 }
 
-#' @noRd
 check_G_scale <- function(G_scale, num_group) {
   err_messages <- character()
   # dimensions don't match num_group num_group
@@ -183,7 +174,6 @@ check_G_scale <- function(G_scale, num_group) {
   err_messages
 }
 
-#' @noRd
 check_G_df <- function(G_df, num_group) {
   err_messages <- character()
   # is not a whole number
@@ -203,7 +193,6 @@ check_G_df <- function(G_df, num_group) {
   err_messages
 }
 
-#' @noRd
 check_Ag_scale <- function(Ag_scale, num_group) {
   err_messages <- character()
   # Ag_scale
@@ -238,7 +227,6 @@ check_Ag_scale <- function(Ag_scale, num_group) {
   err_messages
 }
 
-#' @noRd
 check_Ag_df <- function(Ag_df, num_group) {
   err_messages <- character()
   # is not a whole number
@@ -258,7 +246,6 @@ check_Ag_df <- function(Ag_df, num_group) {
   err_messages
 }
 
-#' @noRd
 check_rho_a <- function(rho_a) {
   # is non-positive or infinite
   if ((rho_a <= 0) || !is.finite(rho_a)) {
@@ -266,7 +253,6 @@ check_rho_a <- function(rho_a) {
   }
 }
 
-#' @noRd
 check_rho_b <- function(rho_b) {
   # is non-positive or infinite
   if ((rho_b <= 0) || !is.finite(rho_b)) {
@@ -274,7 +260,6 @@ check_rho_b <- function(rho_b) {
   }
 }
 
-#' @noRd
 check_rho_sd <- function(rho_sd, num_group) {
   err_messages <- character()
   # length not num_group

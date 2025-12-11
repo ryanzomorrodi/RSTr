@@ -1,4 +1,3 @@
-#' @noRd
 validate_model <- function(RSTr_obj) {
   errout <- c(
     check_data(RSTr_obj),
@@ -8,15 +7,12 @@ validate_model <- function(RSTr_obj) {
   display_errors(errout)
 }
 
-#' Display errors
-#' @noRd
 display_errors <- function(errout) {
   if (length(errout)) {
     stop(paste0(length(errout), "error(s) found:\n", paste(errout, collapse = "\n ")))
   }
 }
 
-#' @noRd
 prepare_data <- function(data) {
   if (is.null(dim(data$Y))) {
     data <- lapply(data, \(x) array(x, dim = c(length(x), 1, 1), dimnames = list(names(x))))
@@ -26,7 +22,6 @@ prepare_data <- function(data) {
   data
 }
 
-#' @noRd
 post_sampler_output <- function(RSTr_obj) {
   samples <- load_samples(RSTr_obj)
   medians <- get_medians(samples)
