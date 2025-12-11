@@ -1,0 +1,17 @@
+pandoc: 3.1.11
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  RSTr-adjacency: RSTr-adjacency.html
+  RSTr-agestandardize: RSTr-agestandardize.html
+  RSTr-car: RSTr-car.html
+  RSTr-event: RSTr-event.html
+  RSTr-informativeness: RSTr-informativeness.html
+  RSTr-initialvalues: RSTr-initialvalues.html
+  RSTr-models: RSTr-models.html
+  RSTr-priors: RSTr-priors.html
+  RSTr-reliability: RSTr-reliability.html
+  RSTr-samples: RSTr-samples.html
+  RSTr-troubleshoot: RSTr-troubleshoot.html
+  RSTr: RSTr.html
+last_built: 2025-12-11T00:05Z
